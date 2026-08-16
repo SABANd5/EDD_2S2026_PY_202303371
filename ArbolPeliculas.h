@@ -1,0 +1,48 @@
+#ifndef ARBOLPELICULAS_H
+#define ARBOLPELICULAS_H
+
+#include <string>
+
+// Estructura para almacenar los datos de la película
+struct Pelicula {
+    std::string codigo;
+    std::string titulo;
+    std::string genero;
+    int duracion;
+    std::string clasificacion;
+    std::string idioma;
+    std::string fechaEstreno;
+    std::string fechaFin;
+};
+
+// Nodo del Árbol Binario de Búsqueda
+struct NodoBST {
+    Pelicula dato;
+    NodoBST* izquierdo;
+    NodoBST* derecho;
+
+    // Constructor del nodo
+    NodoBST(Pelicula p) : dato(p), izquierdo(nullptr), derecho(nullptr) {}
+};
+
+// Clase principal del Árbol
+class ArbolPeliculas {
+public:
+    ArbolPeliculas();
+
+    // Métodos principales del administrador
+    void insertar(Pelicula p);
+    void eliminar(std::string codigo);
+
+    // Generación del reporte
+    void generarReporteGraphviz();
+
+private:
+    NodoBST* raiz;
+
+    // Métodos recursivos auxiliares
+    NodoBST* insertarRecursivo(NodoBST* nodo, Pelicula p);
+    void generarCuerpoDot(NodoBST* nodo, std::string& dotContent);
+};
+
+#endif // ARBOLPELICULAS_H
