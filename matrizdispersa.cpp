@@ -1,0 +1,303 @@
+#include "matrizdispersa.h"
+#include <iostream>
+#include <fstream>
+MatrizDispersa::MatrizDispersa() {
+    // La raíz es el ancla (0,0) de nuestra matriz
+    raiz = new NodoMatriz(-1, -1, "RAIZ");
+}
+
+// Busca la cabecera de la fila, retorna nullptr si no existe
+NodoMatriz* MatrizDispersa::buscarFila(int fila) {
+    NodoMatriz* actual = raiz->abajo;
+    while (actual != nullptr) {
+        if (actual->fila == fila) return actual;
+        actual = actual->abajo;
+    }
+    return nullptr;
+}
+
+// Busca la cabecera de la columna, retorna nullptr si no existe
+NodoMatriz* MatrizDispersa::buscarColumna(int columna) {
+    NodoMatriz* actual = raiz->derecha;
+    while (actual != nullptr) {
+        if (actual->columna == columna) return actual;
+        actual = actual->derecha;
+    }
+    return nullptr;
+}
+
+// Crea e inserta una cabecera de fila en orden
+NodoMatriz* MatrizDispersa::crearFila(int fila) {
+    NodoMatriz* nuevaFila = new NodoMatriz(fila, -1, "CABECERA_FILA");
+    NodoMatriz* actual = raiz;
+
+    while (actual->abajo != nullptr && actual->abajo->fila < fila) {
+        actual = actual->abajo;
+    }
+
+    nuevaFila->abajo = actual->abajo;
+    if (actual->abajo != nullptr) {
+        actual->abajo->arriba = nuevaFila;
+    }
+    nuevaFila->arriba = actual;
+    actual->abajo = nuevaFila;
+
+    return nuevaFila;
+}
+
+// Crea e inserta una cabecera de columna en orden
+NodoMatriz* MatrizDispersa::crearColumna(int columna) {
+    NodoMatriz* nuevaCol = new NodoMatriz(-1, columna, "CABECERA_COL");
+    NodoMatriz* actual = raiz;
+
+    while (actual->derecha != nullptr && actual->derecha->columna < columna) {
+        actual = actual->derecha;
+    }
+
+    nuevaCol->derecha = actual->derecha;
+    if (actual->derecha != nullptr) {
+        actual->derecha->izquierda = nuevaCol;
+    }
+    nuevaCol->izquierda = actual;
+    actual->derecha = nuevaCol;
+
+    return nuevaCol;
+}
+
+// Método interno para insertar el nodo en el cruce exacto de fila y columna
+void MatrizDispersa::insertarAsientoLibre(int fila, int columna) {
+    // 1. Buscamos o creamos las cabeceras
+    NodoMatriz* nodoFila = buscarFila(fila);
+    if (nodoFila == nullptr) {
+        nodoFila = crearFila(fila);
+    }
+
+    NodoMatriz* nodoColumna = buscarColumna(columna);
+    if (nodoColumna == nullptr) {
+        nodoColumna = crearColumna(columna);
+    }
+
+    // 2. Creamos el nuevo asiento con estado LIBRE
+    NodoMatriz* nuevoAsiento = new NodoMatriz(fila, columna, "LIBRE");
+
+    // 3. Inserción HORIZONTAL (en la fila)
+    NodoMatriz* actualF = nodoFila;
+    while (actualF->derecha != nullptr && actualF->derecha->columna < columna) {
+        actualF = actualF->derecha;
+    }
+    nuevoAsiento->derecha = actualF->derecha;
+    if (actualF->derecha != nullptr) {
+        actualF->derecha->izquierda = nuevoAsiento;
+    }
+    nuevoAsiento->izquierda = actualF;
+    actualF->derecha = nuevoAsiento;
+
+    // 4. Inserción VERTICAL (en la columna)
+    NodoMatriz* actualC = nodoColumna;
+    while (actualC->abajo != nullptr && actualC->abajo->fila < fila) {
+        actualC = actualC->abajo;
+    }
+    nuevoAsiento->abajo = actualC->abajo;
+    if (actualC->abajo != nullptr) {
+        actualC->abajo->arriba = nuevoAsiento;
+    }
+    nuevoAsiento->arriba = actualC;
+    actualC->abajo = nuevoAsiento;
+}
+
+// Método público para armar la sala completa
+void MatrizDispersa::inicializarSala(int totalFilas, int totalColumnas) {
+    for (int f = 1; f <= totalFilas; f++) {
+        for (int c = 1; c <= totalColumnas; c++) {
+            insertarAsientoLibre(f, c);
+        }
+    }
+    std::cout << "Sala inicializada con " << totalFilas << " filas y "
+              << totalColumnas << " columnas. Todos los asientos estan LIBRES." << std::endl;
+}
+
+// Reservar un asiento si está libre
+bool MatrizDispersa::reservarAsiento(int fila, int columna, std::string nombreCliente) {
+    NodoMatriz* nodoFila = buscarFila(fila);
+    if (nodoFila == nullptr) {
+        std::cout << "Error: La fila " << fila << " no existe en esta sala." << std::endl;
+        return false;
+    }
+
+    NodoMatriz* actual = nodoFila->derecha;
+    while (actual != nullptr && actual->columna <= columna) {
+        if (actual->columna == columna) {
+            if (actual->cliente == "LIBRE") {
+                actual->cliente = nombreCliente;
+                std::cout << "Asiento F" << fila << "-C" << columna << " reservado a nombre de: " << nombreCliente << std::endl;
+                return true;
+            } else {
+                // El documento pide notificar si ya está ocupado
+                std::cout << "Lo sentimos, el asiento F" << fila << "-C" << columna << " ya esta ocupado por " << actual->cliente << std::endl;
+                return false;
+            }
+        }
+        actual = actual->derecha;
+    }
+
+    std::cout << "Error: La columna " << columna << " no existe." << std::endl;
+    return false;
+}
+
+// Cancelar una reserva usando fila y columna
+bool MatrizDispersa::cancelarReserva(int fila, int columna) {
+    NodoMatriz* nodoFila = buscarFila(fila);
+    if (nodoFila == nullptr) return false;
+
+    NodoMatriz* actual = nodoFila->derecha;
+    while (actual != nullptr && actual->columna <= columna) {
+        if (actual->columna == columna) {
+            if (actual->cliente != "LIBRE") {
+                std::cout << "Reserva de " << actual->cliente << " en asiento F" << fila << "-C" << columna << " cancelada." << std::endl;
+                actual->cliente = "LIBRE";
+                return true;
+            } else {
+                std::cout << "El asiento ya se encuentra LIBRE." << std::endl;
+                return false;
+            }
+        }
+        actual = actual->derecha;
+    }
+    return false;
+}
+
+// Opcional pero recomendado: Cancelar todas las reservas de un cliente
+void MatrizDispersa::cancelarPorCliente(std::string nombreCliente) {
+    bool encontrada = false;
+    NodoMatriz* actualFila = raiz->abajo;
+
+    while (actualFila != nullptr) {
+        NodoMatriz* actualCol = actualFila->derecha;
+        while (actualCol != nullptr) {
+            if (actualCol->cliente == nombreCliente) {
+                actualCol->cliente = "LIBRE";
+                std::cout << "Reserva cancelada para " << nombreCliente << " en F" << actualCol->fila << "-C" << actualCol->columna << std::endl;
+                encontrada = true;
+            }
+            actualCol = actualCol->derecha;
+        }
+        actualFila = actualFila->abajo;
+    }
+
+    if (!encontrada) {
+        std::cout << "No se encontraron reservas a nombre de: " << nombreCliente << std::endl;
+    }
+}
+
+void MatrizDispersa::generarReporteGraphviz() {
+    std::ofstream archivo("reporte_matriz.dot");
+    if (!archivo.is_open()) {
+        std::cout << "Error al crear el archivo DOT de la matriz." << std::endl;
+        return;
+    }
+
+    int totalLibres = 0;
+    int totalOcupados = 0;
+
+    archivo << "digraph MatrizDispersa {\n";
+    archivo << "  node [shape=box, fontname=\"Arial\"];\n";
+    archivo << "  nodesep=0.5;\n";
+    archivo << "  ranksep=0.5;\n";
+
+    // Nodo Raíz
+    archivo << "  Raiz [label=\"Función\", style=filled, fillcolor=lightgray];\n";
+
+    // --- 1. Generar Nodos de Cabecera de Columnas ---
+    NodoMatriz* actualC = raiz->derecha;
+    archivo << "  { rank=same; Raiz; ";
+    while (actualC != nullptr) {
+        archivo << "\"C" << actualC->columna << "\"; ";
+        actualC = actualC->derecha;
+    }
+    archivo << "}\n";
+
+    actualC = raiz->derecha;
+    while (actualC != nullptr) {
+        archivo << "  \"C" << actualC->columna << "\" [label=\"Col " << actualC->columna << "\", style=filled, fillcolor=lightblue];\n";
+        if (actualC->derecha != nullptr) {
+            archivo << "  \"C" << actualC->columna << "\" -> \"C" << actualC->derecha->columna << "\" [dir=both];\n";
+        }
+        actualC = actualC->derecha;
+    }
+    if (raiz->derecha != nullptr) {
+        archivo << "  Raiz -> \"C" << raiz->derecha->columna << "\" [dir=both];\n";
+    }
+
+    // --- 2. Generar Nodos de Cabecera de Filas y Asientos ---
+    NodoMatriz* actualF = raiz->abajo;
+    while (actualF != nullptr) {
+        // Cabecera de fila
+        archivo << "  \"F" << actualF->fila << "\" [label=\"Fila " << actualF->fila << "\", style=filled, fillcolor=lightblue];\n";
+
+        if (actualF->abajo != nullptr) {
+            archivo << "  \"F" << actualF->fila << "\" -> \"F" << actualF->abajo->fila << "\" [dir=both];\n";
+        } else if (actualF == raiz->abajo) {
+            archivo << "  Raiz -> \"F" << actualF->fila << "\" [dir=both];\n"; // Conexión de raíz a primera fila
+        }
+
+        // Agrupar la fila actual para que salga horizontal
+        archivo << "  { rank=same; \"F" << actualF->fila << "\"; ";
+
+        NodoMatriz* asiento = actualF->derecha;
+        while (asiento != nullptr) {
+            std::string idNodo = "N_F" + std::to_string(asiento->fila) + "_C" + std::to_string(asiento->columna);
+            archivo << "\"" << idNodo << "\"; ";
+
+            // Determinar color y contar estadísticas
+            std::string color = "lightgreen";
+            if (asiento->cliente == "LIBRE") {
+                totalLibres++;
+            } else {
+                color = "salmon";
+                totalOcupados++;
+            }
+
+            // Crear el nodo del asiento
+            archivo << "  \"" << idNodo << "\" [label=\"" << asiento->cliente << "\", style=filled, fillcolor=" << color << "];\n";
+
+            // Enlaces horizontales
+            if (asiento->izquierda == actualF) {
+                archivo << "  \"F" << actualF->fila << "\" -> \"" << idNodo << "\" [dir=both];\n";
+            } else {
+                std::string idAnt = "N_F" + std::to_string(asiento->izquierda->fila) + "_C" + std::to_string(asiento->izquierda->columna);
+                archivo << "  \"" << idAnt << "\" -> \"" << idNodo << "\" [dir=both];\n";
+            }
+
+            // Enlaces verticales
+            if (asiento->arriba->fila == -1) { // Apunta a la cabecera de columna
+                archivo << "  \"C" << asiento->columna << "\" -> \"" << idNodo << "\" [dir=both];\n";
+            } else {
+                std::string idArr = "N_F" + std::to_string(asiento->arriba->fila) + "_C" + std::to_string(asiento->arriba->columna);
+                archivo << "  \"" << idArr << "\" -> \"" << idNodo << "\" [dir=both];\n";
+            }
+
+            asiento = asiento->derecha;
+        }
+        archivo << "}\n";
+        actualF = actualF->abajo;
+    }
+    // Conexión inicial de raíz si hay filas
+    if (raiz->abajo != nullptr) {
+        archivo << "  Raiz -> \"F" << raiz->abajo->fila << "\" [dir=both];\n";
+    }
+
+    // --- 3. Estadísticas de la función ---
+    int totalAsientos = totalLibres + totalOcupados;
+    archivo << "  Stats [shape=note, label=\"ESTADÍSTICAS\\nTotal Asientos: " << totalAsientos
+            << "\\nLibres: " << totalLibres
+            << "\\nOcupados: " << totalOcupados << "\", style=filled, fillcolor=yellow];\n";
+
+    archivo << "}\n";
+    archivo.close();
+
+    // Compilar a PNG
+    int resultado = system("dot -Tpng reporte_matriz.dot -o reporte_matriz.png");
+    if (resultado == 0) {
+        std::cout << "Reporte de la matriz generado: reporte_matriz.png" << std::endl;
+    }
+}

@@ -26,7 +26,9 @@ struct NodoSolicitud {
 class ListaSolicitudes {
 public:
     ListaSolicitudes();
-
+    void aprobarPrimeraSolicitud();
+    void rechazarPrimeraSolicitud();
+    void generarReporteGraphviz();
     void registrarSolicitud(std::string cliente, std::string telefono, std::string tipo, std::string descripcion, std::string fecha);
     void procesarPrimeraSolicitud(); // Muestra la primera en la cola
     // ... luego agregaremos los métodos de aprobar/rechazar

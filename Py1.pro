@@ -10,12 +10,14 @@ SOURCES += \
     arbolpeliculas.cpp \
     listasolicitudes.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    matrizdispersa.cpp
 
 HEADERS += \
     ArbolPeliculas.h \
     ListaSolicitudes.h \
-    mainwindow.h
+    mainwindow.h \
+    matrizdispersa.h
 
 FORMS += \
     mainwindow.ui

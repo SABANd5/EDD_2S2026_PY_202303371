@@ -1,5 +1,6 @@
 #include "listasolicitudes.h"
 #include <iostream>
+#include <fstream>
 
 ListaSolicitudes::ListaSolicitudes() {
     cabeza = nullptr;
@@ -48,4 +49,87 @@ void ListaSolicitudes::procesarPrimeraSolicitud() {
     std::cout << "Cliente: " << cabeza->dato.cliente << std::endl;
     std::cout << "Tipo: " << cabeza->dato.tipo << std::endl;
     std::cout << "-----------------------------------" << std::endl;
+}
+
+// Aprobar: Cambia el estado y pasa a la siguiente solicitud en la cola
+void ListaSolicitudes::aprobarPrimeraSolicitud() {
+    if (cabeza == nullptr) {
+        std::cout << "No hay solicitudes pendientes para aprobar." << std::endl;
+        return;
+    }
+
+    // El enunciado indica marcarla como "Atendida" o "En proceso"
+    cabeza->dato.estado = "Atendida";
+    std::cout << "Solicitud " << cabeza->dato.id << " aprobada y marcada como Atendida." << std::endl;
+
+    // Rotamos la cabeza para que la siguiente solicitud sea la primera en fila
+    cabeza = cabeza->siguiente;
+}
+
+// Rechazar: Elimina el nodo de la lista y reconecta el círculo
+void ListaSolicitudes::rechazarPrimeraSolicitud() {
+    if (cabeza == nullptr) {
+        std::cout << "No hay solicitudes pendientes para rechazar." << std::endl;
+        return;
+    }
+
+    NodoSolicitud* aBorrar = cabeza;
+
+    // Caso 1: Es el único nodo en la lista
+    if (cabeza->siguiente == cabeza) {
+        cabeza = nullptr;
+    }
+    // Caso 2: Hay más de un nodo
+    else {
+        NodoSolicitud* ultimo = cabeza->anterior;
+        cabeza = cabeza->siguiente; // Movemos la cabeza al siguiente
+
+        // Reconectamos el círculo saltando el nodo 'aBorrar'
+        ultimo->siguiente = cabeza;
+        cabeza->anterior = ultimo;
+    }
+
+    delete aBorrar;
+    std::cout << "Solicitud rechazada y eliminada de la lista exitosamente." << std::endl;
+}
+
+// Generar Reporte Graphviz para la Lista Circular Doblemente Enlazada
+void ListaSolicitudes::generarReporteGraphviz() {
+    if (cabeza == nullptr) {
+        std::cout << "La lista de solicitudes está vacía. No hay reporte que generar." << std::endl;
+        return;
+    }
+
+    std::ofstream archivo("reporte_solicitudes.dot");
+    if (archivo.is_open()) {
+        archivo << "digraph G {\n";
+        archivo << "  rankdir=LR;\n"; // Left to Right
+        archivo << "  node [shape=Mrecord, style=filled, fillcolor=bisque, fontname=\"Arial\"];\n";
+
+        NodoSolicitud* actual = cabeza;
+
+        // Primera pasada: crear los nodos
+        do {
+            archivo << "  \"" << actual->dato.id << "\" [label=\"{ID: " << actual->dato.id
+                    << " | Cliente: " << actual->dato.cliente
+                    << " | Tipo: " << actual->dato.tipo
+                    << " | Estado: " << actual->dato.estado << "}\"];\n";
+            actual = actual->siguiente;
+        } while (actual != cabeza);
+
+        // Segunda pasada: crear las conexiones dobles
+        actual = cabeza;
+        do {
+            // Usamos dir=both para indicar que es doblemente enlazada en el grafo
+            archivo << "  \"" << actual->dato.id << "\" -> \"" << actual->siguiente->dato.id << "\" [dir=both];\n";
+            actual = actual->siguiente;
+        } while (actual != cabeza);
+
+        archivo << "}\n";
+        archivo.close();
+
+        // Compilar a PNG
+        system("dot -Tpng reporte_solicitudes.dot -o reporte_solicitudes.png");
+        std::cout << "Reporte generado: reporte_solicitudes.png" << std::endl;
+    }
 }
