@@ -8,11 +8,13 @@ CONFIG += c++17
 
 SOURCES += \
     arbolpeliculas.cpp \
+    listasolicitudes.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     ArbolPeliculas.h \
+    ListaSolicitudes.h \
     mainwindow.h
 
 FORMS += \

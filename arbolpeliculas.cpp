@@ -1,7 +1,7 @@
 #include "arbolpeliculas.h"
 #include <iostream>
 #include <fstream> // Necesario para generar el archivo .dot
-
+#include <sstream>
 // Constructor
 ArbolPeliculas::ArbolPeliculas() {
     raiz = nullptr;
@@ -86,4 +86,105 @@ void ArbolPeliculas::generarCuerpoDot(NodoBST* nodo, std::string& dotContent) {
             generarCuerpoDot(nodo->derecho, dotContent);
         }
     }
+}
+
+// Método para lectura del CSV
+void ArbolPeliculas::cargarDesdeCSV(const std::string& rutaArchivo) {
+    std::ifstream archivo(rutaArchivo);
+    std::string linea;
+
+    if (!archivo.is_open()) {
+        std::cout << "Error: No se pudo abrir el archivo CSV en la ruta: " << rutaArchivo << std::endl;
+        return;
+    }
+
+    // Leemos (y descartamos) la primera línea porque son los encabezados
+    std::getline(archivo, linea);
+
+    int peliculasCargadas = 0;
+
+    // Leemos línea por línea hasta el final
+    while (std::getline(archivo, linea)) {
+        std::stringstream stream(linea);
+        std::string item;
+        Pelicula p;
+
+        // Extraemos cada valor separado por coma
+        std::getline(stream, p.codigo, ',');
+        std::getline(stream, p.titulo, ',');
+        std::getline(stream, p.genero, ',');
+
+        // La duración es un int, extraemos como string y convertimos
+        std::getline(stream, item, ',');
+        try {
+            p.duracion = std::stoi(item);
+        } catch (...) {
+            p.duracion = 0; // Por si hay algún error en el formato del número
+        }
+
+        std::getline(stream, p.clasificacion, ',');
+        std::getline(stream, p.idioma, ',');
+        std::getline(stream, p.fechaEstreno, ',');
+        std::getline(stream, p.fechaFin, ',');
+
+        // Insertamos en el BST
+        insertar(p);
+        peliculasCargadas++;
+    }
+
+    archivo.close();
+    std::cout << "Carga masiva exitosa. Se cargaron " << peliculasCargadas << " peliculas." << std::endl;
+}
+// Método público
+void ArbolPeliculas::eliminar(std::string codigo) {
+    raiz = eliminarRecursivo(raiz, codigo);
+    std::cout << "Intento de eliminacion de " << codigo << " finalizado." << std::endl;
+}
+
+// Método recursivo para eliminar
+NodoBST* ArbolPeliculas::eliminarRecursivo(NodoBST* nodo, std::string codigo) {
+    // Caso base: llegamos al final y no lo encontramos
+    if (nodo == nullptr) {
+        return nodo;
+    }
+
+    // Buscamos el nodo recorriendo el árbol
+    if (codigo < nodo->dato.codigo) {
+        nodo->izquierdo = eliminarRecursivo(nodo->izquierdo, codigo);
+    } else if (codigo > nodo->dato.codigo) {
+        nodo->derecho = eliminarRecursivo(nodo->derecho, codigo);
+    } else {
+        // ¡Lo encontramos! Ahora evaluamos los 3 casos:
+
+        // Caso 1 y 2: Un solo hijo o ningún hijo (hoja)
+        if (nodo->izquierdo == nullptr) {
+            NodoBST* temp = nodo->derecho;
+            delete nodo;
+            return temp;
+        } else if (nodo->derecho == nullptr) {
+            NodoBST* temp = nodo->izquierdo;
+            delete nodo;
+            return temp;
+        }
+
+        // Caso 3: Tiene dos hijos
+        // Buscamos el sucesor inorden (el nodo más pequeño del subárbol derecho)
+        NodoBST* temp = encontrarMinimo(nodo->derecho);
+
+        // Copiamos los datos del sucesor al nodo actual
+        nodo->dato = temp->dato;
+
+        // Eliminamos el sucesor en el subárbol derecho
+        nodo->derecho = eliminarRecursivo(nodo->derecho, temp->dato.codigo);
+    }
+    return nodo;
+}
+
+// Método auxiliar para encontrar el nodo más a la izquierda (el más pequeño)
+NodoBST* ArbolPeliculas::encontrarMinimo(NodoBST* nodo) {
+    NodoBST* actual = nodo;
+    while (actual && actual->izquierdo != nullptr) {
+        actual = actual->izquierdo;
+    }
+    return actual;
 }

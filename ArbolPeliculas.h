@@ -33,7 +33,7 @@ public:
     // Métodos principales del administrador
     void insertar(Pelicula p);
     void eliminar(std::string codigo);
-
+    void cargarDesdeCSV(const std::string& rutaArchivo);
     // Generación del reporte
     void generarReporteGraphviz();
 
@@ -42,6 +42,8 @@ private:
 
     // Métodos recursivos auxiliares
     NodoBST* insertarRecursivo(NodoBST* nodo, Pelicula p);
+    NodoBST* eliminarRecursivo(NodoBST* nodo, std::string codigo);
+    NodoBST* encontrarMinimo(NodoBST* nodo);
     void generarCuerpoDot(NodoBST* nodo, std::string& dotContent);
 };
 
