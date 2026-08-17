@@ -1,9 +1,7 @@
 digraph G {
   rankdir=TB;
   node [shape=record, style=filled, fillcolor=lightgreen, fontname="Arial"];
-  "P010" [label="{Código: P010 | Título: Pelicula_10 | Duración: 120 min | Clasificación: B15}"];
-  "P010" -> "P005";
-  "P005" [label="{Código: P005 | Título: Pelicula_5 | Duración: 105 min | Clasificación: A}"];
-  "P010" -> "P015";
-  "P015" [label="{Código: P015 | Título: Pelicula_15 | Duración: 135 min | Clasificación: C}"];
+  "P001" [label="{Código: P001 | Título: Avatar 3 | Duración: 180 min | Clasificación: B15}"];
+  "P001" -> "P002";
+  "P002" [label="{Código: P002 | Título: Intensamente 2 | Duración: 100 min | Clasificación: AA}"];
 }
