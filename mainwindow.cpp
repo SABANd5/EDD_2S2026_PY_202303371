@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->stackedWidget->setCurrentWidget(ui->page1Login);
 }
 
 MainWindow::~MainWindow()
@@ -80,5 +81,99 @@ void MainWindow::on_btnCargaMasiva_clicked()
     cartelera.cargarDesdeCSV(rutaArchivo);
 
     QMessageBox::information(this, "Éxito", "La carga masiva se ha completado. Revisa la consola para más detalles.");
+}
+
+
+// --- 1. RESERVAR ASIENTO ---
+void MainWindow::on_btnReservar_clicked()
+{
+    // Leer los datos ingresados en la interfaz
+    int fila = ui->spinFila->value();
+    int columna = ui->spinColumna->value();
+    std::string cliente = ui->txtNombreCliente->text().toStdString();
+
+    // Validación básica de campos
+    if (cliente.empty()) {
+        QMessageBox::warning(this, "Datos incompletos", "Por favor, ingresa tu nombre para realizar la reserva.");
+        return;
+    }
+
+    // Intentamos reservar en la Matriz Dispersa
+    bool exito = sala.reservarAsiento(fila, columna, cliente);
+
+    if (exito) {
+        QMessageBox::information(this, "Reserva Confirmada",
+                                 QString("¡Asiento F%1-C%2 reservado con éxito para %3!")
+                                     .arg(fila).arg(columna).arg(QString::fromStdString(cliente)));
+
+        // Limpiamos el campo del nombre para la siguiente reserva
+        ui->txtNombreCliente->clear();
+    } else {
+        // La matriz nos devolvió 'false', significa que está ocupado o las coordenadas no existen
+        QMessageBox::critical(this, "Asiento No Disponible",
+                              "Lo sentimos, ese asiento ya está ocupado o no existe en esta sala. Por favor, selecciona otro.");
+    }
+}
+
+// --- 2. CANCELAR RESERVA ---
+void MainWindow::on_btnCancelarReserva_clicked()
+{
+    // Para cancelar, el PDF indica que el cliente debe ingresar su nombre.
+    // Utilizaremos el método extra que creamos para buscar por nombre en toda la matriz.
+    std::string cliente = ui->txtNombreCliente->text().toStdString();
+
+    if (cliente.empty()) {
+        QMessageBox::warning(this, "Datos incompletos", "Ingresa tu nombre para buscar y cancelar tus reservas.");
+        return;
+    }
+
+    // Llamamos al backend para que libere los asientos
+    sala.cancelarPorCliente(cliente);
+
+    QMessageBox::information(this, "Cancelación",
+                             "Se han procesado las cancelaciones. Si tenías asientos a tu nombre, ahora están libres.");
+
+    ui->txtNombreCliente->clear();
+}
+
+// --- LÓGICA DE INICIO DE SESIÓN ---
+void MainWindow::on_btnIniciarSesion_clicked()
+{
+    // Extraemos el correo y contraseña ingresados
+    QString correo = ui->txtCorreo->text();
+    QString password = ui->txtPassword->text();
+
+    // 1. Validar Credenciales de Administrador
+    if (correo == "admin@usac.edu.gt" && password == "admin123") {
+        // Cambiamos a la vista del Administrador
+        ui->stackedWidget->setCurrentWidget(ui->page2Admin);
+        ui->txtCorreo->clear();
+        ui->txtPassword->clear();
+    }
+    // 2. Validar Credenciales de Cliente en Taquilla[cite: 1]
+    else if (correo == "cliente@gmail.com" && password == "cliente123") {
+        // Cambiamos a la vista del Cliente
+        ui->stackedWidget->setCurrentWidget(ui->page3Usuario);
+        ui->txtCorreo->clear();
+        ui->txtPassword->clear();
+    }
+    // 3. Credenciales incorrectas
+    else {
+        QMessageBox::critical(this, "Error de Autenticación", "Correo o contraseña incorrectos. Por favor, intenta de nuevo.");
+    }
+}
+
+
+// --- LÓGICA PARA CERRAR SESIÓN ---
+void MainWindow::on_btnCerrarSesionAdmin_clicked()
+{
+    // Devolvemos al usuario a la página de Login
+    ui->stackedWidget->setCurrentWidget(ui->page1Login);
+}
+
+void MainWindow::on_btnCerrarSesionUsuario_clicked()
+{
+    // Devolvemos al usuario a la página de Login
+    ui->stackedWidget->setCurrentWidget(ui->page1Login);
 }
 

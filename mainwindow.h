@@ -29,6 +29,16 @@ private slots:
 
     void on_btnCargaMasiva_clicked();
 
+    void on_btnReservar_clicked();
+
+    void on_btnCancelarReserva_clicked();
+
+    void on_btnIniciarSesion_clicked();
+
+    void on_btnCerrarSesionAdmin_clicked();
+
+    void on_btnCerrarSesionUsuario_clicked();
+
 private:
     Ui::MainWindow *ui;
 
