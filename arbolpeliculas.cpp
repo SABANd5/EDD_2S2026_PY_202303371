@@ -188,3 +188,19 @@ NodoBST* ArbolPeliculas::encontrarMinimo(NodoBST* nodo) {
     }
     return actual;
 }
+
+// Método público que devuelve el vector con las películas
+std::vector<Pelicula> ArbolPeliculas::obtenerCarteleraInorden() {
+    std::vector<Pelicula> listaPeliculas;
+    recorridoInorden(raiz, listaPeliculas);
+    return listaPeliculas;
+}
+
+// Método recursivo Inorden
+void ArbolPeliculas::recorridoInorden(NodoBST* nodo, std::vector<Pelicula>& lista) {
+    if (nodo != nullptr) {
+        recorridoInorden(nodo->izquierdo, lista); // Visita hijo izquierdo
+        lista.push_back(nodo->dato);              // Almacena la raíz
+        recorridoInorden(nodo->derecho, lista);   // Visita hijo derecho
+    }
+}

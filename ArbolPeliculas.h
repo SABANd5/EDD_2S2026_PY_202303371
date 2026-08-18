@@ -1,6 +1,6 @@
 #ifndef ARBOLPELICULAS_H
 #define ARBOLPELICULAS_H
-
+#include <vector>
 #include <string>
 
 // Estructura para almacenar los datos de la película
@@ -36,6 +36,7 @@ public:
     void cargarDesdeCSV(const std::string& rutaArchivo);
     // Generación del reporte
     void generarReporteGraphviz();
+    std::vector<Pelicula> obtenerCarteleraInorden();
 
 private:
     NodoBST* raiz;
@@ -45,6 +46,7 @@ private:
     NodoBST* eliminarRecursivo(NodoBST* nodo, std::string codigo);
     NodoBST* encontrarMinimo(NodoBST* nodo);
     void generarCuerpoDot(NodoBST* nodo, std::string& dotContent);
+    void recorridoInorden(NodoBST* nodo, std::vector<Pelicula>& lista);
 };
 
 #endif // ARBOLPELICULAS_H

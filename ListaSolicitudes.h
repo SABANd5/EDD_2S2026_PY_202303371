@@ -32,7 +32,7 @@ public:
     void registrarSolicitud(std::string cliente, std::string telefono, std::string tipo, std::string descripcion, std::string fecha);
     void procesarPrimeraSolicitud(); // Muestra la primera en la cola
     // ... luego agregaremos los métodos de aprobar/rechazar
-
+    Solicitud* obtenerPrimeraSolicitud();
 private:
     NodoSolicitud* cabeza;
     int contadorIds; // Para autogenerar el número de solicitud

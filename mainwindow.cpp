@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ui->stackedWidget->setCurrentWidget(ui->page1Login);
+    ui->B->setCurrentWidget(ui->page1Login);
 }
 
 MainWindow::~MainWindow()
@@ -146,14 +146,14 @@ void MainWindow::on_btnIniciarSesion_clicked()
     // 1. Validar Credenciales de Administrador
     if (correo == "admin@usac.edu.gt" && password == "admin123") {
         // Cambiamos a la vista del Administrador
-        ui->stackedWidget->setCurrentWidget(ui->page2Admin);
+        ui->B->setCurrentWidget(ui->page2Admin);
         ui->txtCorreo->clear();
         ui->txtPassword->clear();
     }
     // 2. Validar Credenciales de Cliente en Taquilla[cite: 1]
     else if (correo == "cliente@gmail.com" && password == "cliente123") {
         // Cambiamos a la vista del Cliente
-        ui->stackedWidget->setCurrentWidget(ui->page3Usuario);
+        ui->B->setCurrentWidget(ui->page3Usuario);
         ui->txtCorreo->clear();
         ui->txtPassword->clear();
     }
@@ -168,12 +168,109 @@ void MainWindow::on_btnIniciarSesion_clicked()
 void MainWindow::on_btnCerrarSesionAdmin_clicked()
 {
     // Devolvemos al usuario a la página de Login
-    ui->stackedWidget->setCurrentWidget(ui->page1Login);
+    ui->B->setCurrentWidget(ui->page1Login);
 }
 
 void MainWindow::on_btnCerrarSesionUsuario_clicked()
 {
     // Devolvemos al usuario a la página de Login
-    ui->stackedWidget->setCurrentWidget(ui->page1Login);
+    ui->B->setCurrentWidget(ui->page1Login);
+}
+
+
+// --- ACTUALIZAR TABLA DE CARTELERA (VISTA ADMIN) ---
+void MainWindow::on_btnActualizarCartelera_clicked()
+{
+    // 1. Obtener la lista ordenada desde nuestro BST
+    std::vector<Pelicula> peliculas = cartelera.obtenerCarteleraInorden();
+
+    // 2. Configurar las columnas de la tabla[cite: 1]
+    ui->tablaCarteleraAdmin->setColumnCount(7);
+    QStringList encabezados = {"Código", "Título", "Género", "Duración", "Clasificación", "Idioma", "Estreno"};
+    ui->tablaCarteleraAdmin->setHorizontalHeaderLabels(encabezados);
+
+    // Configurar la cantidad de filas según las películas extraídas
+    ui->tablaCarteleraAdmin->setRowCount(peliculas.size());
+
+    // 3. Llenar la tabla recorriendo el vector
+    for (size_t i = 0; i < peliculas.size(); ++i) {
+        // En Qt, los items de las tablas deben ser objetos QTableWidgetItem
+        ui->tablaCarteleraAdmin->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(peliculas[i].codigo)));
+        ui->tablaCarteleraAdmin->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(peliculas[i].titulo)));
+        ui->tablaCarteleraAdmin->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(peliculas[i].genero)));
+        ui->tablaCarteleraAdmin->setItem(i, 3, new QTableWidgetItem(QString::number(peliculas[i].duracion) + " min"));
+        ui->tablaCarteleraAdmin->setItem(i, 4, new QTableWidgetItem(QString::fromStdString(peliculas[i].clasificacion)));
+        ui->tablaCarteleraAdmin->setItem(i, 5, new QTableWidgetItem(QString::fromStdString(peliculas[i].idioma)));
+        ui->tablaCarteleraAdmin->setItem(i, 6, new QTableWidgetItem(QString::fromStdString(peliculas[i].fechaEstreno)));
+    }
+
+    // Opcional: Ajustar el tamaño de las columnas al contenido
+    ui->tablaCarteleraAdmin->resizeColumnsToContents();
+}
+
+// --- USUARIO: ENVIAR SOLICITUD ---
+void MainWindow::on_btnEnviarSolicitud_clicked()
+{
+    std::string nombre = ui->txtSolNombre->text().toStdString();
+    std::string telefono = ui->txtSolTelefono->text().toStdString();
+    std::string tipo = ui->cmbSolTipo->currentText().toStdString();
+    std::string descripcion = ui->txtSolDescripcion->toPlainText().toStdString();
+    std::string fecha = "2026-08-16"; // Puedes usar QDate::currentDate().toString() luego
+
+    if (nombre.empty() || descripcion.empty()) {
+        QMessageBox::warning(this, "Datos incompletos", "Por favor llena tu nombre y la descripción.");
+        return;
+    }
+
+    // Insertamos en la Lista Circular Doblemente Enlazada
+    solicitudes.registrarSolicitud(nombre, telefono, tipo, descripcion, fecha);
+
+    QMessageBox::information(this, "Enviado", "Tu solicitud especial ha sido registrada y está en estado: Pendiente.");
+
+    // Limpiar campos
+    ui->txtSolNombre->clear();
+    ui->txtSolTelefono->clear();
+    ui->txtSolDescripcion->clear();
+}
+
+
+// --- ADMIN: CARGAR SOLICITUD EN PANTALLA ---
+void MainWindow::on_btnCargarSolicitud_clicked()
+{
+    Solicitud* actual = solicitudes.obtenerPrimeraSolicitud();
+
+    if (actual == nullptr) {
+        ui->lblSolId->setText("ID: --");
+        ui->lblSolCliente->setText("No hay solicitudes pendientes.");
+        ui->lblSolTipo->setText("Tipo: --");
+        ui->lblSolDesc->setText("Descripción: --");
+        return;
+    }
+
+    // Mostramos los datos en los Labels
+    ui->lblSolId->setText(QString("ID Solicitud: %1").arg(actual->id));
+    ui->lblSolCliente->setText(QString::fromStdString(actual->cliente));
+    ui->lblSolTipo->setText(QString::fromStdString(actual->tipo));
+    ui->lblSolDesc->setText(QString::fromStdString(actual->descripcion));
+}
+
+// --- ADMIN: APROBAR ---
+void MainWindow::on_btnAprobarSolicitud_clicked()
+{
+    if (solicitudes.obtenerPrimeraSolicitud() != nullptr) {
+        solicitudes.aprobarPrimeraSolicitud(); // Cambia estado y rota la lista
+        QMessageBox::information(this, "Aprobada", "La solicitud pasó a 'Atendida'.");
+        on_btnCargarSolicitud_clicked(); // Recargar la pantalla con la que sigue
+    }
+}
+
+// --- ADMIN: RECHAZAR ---
+void MainWindow::on_btnRechazarSolicitud_clicked()
+{
+    if (solicitudes.obtenerPrimeraSolicitud() != nullptr) {
+        solicitudes.rechazarPrimeraSolicitud(); // Elimina el nodo
+        QMessageBox::information(this, "Rechazada", "La solicitud fue eliminada de la cola.");
+        on_btnCargarSolicitud_clicked(); // Recargar la pantalla
+    }
 }
 

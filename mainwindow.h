@@ -39,6 +39,16 @@ private slots:
 
     void on_btnCerrarSesionUsuario_clicked();
 
+    void on_btnActualizarCartelera_clicked();
+
+    void on_btnEnviarSolicitud_clicked();
+
+    void on_btnCargarSolicitud_clicked();
+
+    void on_btnAprobarSolicitud_clicked();
+
+    void on_btnRechazarSolicitud_clicked();
+
 private:
     Ui::MainWindow *ui;
 

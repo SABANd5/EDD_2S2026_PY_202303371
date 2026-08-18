@@ -11,6 +11,8 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QComboBox>
+#include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
@@ -19,6 +21,8 @@
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QStackedWidget>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QTableWidget>
+#include <QtWidgets/QTextEdit>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -27,7 +31,7 @@ class Ui_MainWindow
 {
 public:
     QWidget *centralwidget;
-    QStackedWidget *stackedWidget;
+    QStackedWidget *B;
     QWidget *page1Login;
     QPushButton *btnIniciarSesion;
     QLineEdit *txtCorreo;
@@ -43,6 +47,14 @@ public:
     QPushButton *btnReservar;
     QPushButton *btnCancelarReserva;
     QPushButton *btnCerrarSesionUsuario;
+    QLineEdit *txtSolNombre;
+    QLineEdit *txtSolTelefono;
+    QComboBox *cmbSolTipo;
+    QTextEdit *txtSolDescripcion;
+    QPushButton *btnEnviarSolicitud;
+    QLabel *label_12;
+    QLabel *label_13;
+    QLabel *label_14;
     QWidget *page2Admin;
     QLineEdit *txtCodigo;
     QPushButton *btnCargaMasiva;
@@ -63,6 +75,16 @@ public:
     QLabel *label_2;
     QLabel *label_4;
     QPushButton *btnCerrarSesionAdmin;
+    QTableWidget *tablaCarteleraAdmin;
+    QPushButton *btnActualizarCartelera;
+    QLabel *label_11;
+    QPushButton *btnCargarSolicitud;
+    QLabel *lblSolId;
+    QLabel *lblSolCliente;
+    QLabel *lblSolTipo;
+    QLabel *lblSolDesc;
+    QPushButton *btnAprobarSolicitud;
+    QPushButton *btnRechazarSolicitud;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -73,9 +95,10 @@ public:
         MainWindow->resize(797, 621);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
-        stackedWidget = new QStackedWidget(centralwidget);
-        stackedWidget->setObjectName("stackedWidget");
-        stackedWidget->setGeometry(QRect(20, 10, 791, 541));
+        B = new QStackedWidget(centralwidget);
+        B->setObjectName("B");
+        B->setGeometry(QRect(20, 10, 791, 571));
+        B->setAutoFillBackground(false);
         page1Login = new QWidget();
         page1Login->setObjectName("page1Login");
         btnIniciarSesion = new QPushButton(page1Login);
@@ -97,7 +120,7 @@ public:
         label_10 = new QLabel(page1Login);
         label_10->setObjectName("label_10");
         label_10->setGeometry(QRect(140, 40, 49, 16));
-        stackedWidget->addWidget(page1Login);
+        B->addWidget(page1Login);
         page3Usuario = new QWidget();
         page3Usuario->setObjectName("page3Usuario");
         label_7 = new QLabel(page3Usuario);
@@ -108,20 +131,47 @@ public:
         txtNombreCliente->setGeometry(QRect(120, 230, 113, 24));
         spinFila = new QSpinBox(page3Usuario);
         spinFila->setObjectName("spinFila");
-        spinFila->setGeometry(QRect(330, 310, 81, 51));
+        spinFila->setGeometry(QRect(230, 120, 71, 31));
         spinColumna = new QSpinBox(page3Usuario);
         spinColumna->setObjectName("spinColumna");
-        spinColumna->setGeometry(QRect(330, 250, 71, 61));
+        spinColumna->setGeometry(QRect(130, 120, 71, 31));
         btnReservar = new QPushButton(page3Usuario);
         btnReservar->setObjectName("btnReservar");
-        btnReservar->setGeometry(QRect(330, 220, 80, 24));
+        btnReservar->setGeometry(QRect(140, 190, 80, 24));
         btnCancelarReserva = new QPushButton(page3Usuario);
         btnCancelarReserva->setObjectName("btnCancelarReserva");
-        btnCancelarReserva->setGeometry(QRect(450, 220, 121, 24));
+        btnCancelarReserva->setGeometry(QRect(130, 160, 121, 24));
         btnCerrarSesionUsuario = new QPushButton(page3Usuario);
         btnCerrarSesionUsuario->setObjectName("btnCerrarSesionUsuario");
-        btnCerrarSesionUsuario->setGeometry(QRect(470, 440, 111, 71));
-        stackedWidget->addWidget(page3Usuario);
+        btnCerrarSesionUsuario->setGeometry(QRect(640, 10, 111, 71));
+        txtSolNombre = new QLineEdit(page3Usuario);
+        txtSolNombre->setObjectName("txtSolNombre");
+        txtSolNombre->setGeometry(QRect(120, 370, 113, 24));
+        txtSolTelefono = new QLineEdit(page3Usuario);
+        txtSolTelefono->setObjectName("txtSolTelefono");
+        txtSolTelefono->setGeometry(QRect(240, 370, 113, 24));
+        cmbSolTipo = new QComboBox(page3Usuario);
+        cmbSolTipo->addItem(QString());
+        cmbSolTipo->addItem(QString());
+        cmbSolTipo->addItem(QString());
+        cmbSolTipo->setObjectName("cmbSolTipo");
+        cmbSolTipo->setGeometry(QRect(380, 370, 141, 31));
+        txtSolDescripcion = new QTextEdit(page3Usuario);
+        txtSolDescripcion->setObjectName("txtSolDescripcion");
+        txtSolDescripcion->setGeometry(QRect(120, 410, 401, 121));
+        btnEnviarSolicitud = new QPushButton(page3Usuario);
+        btnEnviarSolicitud->setObjectName("btnEnviarSolicitud");
+        btnEnviarSolicitud->setGeometry(QRect(540, 430, 91, 24));
+        label_12 = new QLabel(page3Usuario);
+        label_12->setObjectName("label_12");
+        label_12->setGeometry(QRect(130, 320, 101, 16));
+        label_13 = new QLabel(page3Usuario);
+        label_13->setObjectName("label_13");
+        label_13->setGeometry(QRect(130, 100, 61, 16));
+        label_14 = new QLabel(page3Usuario);
+        label_14->setObjectName("label_14");
+        label_14->setGeometry(QRect(230, 100, 49, 16));
+        B->addWidget(page3Usuario);
         page2Admin = new QWidget();
         page2Admin->setObjectName("page2Admin");
         txtCodigo = new QLineEdit(page2Admin);
@@ -132,7 +182,7 @@ public:
         btnCargaMasiva->setGeometry(QRect(110, 140, 101, 24));
         btnAgregarPelicula = new QPushButton(page2Admin);
         btnAgregarPelicula->setObjectName("btnAgregarPelicula");
-        btnAgregarPelicula->setGeometry(QRect(110, 210, 91, 20));
+        btnAgregarPelicula->setGeometry(QRect(110, 210, 121, 20));
         txtClasificacion = new QLineEdit(page2Admin);
         txtClasificacion->setObjectName("txtClasificacion");
         txtClasificacion->setGeometry(QRect(200, 300, 113, 24));
@@ -168,7 +218,7 @@ public:
         label_5->setGeometry(QRect(460, 260, 49, 16));
         spinDuracion = new QSpinBox(page2Admin);
         spinDuracion->setObjectName("spinDuracion");
-        spinDuracion->setGeometry(QRect(340, 100, 101, 51));
+        spinDuracion->setGeometry(QRect(360, 90, 101, 51));
         txtIdioma = new QLineEdit(page2Admin);
         txtIdioma->setObjectName("txtIdioma");
         txtIdioma->setGeometry(QRect(440, 300, 113, 24));
@@ -180,8 +230,38 @@ public:
         label_4->setGeometry(QRect(340, 260, 61, 16));
         btnCerrarSesionAdmin = new QPushButton(page2Admin);
         btnCerrarSesionAdmin->setObjectName("btnCerrarSesionAdmin");
-        btnCerrarSesionAdmin->setGeometry(QRect(390, 460, 80, 24));
-        stackedWidget->addWidget(page2Admin);
+        btnCerrarSesionAdmin->setGeometry(QRect(640, 20, 101, 31));
+        tablaCarteleraAdmin = new QTableWidget(page2Admin);
+        tablaCarteleraAdmin->setObjectName("tablaCarteleraAdmin");
+        tablaCarteleraAdmin->setGeometry(QRect(50, 340, 461, 81));
+        btnActualizarCartelera = new QPushButton(page2Admin);
+        btnActualizarCartelera->setObjectName("btnActualizarCartelera");
+        btnActualizarCartelera->setGeometry(QRect(530, 340, 80, 24));
+        label_11 = new QLabel(page2Admin);
+        label_11->setObjectName("label_11");
+        label_11->setGeometry(QRect(360, 60, 71, 16));
+        btnCargarSolicitud = new QPushButton(page2Admin);
+        btnCargarSolicitud->setObjectName("btnCargarSolicitud");
+        btnCargarSolicitud->setGeometry(QRect(50, 460, 151, 24));
+        lblSolId = new QLabel(page2Admin);
+        lblSolId->setObjectName("lblSolId");
+        lblSolId->setGeometry(QRect(250, 460, 49, 16));
+        lblSolCliente = new QLabel(page2Admin);
+        lblSolCliente->setObjectName("lblSolCliente");
+        lblSolCliente->setGeometry(QRect(230, 500, 49, 16));
+        lblSolTipo = new QLabel(page2Admin);
+        lblSolTipo->setObjectName("lblSolTipo");
+        lblSolTipo->setGeometry(QRect(240, 530, 49, 16));
+        lblSolDesc = new QLabel(page2Admin);
+        lblSolDesc->setObjectName("lblSolDesc");
+        lblSolDesc->setGeometry(QRect(230, 440, 71, 16));
+        btnAprobarSolicitud = new QPushButton(page2Admin);
+        btnAprobarSolicitud->setObjectName("btnAprobarSolicitud");
+        btnAprobarSolicitud->setGeometry(QRect(580, 460, 131, 24));
+        btnRechazarSolicitud = new QPushButton(page2Admin);
+        btnRechazarSolicitud->setObjectName("btnRechazarSolicitud");
+        btnRechazarSolicitud->setGeometry(QRect(600, 500, 80, 24));
+        B->addWidget(page2Admin);
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
@@ -193,7 +273,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        stackedWidget->setCurrentIndex(1);
+        B->setCurrentIndex(2);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -210,9 +290,17 @@ public:
         btnReservar->setText(QCoreApplication::translate("MainWindow", "RESERVAR", nullptr));
         btnCancelarReserva->setText(QCoreApplication::translate("MainWindow", "CANCELAR RESERVA", nullptr));
         btnCerrarSesionUsuario->setText(QCoreApplication::translate("MainWindow", "CERRAR SESION", nullptr));
+        cmbSolTipo->setItemText(0, QCoreApplication::translate("MainWindow", "Cumplea\303\261os", nullptr));
+        cmbSolTipo->setItemText(1, QCoreApplication::translate("MainWindow", "Aniversario", nullptr));
+        cmbSolTipo->setItemText(2, QCoreApplication::translate("MainWindow", "Requerimiento Especial", nullptr));
+
+        btnEnviarSolicitud->setText(QCoreApplication::translate("MainWindow", "ENVIAR SOLI", nullptr));
+        label_12->setText(QCoreApplication::translate("MainWindow", "HACER SOLICITUD", nullptr));
+        label_13->setText(QCoreApplication::translate("MainWindow", "COLUMNA", nullptr));
+        label_14->setText(QCoreApplication::translate("MainWindow", "FILA", nullptr));
         txtCodigo->setText(QString());
         btnCargaMasiva->setText(QCoreApplication::translate("MainWindow", "CARGA MASIVA", nullptr));
-        btnAgregarPelicula->setText(QCoreApplication::translate("MainWindow", "Agregar Pelicula", nullptr));
+        btnAgregarPelicula->setText(QCoreApplication::translate("MainWindow", "AGREGAR PELICULA", nullptr));
         label_3->setText(QCoreApplication::translate("MainWindow", "CLASIFICACION", nullptr));
         label_6->setText(QCoreApplication::translate("MainWindow", "FIN FECHA", nullptr));
         GENERO->setText(QCoreApplication::translate("MainWindow", "GENERO", nullptr));
@@ -223,6 +311,15 @@ public:
         label_2->setText(QCoreApplication::translate("MainWindow", "TITULO", nullptr));
         label_4->setText(QCoreApplication::translate("MainWindow", "ESTRENO", nullptr));
         btnCerrarSesionAdmin->setText(QCoreApplication::translate("MainWindow", "CERRAR SESION", nullptr));
+        btnActualizarCartelera->setText(QCoreApplication::translate("MainWindow", "ACTUALIZAR", nullptr));
+        label_11->setText(QCoreApplication::translate("MainWindow", "DURACI\303\223N", nullptr));
+        btnCargarSolicitud->setText(QCoreApplication::translate("MainWindow", "CARGAR UNA SOLICITUD", nullptr));
+        lblSolId->setText(QCoreApplication::translate("MainWindow", "ID", nullptr));
+        lblSolCliente->setText(QCoreApplication::translate("MainWindow", "CLIENTE", nullptr));
+        lblSolTipo->setText(QCoreApplication::translate("MainWindow", "TIPO", nullptr));
+        lblSolDesc->setText(QCoreApplication::translate("MainWindow", "DESCUENTO", nullptr));
+        btnAprobarSolicitud->setText(QCoreApplication::translate("MainWindow", "APROBAR SOLICITUD", nullptr));
+        btnRechazarSolicitud->setText(QCoreApplication::translate("MainWindow", "RECHAZAR", nullptr));
     } // retranslateUi
 
 };
