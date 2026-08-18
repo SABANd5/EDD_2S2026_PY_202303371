@@ -1,7 +1,0 @@
-digraph G {
-  rankdir=TB;
-  node [shape=record, style=filled, fillcolor=lightgreen, fontname="Arial"];
-  "P001" [label="{Código: P001 | Título: Avatar 3 | Duración: 180 min | Clasificación: B15}"];
-  "P001" -> "P002";
-  "P002" [label="{Código: P002 | Título: Intensamente 2 | Duración: 100 min | Clasificación: AA}"];
-}

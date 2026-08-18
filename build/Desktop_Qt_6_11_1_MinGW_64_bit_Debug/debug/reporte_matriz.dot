@@ -1,8 +1,0 @@
-digraph MatrizDispersa {
-  node [shape=box, fontname="Arial"];
-  nodesep=0.5;
-  ranksep=0.5;
-  Raiz [label="Función", style=filled, fillcolor=lightgray];
-  { rank=same; Raiz; }
-  Stats [shape=note, label="ESTADÍSTICAS\nTotal Asientos: 0\nLibres: 0\nOcupados: 0", style=filled, fillcolor=yellow];
-}

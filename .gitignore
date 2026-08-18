@@ -3,6 +3,7 @@
 # ==========================================
 
 # Directorios de compilación generados por Qt Creator
+build/
 build-*/
 *-build-*
 build_*/
