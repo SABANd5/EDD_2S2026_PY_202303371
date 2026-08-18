@@ -2,6 +2,8 @@
 #include "ui_mainwindow.h"
 #include <QMessageBox> // Para mostrar alertas emergentes
 #include <QFileDialog>
+#include <QPixmap>
+#include <QFile>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -386,5 +388,44 @@ void MainWindow::on_btnRefrescarSala_clicked()
         }
     }
     ui->tablaAsientos->resizeColumnsToContents();
+}
+
+
+
+// Función auxiliar para cargar la imagen (puedes crearla o poner el código en cada botón)
+void cargarImagenEnVisor(QLabel* label, QString rutaImagen) {
+    if (QFile::exists(rutaImagen)) {
+        QPixmap pixmap(rutaImagen);
+        label->setPixmap(pixmap);
+    } else {
+        label->setText("Error: La imagen no existe. Genera el reporte primero.");
+    }
+}
+
+// --- VISORES DE REPORTES GRAPHVIZ ---
+
+void MainWindow::on_btnVerRepCartelera_clicked()
+{
+    // Ejecuta la generación por si hubo cambios recientes
+    cartelera.generarReporteGraphviz();
+    cargarImagenEnVisor(ui->lblVisorReportes, "reporte_cartelera.png");
+}
+
+void MainWindow::on_btnVerRepSolicitudes_clicked()
+{
+    solicitudes.generarReporteGraphviz();
+    cargarImagenEnVisor(ui->lblVisorReportes, "reporte_solicitudes.png");
+}
+
+void MainWindow::on_btnVerRepSala_clicked()
+{
+    sala.generarReporteGraphviz();
+    cargarImagenEnVisor(ui->lblVisorReportes, "reporte_matriz.png");
+}
+
+void MainWindow::on_btnVerRepPromos_clicked()
+{
+    promociones.generarReporteGraphviz();
+    cargarImagenEnVisor(ui->lblVisorReportes, "reporte_promociones.png");
 }
 
