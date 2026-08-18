@@ -301,3 +301,26 @@ void MatrizDispersa::generarReporteGraphviz() {
         std::cout << "Reporte de la matriz generado: reporte_matriz.png" << std::endl;
     }
 }
+// --- MÉTODO PARA OBTENER EL ESTADO DE UN ASIENTO ESPECÍFICO ---
+std::string MatrizDispersa::obtenerEstadoAsiento(int fila, int columna) {
+    // 1. Buscamos la fila
+    NodoMatriz* nodoFila = buscarFila(fila);
+
+    // Si la fila no existe, devolvemos un código de error (No Disponible)
+    if (nodoFila == nullptr) {
+        return "ND";
+    }
+
+    // 2. Recorremos hacia la derecha buscando la columna
+    NodoMatriz* actual = nodoFila->derecha;
+    while (actual != nullptr && actual->columna <= columna) {
+        if (actual->columna == columna) {
+            // ¡Lo encontramos! Retornamos "LIBRE" o el nombre del cliente
+            return actual->cliente;
+        }
+        actual = actual->derecha;
+    }
+
+    // Si terminamos de recorrer la fila y no hallamos la columna
+    return "ND";
+}

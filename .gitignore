@@ -1,0 +1,67 @@
+# ==========================================
+# Qt Creator / Qt / C++ .gitignore
+# ==========================================
+
+# Directorios de compilación generados por Qt Creator
+build-*/
+*-build-*
+build_*/
+
+# Archivos de configuración de usuario específicos de Qt Creator
+*.user
+*.user.*
+*.pro.user
+*.pro.user.*
+*.pro.shared
+
+# Archivos compilados (Objetos)
+*.o
+*.obj
+*.pch
+
+# Archivos ejecutables y librerías
+*.exe
+*.dll
+*.so
+*.so.*
+*.dylib
+*.a
+*.lib
+*.sl
+*.out
+*.app/
+
+# Archivos generados automáticamente por Qt (Moc, Rcc, Uic)
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+qmlcache_*.cpp
+
+# Archivos de traducción compilados
+*.qm
+
+# Makefiles generados por qmake o CMake
+Makefile
+Makefile.*
+CMakeCache.txt
+CMakeFiles/
+CMakeLists.txt.user
+cmake_install.cmake
+
+# Archivos de volcado de memoria (Crash dumps)
+core
+core.*
+
+# ==========================================
+# Archivos del Sistema Operativo
+# ==========================================
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride

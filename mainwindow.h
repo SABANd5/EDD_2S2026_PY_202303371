@@ -49,6 +49,14 @@ private slots:
 
     void on_btnRechazarSolicitud_clicked();
 
+    void on_btnCrearPromo_clicked();
+
+    void on_btnAnadirBeneficio_clicked();
+
+    void on_btnCrearFuncion_clicked();
+
+    void on_btnRefrescarSala_clicked();
+
 private:
     Ui::MainWindow *ui;
 

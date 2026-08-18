@@ -274,3 +274,117 @@ void MainWindow::on_btnRechazarSolicitud_clicked()
     }
 }
 
+
+void MainWindow::on_btnCrearPromo_clicked()
+{
+    std::string codigo = ui->txtPromoCodigo->text().toStdString();
+    std::string nombre = ui->txtPromoNombre->text().toStdString();
+    std::string vigencia = ui->txtPromoVigencia->text().toStdString();
+    std::string dias = ui->txtPromoDias->text().toStdString();
+
+    if (codigo.empty() || nombre.empty()) {
+        QMessageBox::warning(this, "Datos incompletos", "El código y el nombre de la promoción son obligatorios.");
+        return;
+    }
+
+    // Insertamos en la lista circular principal
+    promociones.registrarPromocion(codigo, nombre, vigencia, dias);
+
+    QMessageBox::information(this, "Éxito", "Promoción principal registrada. Ahora puedes añadirle beneficios.");
+
+    // Limpiamos los campos
+    ui->txtPromoCodigo->clear();
+    ui->txtPromoNombre->clear();
+    ui->txtPromoVigencia->clear();
+    ui->txtPromoDias->clear();
+}
+
+// --- ADMIN: AÑADIR BENEFICIO A PROMOCIÓN EXISTENTE ---
+void MainWindow::on_btnAnadirBeneficio_clicked()
+{
+    std::string codigoPromo = ui->txtBenCodigoPromo->text().toStdString();
+    std::string tipo = ui->txtBenTipo->text().toStdString();
+    std::string descripcion = ui->txtBenDesc->text().toStdString();
+    std::string valor = ui->txtBenValor->text().toStdString();
+
+    if (codigoPromo.empty() || tipo.empty()) {
+        QMessageBox::warning(this, "Datos incompletos", "Debes indicar el código de la promoción y el tipo de beneficio.");
+        return;
+    }
+
+    // Insertamos en la sub-lista doblemente enlazada
+    promociones.anadirBeneficio(codigoPromo, tipo, descripcion, valor);
+
+    QMessageBox::information(this, "Beneficio Añadido", "El beneficio se ha enlazado a la promoción correctamente.");
+
+    // Limpiamos los campos (dejamos el código por si quiere seguir agregando a la misma)
+    ui->txtBenTipo->clear();
+    ui->txtBenDesc->clear();
+    ui->txtBenValor->clear();
+}
+
+// --- ADMIN: CREAR FUNCIÓN Y GENERAR MATRIZ ---
+void MainWindow::on_btnCrearFuncion_clicked()
+{
+    int filas = ui->spinFilasSala->value();
+    int columnas = ui->spinColumnasSala->value();
+
+    if (filas <= 0 || columnas <= 0) {
+        QMessageBox::warning(this, "Error", "Las dimensiones de la sala deben ser mayores a 0.");
+        return;
+    }
+
+    // Como el PDF indica que solo hay una función a la vez,
+    // inicializarSala() reconstruirá la cuadrícula con asientos LIBRES.
+    // (Nota: Si tu método inicializarSala no limpia la memoria anterior, asegúrate de hacerlo o re-instanciar el objeto 'sala').
+
+    sala = MatrizDispersa(); // Reiniciamos la matriz para cumplir la regla de sobrescritura
+    sala.inicializarSala(filas, columnas);
+
+    QMessageBox::information(this, "Función Creada",
+                             QString("Se ha generado el mapa de asientos con %1 filas y %2 columnas.").arg(filas).arg(columnas));
+}
+
+
+void MainWindow::on_btnRefrescarSala_clicked()
+{
+    // Leemos las dimensiones directamente de lo que el Admin configuró en sus SpinBoxes
+    int totalFilas = ui->spinFilasSala->value();
+    int totalColumnas = ui->spinColumnasSala->value();
+
+    if (totalFilas == 0 || totalColumnas == 0) {
+        QMessageBox::warning(this, "Aviso", "Aún no se ha creado una función con asientos válidos.");
+        return;
+    }
+
+    // Preparamos la tabla visual
+    ui->tablaAsientos->setRowCount(totalFilas);
+    ui->tablaAsientos->setColumnCount(totalColumnas);
+    ui->tablaAsientos->horizontalHeader()->setVisible(false);
+    ui->tablaAsientos->verticalHeader()->setVisible(false);
+
+    // Pintamos la tabla consultando a nuestro nuevo método
+    for (int f = 1; f <= totalFilas; f++) {
+        for (int c = 1; c <= totalColumnas; c++) {
+
+            std::string estado = sala.obtenerEstadoAsiento(f, c);
+            QTableWidgetItem *asientoItem = new QTableWidgetItem();
+
+            if (estado == "LIBRE") {
+                asientoItem->setBackground(QBrush(Qt::green));
+                asientoItem->setText("Libre");
+            } else if (estado == "ND") {
+                asientoItem->setBackground(QBrush(Qt::gray)); // Por si hay algún error de punteros
+                asientoItem->setText("Error");
+            } else {
+                asientoItem->setBackground(QBrush(Qt::red));
+                asientoItem->setText(QString::fromStdString(estado)); // Mostramos el nombre del cliente
+            }
+
+            asientoItem->setTextAlignment(Qt::AlignCenter);
+            ui->tablaAsientos->setItem(f - 1, c - 1, asientoItem);
+        }
+    }
+    ui->tablaAsientos->resizeColumnsToContents();
+}
+

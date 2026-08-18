@@ -29,6 +29,7 @@ public:
     bool cancelarReserva(int fila, int columna);
     void cancelarPorCliente(std::string nombreCliente); // Extra útil
     void generarReporteGraphviz();
+    std::string obtenerEstadoAsiento(int fila, int columna);
 
 private:
     NodoMatriz* raiz;
