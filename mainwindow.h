@@ -65,6 +65,14 @@ private slots:
 
     void on_btnVerRepSala_clicked();
 
+    void on_btnConsultarEstado_clicked();
+
+    void on_btnEliminarFuncion_clicked();
+
+    void on_btnBuscarPelicula_clicked();
+
+    void on_btnVerPromociones_clicked();
+
 private:
     Ui::MainWindow *ui;
 

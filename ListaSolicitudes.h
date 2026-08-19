@@ -12,7 +12,6 @@ struct Solicitud {
     std::string descripcion;
     std::string fecha;
     std::string estado; // Pendiente, En proceso, Atendida, Rechazada
-    std::string consultarEstado(std::string telefono);
 };
 
 // Nodo para la Lista Circular Doblemente Enlazada
@@ -34,6 +33,8 @@ public:
     void procesarPrimeraSolicitud(); // Muestra la primera en la cola
     // ... luego agregaremos los métodos de aprobar/rechazar
     Solicitud* obtenerPrimeraSolicitud();
+    std::string consultarEstado(std::string telefono);
+
 private:
     NodoSolicitud* cabeza;
     int contadorIds; // Para autogenerar el número de solicitud

@@ -133,6 +133,7 @@ void ListaSolicitudes::generarReporteGraphviz() {
         std::cout << "Reporte generado: reporte_solicitudes.png" << std::endl;
     }
 }
+
 Solicitud* ListaSolicitudes::obtenerPrimeraSolicitud() {
     if (cabeza == nullptr) return nullptr;
     return &(cabeza->dato); // Retornamos la dirección de los datos de la cabeza

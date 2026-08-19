@@ -4,6 +4,7 @@
 #include <QFileDialog>
 #include <QPixmap>
 #include <QFile>
+#include <QDate>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -180,23 +181,25 @@ void MainWindow::on_btnCerrarSesionUsuario_clicked()
 }
 
 
-// --- ACTUALIZAR TABLA DE CARTELERA (VISTA ADMIN) ---
+// --- ACTUALIZAR TABLA DE CARTELERA CON ALERTAS (VISTA ADMIN) ---
 void MainWindow::on_btnActualizarCartelera_clicked()
 {
-    // 1. Obtener la lista ordenada desde nuestro BST
     std::vector<Pelicula> peliculas = cartelera.obtenerCarteleraInorden();
 
-    // 2. Configurar las columnas de la tabla[cite: 1]
     ui->tablaCarteleraAdmin->setColumnCount(7);
     QStringList encabezados = {"Código", "Título", "Género", "Duración", "Clasificación", "Idioma", "Estreno"};
     ui->tablaCarteleraAdmin->setHorizontalHeaderLabels(encabezados);
+    ui->tablaAsientos->horizontalHeader()->setVisible(true); // Asegurarnos que se vean
 
-    // Configurar la cantidad de filas según las películas extraídas
     ui->tablaCarteleraAdmin->setRowCount(peliculas.size());
 
-    // 3. Llenar la tabla recorriendo el vector
+    // Variables para nuestra alerta
+    QDate fechaHoy = QDate::currentDate();
+    QString alertaMensaje = "";
+    bool hayAlertas = false;
+
+    // Llenar la tabla
     for (size_t i = 0; i < peliculas.size(); ++i) {
-        // En Qt, los items de las tablas deben ser objetos QTableWidgetItem
         ui->tablaCarteleraAdmin->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(peliculas[i].codigo)));
         ui->tablaCarteleraAdmin->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(peliculas[i].titulo)));
         ui->tablaCarteleraAdmin->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(peliculas[i].genero)));
@@ -204,10 +207,35 @@ void MainWindow::on_btnActualizarCartelera_clicked()
         ui->tablaCarteleraAdmin->setItem(i, 4, new QTableWidgetItem(QString::fromStdString(peliculas[i].clasificacion)));
         ui->tablaCarteleraAdmin->setItem(i, 5, new QTableWidgetItem(QString::fromStdString(peliculas[i].idioma)));
         ui->tablaCarteleraAdmin->setItem(i, 6, new QTableWidgetItem(QString::fromStdString(peliculas[i].fechaEstreno)));
+
+        // --- LÓGICA DE ALERTA DE 7 DÍAS ---
+        QString fechaFinStr = QString::fromStdString(peliculas[i].fechaFin);
+        QDate fechaFin = QDate::fromString(fechaFinStr, "yyyy-MM-dd"); // El formato que pide el PDF[cite: 1]
+
+        if (fechaFin.isValid()) {
+            qint64 diasRestantes = fechaHoy.daysTo(fechaFin);
+
+            // Si faltan entre 0 y 7 días para que salga de cartelera
+            if (diasRestantes >= 0 && diasRestantes <= 7) {
+                hayAlertas = true;
+                alertaMensaje += "- " + QString::fromStdString(peliculas[i].titulo) +
+                                 " (Sale en " + QString::number(diasRestantes) + " días)\n";
+
+                // Pintamos toda la fila de un color rojito/salmón de advertencia
+                for (int col = 0; col < 7; col++) {
+                    ui->tablaCarteleraAdmin->item(i, col)->setBackground(QBrush(QColor(255, 150, 150)));
+                }
+            }
+        }
     }
 
-    // Opcional: Ajustar el tamaño de las columnas al contenido
     ui->tablaCarteleraAdmin->resizeColumnsToContents();
+
+    // Lanzamos el pop-up si encontramos películas a punto de caducar
+    if (hayAlertas) {
+        QMessageBox::warning(this, "¡Alerta de Cartelera!",
+                             "Atención Admin, las siguientes películas están próximas a salir de cartelera:\n\n" + alertaMensaje);
+    }
 }
 
 // --- USUARIO: ENVIAR SOLICITUD ---
@@ -442,3 +470,48 @@ void MainWindow::on_btnConsultarEstado_clicked()
     std::string resultado = solicitudes.consultarEstado(telefono);
     QMessageBox::information(this, "Estado de Solicitud", QString::fromStdString(resultado));
 }
+
+// --- ADMIN: ELIMINAR FUNCIÓN ---
+void MainWindow::on_btnEliminarFuncion_clicked()
+{
+    sala = MatrizDispersa(); // Reiniciamos la matriz a su estado vacío
+
+    // Si tienes la tabla visible, la limpiamos
+    ui->tablaAsientos->clear();
+    ui->tablaAsientos->setRowCount(0);
+    ui->tablaAsientos->setColumnCount(0);
+
+    QMessageBox::information(this, "Función Eliminada", "La función actual y su mapa de asientos han sido borrados del sistema.");
+}
+
+// --- CLIENTE: BUSCAR PELÍCULA ---
+void MainWindow::on_btnBuscarPelicula_clicked()
+{
+    std::string codigo = ui->txtBuscarCodigoPelicula->text().toStdString();
+
+    if (codigo.empty()) return;
+
+    Pelicula* p = cartelera.buscarPelicula(codigo);
+
+    if (p != nullptr) {
+        QString info = QString("Título: %1\nGénero: %2\nDuración: %3 min\nClasificación: %4\nIdioma: %5")
+                           .arg(QString::fromStdString(p->titulo))
+                           .arg(QString::fromStdString(p->genero))
+                           .arg(p->duracion)
+                           .arg(QString::fromStdString(p->clasificacion))
+                           .arg(QString::fromStdString(p->idioma));
+
+        QMessageBox::information(this, "Película Encontrada", info);
+    } else {
+        QMessageBox::warning(this, "No Encontrada", "No existe ninguna película con ese código en cartelera.");
+    }
+}
+
+
+// --- CLIENTE: VER PROMOCIONES ---
+void MainWindow::on_btnVerPromociones_clicked()
+{
+    std::string textoPromos = promociones.obtenerTextoPromociones();
+    QMessageBox::information(this, "Promociones Activas", QString::fromStdString(textoPromos));
+}
+

@@ -137,3 +137,27 @@ void GestorPromociones::generarReporteGraphviz() {
         std::cout << "Reporte de Promociones generado: reporte_promociones.png" << std::endl;
     }
 }
+std::string GestorPromociones::obtenerTextoPromociones() {
+    if (cabezaPromociones == nullptr) return "No hay promociones activas por el momento.";
+
+    std::string res = "";
+    NodoPromocion* actual = cabezaPromociones;
+
+    do {
+        res += "🔥 " + actual->dato.nombre + " (" + actual->dato.dias + ")\n";
+        res += "Vigencia: " + actual->dato.vigencia + "\nBeneficios:\n";
+
+        NodoBeneficio* ben = actual->cabezaBeneficios;
+        if (ben == nullptr) res += "  - Sin beneficios asignados\n";
+
+        while (ben != nullptr) {
+            res += "  ✓ " + ben->dato.tipo + ": " + ben->dato.descripcion + " (" + ben->dato.valor + ")\n";
+            ben = ben->siguiente;
+        }
+        res += "--------------------------------------\n";
+
+        actual = actual->siguiente;
+    } while (actual != cabezaPromociones);
+
+    return res;
+}

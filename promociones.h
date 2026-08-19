@@ -45,6 +45,8 @@ public:
 
     // Reporte visual
     void generarReporteGraphviz();
+    // Añade esto a public:
+    std::string obtenerTextoPromociones();
 
 private:
     NodoPromocion* cabezaPromociones;

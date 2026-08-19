@@ -37,6 +37,8 @@ public:
     // Generación del reporte
     void generarReporteGraphviz();
     std::vector<Pelicula> obtenerCarteleraInorden();
+    // Añade esto a la sección public:
+    Pelicula* buscarPelicula(std::string codigo);
 
 private:
     NodoBST* raiz;

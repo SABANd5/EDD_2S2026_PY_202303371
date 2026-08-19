@@ -17,24 +17,24 @@
    <widget class="QStackedWidget" name="B">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>30</y>
-      <width>851</width>
-      <height>571</height>
+      <x>0</x>
+      <y>-20</y>
+      <width>921</width>
+      <height>661</height>
      </rect>
     </property>
     <property name="autoFillBackground">
      <bool>false</bool>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="page1Login">
      <widget class="QPushButton" name="btnIniciarSesion">
       <property name="geometry">
        <rect>
-        <x>370</x>
-        <y>450</y>
+        <x>400</x>
+        <y>350</y>
         <width>121</width>
         <height>41</height>
        </rect>
@@ -46,9 +46,9 @@
      <widget class="QLineEdit" name="txtCorreo">
       <property name="geometry">
        <rect>
-        <x>170</x>
-        <y>280</y>
-        <width>113</width>
+        <x>360</x>
+        <y>270</y>
+        <width>161</width>
         <height>24</height>
        </rect>
       </property>
@@ -56,9 +56,9 @@
      <widget class="QLineEdit" name="txtPassword">
       <property name="geometry">
        <rect>
-        <x>180</x>
-        <y>330</y>
-        <width>113</width>
+        <x>360</x>
+        <y>310</y>
+        <width>161</width>
         <height>24</height>
        </rect>
       </property>
@@ -69,40 +69,46 @@
      <widget class="QLabel" name="label_8">
       <property name="geometry">
        <rect>
-        <x>350</x>
-        <y>300</y>
+        <x>310</x>
+        <y>270</y>
         <width>49</width>
         <height>16</height>
        </rect>
       </property>
       <property name="text">
-       <string>correo</string>
+       <string>CORREO</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_9">
       <property name="geometry">
        <rect>
-        <x>330</x>
-        <y>340</y>
-        <width>49</width>
+        <x>280</x>
+        <y>310</y>
+        <width>81</width>
         <height>16</height>
        </rect>
       </property>
       <property name="text">
-       <string>password</string>
+       <string>CONTRASEÑA</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_10">
       <property name="geometry">
        <rect>
-        <x>140</x>
-        <y>40</y>
-        <width>49</width>
-        <height>16</height>
+        <x>270</x>
+        <y>140</y>
+        <width>321</width>
+        <height>71</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>Kristen ITC</family>
+        <pointsize>28</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>login</string>
+       <string>CINEMAUSAC</string>
       </property>
      </widget>
     </widget>
@@ -117,7 +123,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>VISTA CLIENTE</string>
+       <string>VISTA usuario</string>
       </property>
      </widget>
      <widget class="QPushButton" name="btnCerrarSesionUsuario">
@@ -143,7 +149,7 @@
        </rect>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
@@ -162,8 +168,8 @@
        <widget class="QPushButton" name="btnCancelarReserva">
         <property name="geometry">
          <rect>
-          <x>40</x>
-          <y>100</y>
+          <x>380</x>
+          <y>90</y>
           <width>121</width>
           <height>24</height>
          </rect>
@@ -221,8 +227,8 @@
        <widget class="QPushButton" name="btnReservar">
         <property name="geometry">
          <rect>
-          <x>50</x>
-          <y>130</y>
+          <x>380</x>
+          <y>60</y>
           <width>80</width>
           <height>24</height>
          </rect>
@@ -242,6 +248,52 @@
         </property>
         <property name="text">
          <string>Nombre de reserva</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnBuscarPelicula">
+        <property name="geometry">
+         <rect>
+          <x>220</x>
+          <y>180</y>
+          <width>121</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>BUSCAR PELICULA</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="txtBuscarCodigoPelicula">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>180</y>
+          <width>171</width>
+          <height>31</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_34">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>150</y>
+          <width>111</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>CODIGO PELICULA</string>
+        </property>
+       </widget>
+       <widget class="QTableWidget" name="tableWidget">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>260</y>
+          <width>691</width>
+          <height>161</height>
+         </rect>
         </property>
        </widget>
       </widget>
@@ -356,6 +408,42 @@
          <string>Numero de telefono</string>
         </property>
        </widget>
+       <widget class="QLineEdit" name="txtConsultaTelefono">
+        <property name="geometry">
+         <rect>
+          <x>30</x>
+          <y>300</y>
+          <width>131</width>
+          <height>21</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnConsultarEstado">
+        <property name="geometry">
+         <rect>
+          <x>180</x>
+          <y>300</y>
+          <width>131</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>CONSULTAR ESTADO</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnVerPromociones">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>370</y>
+          <width>111</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>PROMOCIONES</string>
+        </property>
+       </widget>
       </widget>
       <widget class="QWidget" name="tab_6">
        <attribute name="title">
@@ -419,12 +507,12 @@
        <rect>
         <x>0</x>
         <y>50</y>
-        <width>831</width>
+        <width>841</width>
         <height>461</height>
        </rect>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>0</number>
       </property>
       <property name="tabBarAutoHide">
        <bool>false</bool>
@@ -668,7 +756,7 @@
           <x>30</x>
           <y>220</y>
           <width>461</width>
-          <height>211</height>
+          <height>171</height>
          </rect>
         </property>
        </widget>
@@ -708,7 +796,7 @@
          <rect>
           <x>50</x>
           <y>60</y>
-          <width>251</width>
+          <width>291</width>
           <height>16</height>
          </rect>
         </property>
@@ -719,10 +807,10 @@
        <widget class="QLabel" name="lblSolId">
         <property name="geometry">
          <rect>
-          <x>60</x>
+          <x>50</x>
           <y>90</y>
-          <width>451</width>
-          <height>16</height>
+          <width>461</width>
+          <height>20</height>
          </rect>
         </property>
         <property name="text">
@@ -732,10 +820,10 @@
        <widget class="QLabel" name="lblSolCliente">
         <property name="geometry">
          <rect>
-          <x>40</x>
+          <x>50</x>
           <y>120</y>
           <width>431</width>
-          <height>16</height>
+          <height>20</height>
          </rect>
         </property>
         <property name="text">
@@ -745,10 +833,10 @@
        <widget class="QLabel" name="lblSolTipo">
         <property name="geometry">
          <rect>
-          <x>40</x>
+          <x>50</x>
           <y>160</y>
-          <width>411</width>
-          <height>16</height>
+          <width>401</width>
+          <height>20</height>
          </rect>
         </property>
         <property name="text">
@@ -1096,8 +1184,8 @@
        <widget class="QLabel" name="label_30">
         <property name="geometry">
          <rect>
-          <x>90</x>
-          <y>130</y>
+          <x>80</x>
+          <y>140</y>
           <width>71</width>
           <height>16</height>
          </rect>
@@ -1130,6 +1218,19 @@
         </property>
         <property name="text">
          <string>CREAR FUNCION</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnEliminarFuncion">
+        <property name="geometry">
+         <rect>
+          <x>480</x>
+          <y>160</y>
+          <width>141</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>ELIMINAR FUNCION</string>
         </property>
        </widget>
       </widget>

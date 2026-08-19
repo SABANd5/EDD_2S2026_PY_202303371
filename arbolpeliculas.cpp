@@ -204,3 +204,17 @@ void ArbolPeliculas::recorridoInorden(NodoBST* nodo, std::vector<Pelicula>& list
         recorridoInorden(nodo->derecho, lista);   // Visita hijo derecho
     }
 }
+// En arbolpeliculas.cpp:
+Pelicula* ArbolPeliculas::buscarPelicula(std::string codigo) {
+    NodoBST* actual = raiz;
+    while (actual != nullptr) {
+        if (codigo < actual->dato.codigo) {
+            actual = actual->izquierdo;
+        } else if (codigo > actual->dato.codigo) {
+            actual = actual->derecho;
+        } else {
+            return &(actual->dato); // ¡Encontrada!
+        }
+    }
+    return nullptr; // No existe
+}
