@@ -73,6 +73,8 @@ private slots:
 
     void on_btnVerPromociones_clicked();
 
+    void on_btnVerCarteleraUsuario_clicked();
+
 private:
     Ui::MainWindow *ui;
 

@@ -515,3 +515,31 @@ void MainWindow::on_btnVerPromociones_clicked()
     QMessageBox::information(this, "Promociones Activas", QString::fromStdString(textoPromos));
 }
 
+
+// --- CLIENTE: VER CARTELERA COMPLETA ---
+void MainWindow::on_btnVerCarteleraUsuario_clicked()
+{
+    // Obtenemos la lista ordenada directamente desde el backend
+    std::vector<Pelicula> peliculas = cartelera.obtenerCarteleraInorden();
+
+    // Configuramos la tabla
+    ui->tablaCarteleraUsuario->setColumnCount(7);
+    QStringList encabezados = {"Código", "Título", "Género", "Duración", "Clasificación", "Idioma", "Estreno"};
+    ui->tablaCarteleraUsuario->setHorizontalHeaderLabels(encabezados);
+    ui->tablaCarteleraUsuario->setRowCount(peliculas.size());
+
+    // Llenamos la tabla con los datos
+    for (size_t i = 0; i < peliculas.size(); ++i) {
+        ui->tablaCarteleraUsuario->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(peliculas[i].codigo)));
+        ui->tablaCarteleraUsuario->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(peliculas[i].titulo)));
+        ui->tablaCarteleraUsuario->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(peliculas[i].genero)));
+        ui->tablaCarteleraUsuario->setItem(i, 3, new QTableWidgetItem(QString::number(peliculas[i].duracion) + " min"));
+        ui->tablaCarteleraUsuario->setItem(i, 4, new QTableWidgetItem(QString::fromStdString(peliculas[i].clasificacion)));
+        ui->tablaCarteleraUsuario->setItem(i, 5, new QTableWidgetItem(QString::fromStdString(peliculas[i].idioma)));
+        ui->tablaCarteleraUsuario->setItem(i, 6, new QTableWidgetItem(QString::fromStdString(peliculas[i].fechaEstreno)));
+    }
+
+    // Ajustar el ancho de las columnas para que se vea limpio
+    ui->tablaCarteleraUsuario->resizeColumnsToContents();
+}
+
