@@ -30,7 +30,7 @@
      <string notr="true">background-color: rgb(5, 90, 200);</string>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="page1Login">
      <widget class="QPushButton" name="btnIniciarSesion">
@@ -143,7 +143,7 @@
 </string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
@@ -152,8 +152,8 @@
        <widget class="QLineEdit" name="txtNombreCliente">
         <property name="geometry">
          <rect>
-          <x>240</x>
-          <y>110</y>
+          <x>250</x>
+          <y>100</y>
           <width>113</width>
           <height>24</height>
          </rect>
@@ -162,8 +162,8 @@
        <widget class="QPushButton" name="btnCancelarReserva">
         <property name="geometry">
          <rect>
-          <x>380</x>
-          <y>130</y>
+          <x>540</x>
+          <y>140</y>
           <width>121</width>
           <height>24</height>
          </rect>
@@ -221,8 +221,8 @@
        <widget class="QPushButton" name="btnReservar">
         <property name="geometry">
          <rect>
-          <x>380</x>
-          <y>100</y>
+          <x>540</x>
+          <y>110</y>
           <width>80</width>
           <height>24</height>
          </rect>
@@ -234,8 +234,8 @@
        <widget class="QLabel" name="label_17">
         <property name="geometry">
          <rect>
-          <x>240</x>
-          <y>90</y>
+          <x>250</x>
+          <y>80</y>
           <width>101</width>
           <height>16</height>
          </rect>
@@ -299,8 +299,34 @@
           <height>24</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(170, 85, 0);</string>
+        </property>
         <property name="text">
          <string>CARTELERA</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="txtResPelicula">
+        <property name="geometry">
+         <rect>
+          <x>370</x>
+          <y>100</y>
+          <width>113</width>
+          <height>24</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_7">
+        <property name="geometry">
+         <rect>
+          <x>370</x>
+          <y>80</y>
+          <width>111</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Nombre Pelicula</string>
         </property>
        </widget>
       </widget>
@@ -311,18 +337,18 @@
        <widget class="QTableWidget" name="tablaAsientos">
         <property name="geometry">
          <rect>
-          <x>100</x>
-          <y>110</y>
-          <width>431</width>
-          <height>241</height>
+          <x>80</x>
+          <y>140</y>
+          <width>461</width>
+          <height>261</height>
          </rect>
         </property>
        </widget>
        <widget class="QPushButton" name="btnRefrescarSala">
         <property name="geometry">
          <rect>
-          <x>600</x>
-          <y>190</y>
+          <x>550</x>
+          <y>270</y>
           <width>111</width>
           <height>24</height>
          </rect>
@@ -334,8 +360,8 @@
        <widget class="QLabel" name="label_32">
         <property name="geometry">
          <rect>
-          <x>100</x>
-          <y>90</y>
+          <x>90</x>
+          <y>100</y>
           <width>121</width>
           <height>16</height>
          </rect>
@@ -519,10 +545,10 @@
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(0, 170, 255);</string>
+       <string notr="true">background-color: rgb(0, 0, 0);</string>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <property name="tabBarAutoHide">
        <bool>false</bool>
@@ -1130,8 +1156,8 @@
          <rect>
           <x>80</x>
           <y>80</y>
-          <width>42</width>
-          <height>25</height>
+          <width>101</width>
+          <height>61</height>
          </rect>
         </property>
        </widget>
@@ -1140,8 +1166,8 @@
          <rect>
           <x>200</x>
           <y>80</y>
-          <width>42</width>
-          <height>25</height>
+          <width>121</width>
+          <height>61</height>
          </rect>
         </property>
        </widget>
@@ -1171,21 +1197,21 @@
          <string>COLUMNA</string>
         </property>
        </widget>
-       <widget class="QLineEdit" name="txtSalaPelicula">
+       <widget class="QLineEdit" name="txtPelicula">
         <property name="geometry">
          <rect>
-          <x>80</x>
-          <y>160</y>
+          <x>90</x>
+          <y>270</y>
           <width>113</width>
           <height>24</height>
          </rect>
         </property>
        </widget>
-       <widget class="QLineEdit" name="txtNumSala">
+       <widget class="QLineEdit" name="txtSala">
         <property name="geometry">
          <rect>
-          <x>230</x>
-          <y>160</y>
+          <x>220</x>
+          <y>270</y>
           <width>113</width>
           <height>24</height>
          </rect>
@@ -1194,8 +1220,8 @@
        <widget class="QLabel" name="label_30">
         <property name="geometry">
          <rect>
-          <x>80</x>
-          <y>140</y>
+          <x>90</x>
+          <y>250</y>
           <width>71</width>
           <height>16</height>
          </rect>
@@ -1207,21 +1233,21 @@
        <widget class="QLabel" name="label_31">
         <property name="geometry">
          <rect>
-          <x>230</x>
-          <y>140</y>
+          <x>220</x>
+          <y>250</y>
           <width>49</width>
           <height>16</height>
          </rect>
         </property>
         <property name="text">
-         <string>SALA</string>
+         <string>No. Sala</string>
         </property>
        </widget>
        <widget class="QPushButton" name="btnCrearFuncion">
         <property name="geometry">
          <rect>
-          <x>360</x>
-          <y>160</y>
+          <x>490</x>
+          <y>240</y>
           <width>101</width>
           <height>24</height>
          </rect>
@@ -1233,14 +1259,37 @@
        <widget class="QPushButton" name="btnEliminarFuncion">
         <property name="geometry">
          <rect>
-          <x>480</x>
-          <y>160</y>
+          <x>490</x>
+          <y>270</y>
           <width>141</width>
           <height>24</height>
          </rect>
         </property>
         <property name="text">
          <string>ELIMINAR FUNCION</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="txtHorario">
+        <property name="geometry">
+         <rect>
+          <x>350</x>
+          <y>270</y>
+          <width>113</width>
+          <height>24</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_35">
+        <property name="geometry">
+         <rect>
+          <x>350</x>
+          <y>250</y>
+          <width>49</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Horario</string>
         </property>
        </widget>
       </widget>
@@ -1251,10 +1300,10 @@
        <widget class="QLabel" name="lblVisorReportes">
         <property name="geometry">
          <rect>
-          <x>40</x>
-          <y>50</y>
-          <width>731</width>
-          <height>261</height>
+          <x>30</x>
+          <y>40</y>
+          <width>781</width>
+          <height>341</height>
          </rect>
         </property>
         <property name="frameShape">
@@ -1270,8 +1319,8 @@
        <widget class="QLabel" name="label_33">
         <property name="geometry">
          <rect>
-          <x>50</x>
-          <y>20</y>
+          <x>30</x>
+          <y>10</y>
           <width>101</width>
           <height>16</height>
          </rect>
@@ -1283,8 +1332,8 @@
        <widget class="QPushButton" name="btnVerRepCartelera">
         <property name="geometry">
          <rect>
-          <x>29</x>
-          <y>350</y>
+          <x>30</x>
+          <y>400</y>
           <width>111</width>
           <height>24</height>
          </rect>
@@ -1296,8 +1345,8 @@
        <widget class="QPushButton" name="btnVerRepSolicitudes">
         <property name="geometry">
          <rect>
-          <x>150</x>
-          <y>350</y>
+          <x>151</x>
+          <y>400</y>
           <width>111</width>
           <height>24</height>
          </rect>
@@ -1309,8 +1358,8 @@
        <widget class="QPushButton" name="btnVerRepSala">
         <property name="geometry">
          <rect>
-          <x>270</x>
-          <y>350</y>
+          <x>271</x>
+          <y>400</y>
           <width>91</width>
           <height>24</height>
          </rect>
@@ -1322,8 +1371,8 @@
        <widget class="QPushButton" name="btnVerRepPromos">
         <property name="geometry">
          <rect>
-          <x>370</x>
-          <y>350</y>
+          <x>371</x>
+          <y>400</y>
           <width>101</width>
           <height>24</height>
          </rect>

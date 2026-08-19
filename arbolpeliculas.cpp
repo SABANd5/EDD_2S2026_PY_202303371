@@ -218,3 +218,25 @@ Pelicula* ArbolPeliculas::buscarPelicula(std::string codigo) {
     }
     return nullptr; // No existe
 }
+
+// Método público
+bool ArbolPeliculas::existePeliculaPorTitulo(std::string titulo) {
+    return buscarPorTituloRecursivo(raiz, titulo);
+}
+
+// Método recursivo
+bool ArbolPeliculas::buscarPorTituloRecursivo(NodoBST* nodo, std::string titulo) {
+    // Si llegamos a una hoja y no está, retornamos falso
+    if (nodo == nullptr) {
+        return false;
+    }
+
+    // Si la encontramos, retornamos verdadero inmediatamente
+    if (nodo->dato.titulo == titulo) {
+        return true;
+    }
+
+    // Buscamos en el lado izquierdo y luego en el derecho
+    return buscarPorTituloRecursivo(nodo->izquierdo, titulo) ||
+           buscarPorTituloRecursivo(nodo->derecho, titulo);
+}

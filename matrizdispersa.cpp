@@ -105,15 +105,18 @@ void MatrizDispersa::insertarAsientoLibre(int fila, int columna) {
     actualC->abajo = nuevoAsiento;
 }
 
-// Método público para armar la sala completa
-void MatrizDispersa::inicializarSala(int totalFilas, int totalColumnas) {
+void MatrizDispersa::inicializarSala(int totalFilas, int totalColumnas, std::string pelicula, std::string horario, std::string numSala) {
+    // Guardamos los metadatos de la función
+    peliculaActual = pelicula;
+    horarioActual = horario;
+    salaActual = numSala;
+
+    // Generamos la cuadrícula (este es tu bucle for que ya tenías)
     for (int f = 1; f <= totalFilas; f++) {
         for (int c = 1; c <= totalColumnas; c++) {
             insertarAsientoLibre(f, c);
         }
     }
-    std::cout << "Sala inicializada con " << totalFilas << " filas y "
-              << totalColumnas << " columnas. Todos los asientos estan LIBRES." << std::endl;
 }
 
 // Reservar un asiento si está libre
@@ -204,8 +207,8 @@ void MatrizDispersa::generarReporteGraphviz() {
     archivo << "  nodesep=0.5;\n";
     archivo << "  ranksep=0.5;\n";
 
-    // Nodo Raíz
-    archivo << "  Raiz [label=\"Función\", style=filled, fillcolor=lightgray];\n";
+    // Reemplaza la línea antigua del Nodo Raíz por esta:
+    archivo << "  Raiz [label=\"Función:\\n" << peliculaActual << " - " << horarioActual << "\\nSala: " << salaActual << "\", style=filled, fillcolor=lightgray];\n";
 
     // --- 1. Generar Nodos de Cabecera de Columnas ---
     NodoMatriz* actualC = raiz->derecha;

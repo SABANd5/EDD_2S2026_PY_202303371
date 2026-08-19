@@ -24,8 +24,7 @@ public:
     MatrizDispersa();
 
     // Genera la cuadrícula base de la sala
-    void inicializarSala(int totalFilas, int totalColumnas);
-    bool reservarAsiento(int fila, int columna, std::string nombreCliente);
+    void inicializarSala(int totalFilas, int totalColumnas, std::string pelicula, std::string horario, std::string numSala);    bool reservarAsiento(int fila, int columna, std::string nombreCliente);
     bool cancelarReserva(int fila, int columna);
     void cancelarPorCliente(std::string nombreCliente); // Extra útil
     void generarReporteGraphviz();
@@ -39,7 +38,9 @@ private:
     NodoMatriz* buscarColumna(int columna);
     NodoMatriz* crearFila(int fila);
     NodoMatriz* crearColumna(int columna);
-
+    std::string peliculaActual;
+    std::string horarioActual;
+    std::string salaActual;
     // Método interno para cruzar punteros
     void insertarAsientoLibre(int fila, int columna);
 };

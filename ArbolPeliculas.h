@@ -39,6 +39,7 @@ public:
     std::vector<Pelicula> obtenerCarteleraInorden();
     // Añade esto a la sección public:
     Pelicula* buscarPelicula(std::string codigo);
+    bool existePeliculaPorTitulo(std::string titulo);
 
 private:
     NodoBST* raiz;
@@ -49,6 +50,7 @@ private:
     NodoBST* encontrarMinimo(NodoBST* nodo);
     void generarCuerpoDot(NodoBST* nodo, std::string& dotContent);
     void recorridoInorden(NodoBST* nodo, std::vector<Pelicula>& lista);
+    bool buscarPorTituloRecursivo(NodoBST* nodo, std::string titulo);
 };
 
 #endif // ARBOLPELICULAS_H

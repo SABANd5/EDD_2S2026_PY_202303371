@@ -87,21 +87,37 @@ void MainWindow::on_btnCargaMasiva_clicked()
 }
 
 
-// --- 1. RESERVAR ASIENTO ---
 void MainWindow::on_btnReservar_clicked()
 {
-    // Leer los datos ingresados en la interfaz
+    // 1. Leer TODOS los datos ingresados en la interfaz
+    std::string pelicula = ui->txtResPelicula->text().toStdString(); // El nuevo campo
     int fila = ui->spinFila->value();
     int columna = ui->spinColumna->value();
     std::string cliente = ui->txtNombreCliente->text().toStdString();
 
-    // Validación básica de campos
-    if (cliente.empty()) {
-        QMessageBox::warning(this, "Datos incompletos", "Por favor, ingresa tu nombre para realizar la reserva.");
+    // 2. Validación de campos vacíos
+    if (cliente.empty() || pelicula.empty()) {
+        QMessageBox::warning(this, "Datos incompletos", "Por favor, ingresa tu nombre y la película para realizar la reserva.");
         return;
     }
 
-    // Intentamos reservar en la Matriz Dispersa
+    // 3. ¡LA NUEVA VALIDACIÓN! Verificamos si la película existe en la cartelera
+    if (!cartelera.existePeliculaPorTitulo(pelicula)) {
+        QMessageBox::critical(this, "Película Inválida", "La película '" + QString::fromStdString(pelicula) + "' no existe en nuestra cartelera. Revisa bien el título.");
+        return;
+    }
+
+    if (!cartelera.existePeliculaPorTitulo(pelicula)) {
+        QMessageBox::critical(this, "Error de Consistencia", "La película '" + QString::fromStdString(pelicula) + "' no se encuentra en el sistema. Regístrala en la cartelera antes de asignarle una función.");
+        return;
+    }
+    // (Opcional) Validación estricta de Fase 1: Validar que sea la función activa actualmente
+    // if (pelicula != sala.peliculaActual) {
+    //     QMessageBox::warning(this, "Función No Disponible", "La película existe, pero en este momento la sala está configurada para: " + QString::fromStdString(sala.peliculaActual));
+    //     return;
+    // }
+
+    // 4. Intentamos reservar en la Matriz Dispersa
     bool exito = sala.reservarAsiento(fila, columna, cliente);
 
     if (exito) {
@@ -109,10 +125,9 @@ void MainWindow::on_btnReservar_clicked()
                                  QString("¡Asiento F%1-C%2 reservado con éxito para %3!")
                                      .arg(fila).arg(columna).arg(QString::fromStdString(cliente)));
 
-        // Limpiamos el campo del nombre para la siguiente reserva
         ui->txtNombreCliente->clear();
+        ui->txtPelicula->clear(); // Limpiamos el campo también
     } else {
-        // La matriz nos devolvió 'false', significa que está ocupado o las coordenadas no existen
         QMessageBox::critical(this, "Asiento No Disponible",
                               "Lo sentimos, ese asiento ya está ocupado o no existe en esta sala. Por favor, selecciona otro.");
     }
@@ -359,20 +374,38 @@ void MainWindow::on_btnCrearFuncion_clicked()
     int filas = ui->spinFilasSala->value();
     int columnas = ui->spinColumnasSala->value();
 
-    if (filas <= 0 || columnas <= 0) {
-        QMessageBox::warning(this, "Error", "Las dimensiones de la sala deben ser mayores a 0.");
+    // Leemos los campos
+    std::string pelicula = ui->txtPelicula->text().toStdString(); // O ui->txtPelicula si así lo nombraste
+    std::string salaNum = ui->txtSala->text().toStdString();
+    std::string horario = ui->txtHorario->text().toStdString();
+
+    // 1. Validar que no haya campos vacíos o dimensiones cero
+    if (filas <= 0 || columnas <= 0 || pelicula.empty() || salaNum.empty() || horario.empty()) {
+        QMessageBox::warning(this, "Datos incompletos", "Por favor completa todos los datos (película, sala, horario y dimensiones).");
         return;
     }
 
-    // Como el PDF indica que solo hay una función a la vez,
-    // inicializarSala() reconstruirá la cuadrícula con asientos LIBRES.
-    // (Nota: Si tu método inicializarSala no limpia la memoria anterior, asegúrate de hacerlo o re-instanciar el objeto 'sala').
+    // 2. ¡LA NUEVA VALIDACIÓN DEL ADMIN! Verificamos si la película existe en la cartelera
+    if (!cartelera.existePeliculaPorTitulo(pelicula)) {
+        QMessageBox::critical(this, "Error de Consistencia", "La película '" + QString::fromStdString(pelicula) + "' no se encuentra en el sistema. Regístrala en la cartelera antes de asignarle una función.");
+        return;
+    }
 
-    sala = MatrizDispersa(); // Reiniciamos la matriz para cumplir la regla de sobrescritura
-    sala.inicializarSala(filas, columnas);
+    // 3. Todo correcto, reiniciamos la matriz y creamos la función
+    sala = MatrizDispersa();
+
+    sala.inicializarSala(filas, columnas, pelicula, horario, salaNum);
 
     QMessageBox::information(this, "Función Creada",
-                             QString("Se ha generado el mapa de asientos con %1 filas y %2 columnas.").arg(filas).arg(columnas));
+                             QString("Se generó la función para %1 a las %2 en la %3.")
+                                 .arg(QString::fromStdString(pelicula))
+                                 .arg(QString::fromStdString(horario))
+                                 .arg(QString::fromStdString(salaNum)));
+
+    // Limpiamos los campos
+    ui->txtPelicula->clear();
+    ui->txtSala->clear();
+    ui->txtHorario->clear();
 }
 
 
