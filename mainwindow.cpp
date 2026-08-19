@@ -429,3 +429,16 @@ void MainWindow::on_btnVerRepPromos_clicked()
     cargarImagenEnVisor(ui->lblVisorReportes, "reporte_promociones.png");
 }
 
+
+void MainWindow::on_btnConsultarEstado_clicked()
+{
+    std::string telefono = ui->txtConsultaTelefono->text().toStdString();
+
+    if (telefono.empty()) {
+        QMessageBox::warning(this, "Aviso", "Ingresa tu número de teléfono.");
+        return;
+    }
+
+    std::string resultado = solicitudes.consultarEstado(telefono);
+    QMessageBox::information(this, "Estado de Solicitud", QString::fromStdString(resultado));
+}

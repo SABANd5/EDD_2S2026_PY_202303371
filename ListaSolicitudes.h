@@ -12,6 +12,7 @@ struct Solicitud {
     std::string descripcion;
     std::string fecha;
     std::string estado; // Pendiente, En proceso, Atendida, Rechazada
+    std::string consultarEstado(std::string telefono);
 };
 
 // Nodo para la Lista Circular Doblemente Enlazada

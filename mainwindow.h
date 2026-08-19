@@ -57,6 +57,14 @@ private slots:
 
     void on_btnRefrescarSala_clicked();
 
+    void on_btnVerRepPromos_clicked();
+
+    void on_btnVerRepCartelera_clicked();
+
+    void on_btnVerRepSolicitudes_clicked();
+
+    void on_btnVerRepSala_clicked();
+
 private:
     Ui::MainWindow *ui;
 

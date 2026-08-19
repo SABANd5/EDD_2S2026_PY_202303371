@@ -137,3 +137,17 @@ Solicitud* ListaSolicitudes::obtenerPrimeraSolicitud() {
     if (cabeza == nullptr) return nullptr;
     return &(cabeza->dato); // Retornamos la dirección de los datos de la cabeza
 }
+
+std::string ListaSolicitudes::consultarEstado(std::string telefono) {
+    if (cabeza == nullptr) return "No hay solicitudes registradas.";
+
+    NodoSolicitud* actual = cabeza;
+    do {
+        if (actual->dato.telefono == telefono) {
+            return "Solicitud: " + actual->dato.tipo + " | Estado: " + actual->dato.estado;
+        }
+        actual = actual->siguiente;
+    } while (actual != cabeza);
+
+    return "No se encontró ninguna solicitud con ese teléfono.";
+}

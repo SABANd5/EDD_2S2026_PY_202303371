@@ -1169,6 +1169,58 @@
          <string>VISUALIZACIÓN</string>
         </property>
        </widget>
+       <widget class="QPushButton" name="btnVerRepCartelera">
+        <property name="geometry">
+         <rect>
+          <x>29</x>
+          <y>350</y>
+          <width>111</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Ver Árbol Cartelera</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnVerRepSolicitudes">
+        <property name="geometry">
+         <rect>
+          <x>150</x>
+          <y>350</y>
+          <width>111</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Ver Lista Solicitudes</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnVerRepSala">
+        <property name="geometry">
+         <rect>
+          <x>270</x>
+          <y>350</y>
+          <width>91</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Ver Matriz Sala</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnVerRepPromos">
+        <property name="geometry">
+         <rect>
+          <x>370</x>
+          <y>350</y>
+          <width>101</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Ver Promociones</string>
+        </property>
+       </widget>
       </widget>
      </widget>
     </widget>
