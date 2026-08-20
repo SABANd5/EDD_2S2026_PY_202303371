@@ -257,102 +257,8 @@ QTabBar::tab:hover {
 </string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
-      <widget class="QWidget" name="tab_6">
-       <attribute name="title">
-        <string>MAPA ASIENTOS</string>
-       </attribute>
-       <widget class="QTableWidget" name="tablaAsientos">
-        <property name="geometry">
-         <rect>
-          <x>50</x>
-          <y>90</y>
-          <width>581</width>
-          <height>301</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QTableWidget {
-    background-color: #1D2D44;
-    alternate-background-color: #25314A;
-    color: #F1FAEE;
-    gridline-color: #3A4A6B;
-    border: 1px solid #3A4A6B;
-    border-radius: 6px;
-    font-family: &quot;Montserrat&quot;;
-}
-QHeaderView::section {
-    background-color: #0D1321;
-    color: #F1FAEE;
-    padding: 6px;
-    border: none;
-    font-family: &quot;Montserrat SemiBold&quot;;
-    font-weight: 600;
-}
-QTableWidget::item {
-    padding: 4px;
-}
-QTableWidget::item:selected {
-    background-color: #E63946;
-    color: #F1FAEE;
-}</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="btnRefrescarSala">
-        <property name="geometry">
-         <rect>
-          <x>650</x>
-          <y>230</y>
-          <width>161</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QPushButton {
-    background-color: transparent;
-    color: #5C7CFA;
-    border: 1px solid #5C7CFA;
-    border-radius: 6px;
-    padding: 6px 14px;
-    font-family: &quot;Montserrat&quot;;
-    font-weight: 600;
-}
-QPushButton:hover {
-    background-color: #5C7CFA;
-    color: #F1FAEE;
-}
-QPushButton:pressed {
-    background-color: #3D5FE0;
-    border: 1px solid #3D5FE0;
-    color: #F1FAEE;
-}</string>
-        </property>
-        <property name="text">
-         <string>REFRESCAR SALA</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_32">
-        <property name="geometry">
-         <rect>
-          <x>50</x>
-          <y>40</y>
-          <width>151</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">font-family: &quot;Montserrat &quot;;
-font-size: 14px;
-color: #A8B2C1;
-background: transparent;
-font: 900 </string>
-        </property>
-        <property name="text">
-         <string>LIBRES Y OCUPADOS</string>
-        </property>
-       </widget>
-      </widget>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
         <string>RESERVACIONES</string>
@@ -1184,6 +1090,100 @@ background: transparent;</string>
         </property>
        </widget>
       </widget>
+      <widget class="QWidget" name="tab_6">
+       <attribute name="title">
+        <string>MAPA ASIENTOS</string>
+       </attribute>
+       <widget class="QTableWidget" name="tablaAsientos">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>90</y>
+          <width>581</width>
+          <height>301</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QTableWidget {
+    background-color: #1D2D44;
+    alternate-background-color: #25314A;
+    color: #F1FAEE;
+    gridline-color: #3A4A6B;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    font-family: &quot;Montserrat&quot;;
+}
+QHeaderView::section {
+    background-color: #0D1321;
+    color: #F1FAEE;
+    padding: 6px;
+    border: none;
+    font-family: &quot;Montserrat SemiBold&quot;;
+    font-weight: 600;
+}
+QTableWidget::item {
+    padding: 4px;
+}
+QTableWidget::item:selected {
+    background-color: #E63946;
+    color: #F1FAEE;
+}</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnRefrescarSala">
+        <property name="geometry">
+         <rect>
+          <x>650</x>
+          <y>230</y>
+          <width>161</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+    background-color: transparent;
+    color: #5C7CFA;
+    border: 1px solid #5C7CFA;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-family: &quot;Montserrat&quot;;
+    font-weight: 600;
+}
+QPushButton:hover {
+    background-color: #5C7CFA;
+    color: #F1FAEE;
+}
+QPushButton:pressed {
+    background-color: #3D5FE0;
+    border: 1px solid #3D5FE0;
+    color: #F1FAEE;
+}</string>
+        </property>
+        <property name="text">
+         <string>REFRESCAR SALA</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_32">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>40</y>
+          <width>151</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: &quot;Montserrat &quot;;
+font-size: 14px;
+color: #A8B2C1;
+background: transparent;
+font: 900 </string>
+        </property>
+        <property name="text">
+         <string>LIBRES Y OCUPADOS</string>
+        </property>
+       </widget>
+      </widget>
      </widget>
     </widget>
     <widget class="QWidget" name="page2Admin">
@@ -1253,7 +1253,7 @@ QTabBar::tab:hover {
 }</string>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>4</number>
       </property>
       <property name="tabBarAutoHide">
        <bool>false</bool>
