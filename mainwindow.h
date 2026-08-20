@@ -75,6 +75,8 @@ private slots:
 
     void on_btnVerCarteleraUsuario_clicked();
 
+    void actualizarCombosPeliculas();
+
 private:
     Ui::MainWindow *ui;
 
@@ -84,6 +86,7 @@ private:
     ListaSolicitudes solicitudes;
     MatrizDispersa sala;
     GestorPromociones promociones;
+
 };
 
 #endif // MAINWINDOW_H

@@ -257,7 +257,7 @@ QTabBar::tab:hover {
 </string>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
@@ -688,30 +688,6 @@ QPushButton:pressed {
          <string>CARTELERA</string>
         </property>
        </widget>
-       <widget class="QLineEdit" name="txtResPelicula">
-        <property name="geometry">
-         <rect>
-          <x>370</x>
-          <y>100</y>
-          <width>113</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QLineEdit {
-    background-color: #25314A;
-    border: 1px solid #3A4A6B;
-    border-radius: 6px;
-    padding: 6px 10px;
-    color: #F1FAEE;
-    font-family: &quot;Montserrat&quot;;
-    font-size: 13px;
-}
-QLineEdit:focus {
-    border: 1px solid #4A6FA5;
-}</string>
-        </property>
-       </widget>
        <widget class="QLabel" name="label_7">
         <property name="geometry">
          <rect>
@@ -749,6 +725,52 @@ font: 900 </string>
         </property>
         <property name="text">
          <string>ASIENTO</string>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="cmbPeliculaReserva">
+        <property name="geometry">
+         <rect>
+          <x>370</x>
+          <y>100</y>
+          <width>121</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QComboBox {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QComboBox:hover {
+    border: 1px solid #E63946;
+}
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 24px;
+    border-left: 1px solid #3A4A6B;
+}
+QComboBox::down-arrow {
+    width: 0px;
+    height: 0px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #F1FAEE;
+    margin-right: 6px;
+}
+QComboBox QAbstractItemView {
+    background-color: #1D2D44;
+    border: 1px solid #3A4A6B;
+    color: #F1FAEE;
+    selection-background-color: #E63946;
+    selection-color: #F1FAEE;
+    outline: none;
+}</string>
         </property>
        </widget>
       </widget>
@@ -1253,7 +1275,7 @@ QTabBar::tab:hover {
 }</string>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>3</number>
       </property>
       <property name="tabBarAutoHide">
        <bool>false</bool>
@@ -2695,30 +2717,6 @@ background: transparent;</string>
          <string>COLUMNAS</string>
         </property>
        </widget>
-       <widget class="QLineEdit" name="txtPelicula">
-        <property name="geometry">
-         <rect>
-          <x>90</x>
-          <y>220</y>
-          <width>113</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QLineEdit {
-    background-color: #25314A;
-    border: 1px solid #3A4A6B;
-    border-radius: 6px;
-    padding: 6px 10px;
-    color: #F1FAEE;
-    font-family: &quot;Montserrat&quot;;
-    font-size: 13px;
-}
-QLineEdit:focus {
-    border: 1px solid #4A6FA5;
-}</string>
-        </property>
-       </widget>
        <widget class="QLineEdit" name="txtSala">
         <property name="geometry">
          <rect>
@@ -2911,6 +2909,52 @@ font: 900 </string>
         </property>
         <property name="text">
          <string>ASIENTOS ❒ </string>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="cmbPeliculaAdmin">
+        <property name="geometry">
+         <rect>
+          <x>80</x>
+          <y>220</y>
+          <width>121</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QComboBox {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QComboBox:hover {
+    border: 1px solid #E63946;
+}
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 24px;
+    border-left: 1px solid #3A4A6B;
+}
+QComboBox::down-arrow {
+    width: 0px;
+    height: 0px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #F1FAEE;
+    margin-right: 6px;
+}
+QComboBox QAbstractItemView {
+    background-color: #1D2D44;
+    border: 1px solid #3A4A6B;
+    color: #F1FAEE;
+    selection-background-color: #E63946;
+    selection-color: #F1FAEE;
+    outline: none;
+}</string>
         </property>
        </widget>
       </widget>

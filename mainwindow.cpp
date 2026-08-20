@@ -82,7 +82,7 @@ void MainWindow::on_btnCargaMasiva_clicked()
 
     // Llamamos a la función que construimos en el backend
     cartelera.cargarDesdeCSV(rutaArchivo);
-
+    actualizarCombosPeliculas();
     QMessageBox::information(this, "Éxito", "La carga masiva se ha completado. Revisa la consola para más detalles.");
 }
 
@@ -90,8 +90,7 @@ void MainWindow::on_btnCargaMasiva_clicked()
 void MainWindow::on_btnReservar_clicked()
 {
     // 1. Leer TODOS los datos ingresados en la interfaz
-    std::string pelicula = ui->txtResPelicula->text().toStdString(); // El nuevo campo
-    int fila = ui->spinFila->value();
+    std::string pelicula = ui->cmbPeliculaReserva->currentText().toStdString();    int fila = ui->spinFila->value();
     int columna = ui->spinColumna->value();
     std::string cliente = ui->txtNombreCliente->text().toStdString();
 
@@ -126,7 +125,7 @@ void MainWindow::on_btnReservar_clicked()
                                      .arg(fila).arg(columna).arg(QString::fromStdString(cliente)));
 
         ui->txtNombreCliente->clear();
-        ui->txtPelicula->clear(); // Limpiamos el campo también
+
     } else {
         QMessageBox::critical(this, "Asiento No Disponible",
                               "Lo sentimos, ese asiento ya está ocupado o no existe en esta sala. Por favor, selecciona otro.");
@@ -375,7 +374,7 @@ void MainWindow::on_btnCrearFuncion_clicked()
     int columnas = ui->spinColumnasSala->value();
 
     // Leemos los campos
-    std::string pelicula = ui->txtPelicula->text().toStdString(); // O ui->txtPelicula si así lo nombraste
+    std::string pelicula = ui->cmbPeliculaReserva->currentText().toStdString(); // O ui->txtPelicula si así lo nombraste
     std::string salaNum = ui->txtSala->text().toStdString();
     std::string horario = ui->txtHorario->text().toStdString();
 
@@ -403,7 +402,7 @@ void MainWindow::on_btnCrearFuncion_clicked()
                                  .arg(QString::fromStdString(salaNum)));
 
     // Limpiamos los campos
-    ui->txtPelicula->clear();
+
     ui->txtSala->clear();
     ui->txtHorario->clear();
 }
@@ -574,5 +573,24 @@ void MainWindow::on_btnVerCarteleraUsuario_clicked()
 
     // Ajustar el ancho de las columnas para que se vea limpio
     ui->tablaCarteleraUsuario->resizeColumnsToContents();
+}
+
+void MainWindow::actualizarCombosPeliculas() {
+    // 1. Limpiamos los datos anteriores para no duplicar
+    ui->cmbPeliculaReserva->clear();
+
+    // Si también lo agregaste en el admin, descomenta esta línea:
+    ui->cmbPeliculaAdmin->clear();
+
+    // 2. Obtenemos las películas de nuestro Árbol Binario
+    std::vector<Pelicula> peliculas = cartelera.obtenerCarteleraInorden();
+
+    // 3. Llenamos el ComboBox iterando el vector
+    for (size_t i = 0; i < peliculas.size(); ++i) {
+        ui->cmbPeliculaReserva->addItem(QString::fromStdString(peliculas[i].titulo));
+
+        // Descomenta si usaste el del admin:
+         ui->cmbPeliculaAdmin->addItem(QString::fromStdString(peliculas[i].titulo));
+    }
 }
 
