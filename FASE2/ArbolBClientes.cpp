@@ -1,5 +1,6 @@
 #include "ArbolBClientes.h"
 #include <fstream>
+#include <iostream>
 
 ArbolBClientes::ArbolBClientes() {
     raiz = new NodoB(true);

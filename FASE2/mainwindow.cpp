@@ -5,6 +5,10 @@
 #include <QPixmap>
 #include <QFile>
 #include <QDate>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -145,7 +149,7 @@ void MainWindow::on_btnCancelarReserva_clicked()
     }
 
     // Llamamos al backend para que libere los asientos
-    sala.cancelarPorCliente(cliente);
+    //sala.cancelarPorCliente(cliente);
 
     QMessageBox::information(this, "Cancelación",
                              "Se han procesado las cancelaciones. Si tenías asientos a tu nombre, ahora están libres.");
@@ -594,3 +598,124 @@ void MainWindow::actualizarCombosPeliculas() {
     }
 }
 
+// =======================================================
+// MÉTODOS DE CARGA MASIVA (Con prefijo MainWindow::)
+// =======================================================
+void MainWindow::cargarMasivaPeliculas(const QString& rutaArchivo) {
+    QFile archivo(rutaArchivo);
+    if (!archivo.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QMessageBox::warning(this, "Error", "No se pudo abrir el archivo JSON.");
+        return;
+    }
+
+    QByteArray datos = archivo.readAll();
+    archivo.close();
+
+    QJsonParseError errorParseo;
+    QJsonDocument doc = QJsonDocument::fromJson(datos, &errorParseo);
+
+    if (errorParseo.error != QJsonParseError::NoError) {
+        QMessageBox::critical(this, "Error de Formato", "El archivo JSON tiene errores de sintaxis.");
+        return;
+    }
+
+    QJsonArray arrayPeliculas = doc.object().value("peliculas").toArray();
+    int peliculasCargadas = 0, funcionesCargadas = 0;
+
+    for (const QJsonValue& valPelicula : arrayPeliculas) {
+        QJsonObject objPel = valPelicula.toObject();
+
+        // Validaciones básicas exigidas
+        if (objPel["codigo"].toString().isEmpty() || objPel["titulo"].toString().isEmpty() || objPel["duracion"].toInt() <= 0) {
+            continue;
+        }
+
+        QString fechaEstreno = objPel["fecha estreno"].toString();
+        if (!QDate::fromString(fechaEstreno, "yyyy-MM-dd").isValid()) {
+            continue;
+        }
+
+        Pelicula nuevaPel;
+        nuevaPel.codigo = objPel["codigo"].toString().toStdString();
+        nuevaPel.titulo = objPel["titulo"].toString().toStdString();
+        nuevaPel.genero = objPel["genero"].toString().toStdString();
+        nuevaPel.duracion = objPel["duracion"].toInt();
+        nuevaPel.clasificacion = objPel["clasificacion"].toString().toStdString();
+        nuevaPel.idioma = objPel["idioma"].toString().toStdString();
+        nuevaPel.fechaEstreno = fechaEstreno.toStdString();
+        nuevaPel.fechaFin = objPel["fecha fin"].toString().toStdString();
+
+        cartelera.insertar(nuevaPel);
+        peliculasCargadas++;
+
+        QJsonArray arrayFunciones = objPel["funciones"].toArray();
+        for (const QJsonValue& valFuncion : arrayFunciones) {
+            QJsonObject objFun = valFuncion.toObject();
+
+            if (objFun["codigo_funcion"].toString().isEmpty() || objFun["filas"].toInt() <= 0) {
+                continue;
+            }
+
+            Funcion nuevaFun;
+            nuevaFun.codigo_funcion = objFun["codigo_funcion"].toString().toStdString();
+            nuevaFun.codigo_pelicula = nuevaPel.codigo;
+            nuevaFun.horario = objFun["horario"].toString().toStdString();
+            nuevaFun.sala = objFun["sala"].toString().toStdString();
+            nuevaFun.filas = objFun["filas"].toInt();
+            nuevaFun.columnas = objFun["columnas"].toInt();
+            nuevaFun.archivo_asientos = "";
+            nuevaFun.ya_realizada = false;
+
+            avlFunciones.insertar(nuevaFun); // Usa la variable global de MainWindow
+            funcionesCargadas++;
+        }
+    }
+    QMessageBox::information(this, "Éxito", QString("Carga masiva finalizada.\nPelículas: %1\nFunciones: %2").arg(peliculasCargadas).arg(funcionesCargadas));
+}
+
+void MainWindow::cargarMasivaClientes(const QString& rutaArchivo) {
+    QFile archivo(rutaArchivo);
+    if (!archivo.open(QIODevice::ReadOnly)) return;
+
+    QJsonDocument doc = QJsonDocument::fromJson(archivo.readAll());
+    archivo.close();
+
+    QJsonArray arrayClientes = doc.object().value("clientes").toArray();
+
+    for (const QJsonValue& valCliente : arrayClientes) {
+        QJsonObject objCli = valCliente.toObject();
+
+        if (objCli["id"].toString().isEmpty() || objCli["correo"].toString().isEmpty()) {
+            continue;
+        }
+
+        Cliente nuevoCli;
+        nuevoCli.id = objCli["id"].toString().toStdString();
+        nuevoCli.nombre = objCli["nombre"].toString().toStdString();
+        nuevoCli.correo = objCli["correo"].toString().toStdString();
+        nuevoCli.telefono = objCli["telefono"].toString().toStdString();
+        nuevoCli.password = objCli["password"].toString().toStdString();
+        nuevoCli.tipo = objCli["tipo"].toString().toStdString();
+
+        QJsonArray arrayReservas = objCli["reservas"].toArray();
+        for (const QJsonValue& valReserva : arrayReservas) {
+            QJsonObject objRes = valReserva.toObject();
+
+            if (objRes["codigo reserva"].toString().isEmpty()) continue;
+
+            Reserva nuevaRes;
+            nuevaRes.codigo_reserva = objRes["codigo reserva"].toString().toStdString();
+            nuevaRes.id_cliente = nuevoCli.id;
+            nuevaRes.codigo_funcion = objRes["codigo funcion"].toString().toStdString();
+            nuevaRes.fila = objRes["fila"].toInt();
+            nuevaRes.columna = objRes["columna"].toInt();
+            nuevaRes.fecha_reserva = objRes["fecha reserva"].toString().toStdString();
+
+            tablaReservas.insertar(nuevaRes);
+            nuevoCli.codigos_reservas.push_back(nuevaRes.codigo_reserva);
+        }
+
+        arbolClientes.insertar(nuevoCli);
+    }
+    QMessageBox::information(this, "Éxito", "Carga de clientes y reservas finalizada.");
+}
