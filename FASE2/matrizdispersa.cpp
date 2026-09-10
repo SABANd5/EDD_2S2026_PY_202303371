@@ -1,6 +1,8 @@
 #include "matrizdispersa.h"
 #include <iostream>
 #include <fstream>
+#include <sstream>
+
 MatrizDispersa::MatrizDispersa() {
     // La raíz es el ancla (0,0) de nuestra matriz
     raiz = new NodoMatriz(-1, -1, "RAIZ");
@@ -105,92 +107,6 @@ void MatrizDispersa::insertarAsientoLibre(int fila, int columna) {
     actualC->abajo = nuevoAsiento;
 }
 
-void MatrizDispersa::inicializarSala(int totalFilas, int totalColumnas, std::string pelicula, std::string horario, std::string numSala) {
-    // Guardamos los metadatos de la función
-    peliculaActual = pelicula;
-    horarioActual = horario;
-    salaActual = numSala;
-
-    // Generamos la cuadrícula (este es tu bucle for que ya tenías)
-    for (int f = 1; f <= totalFilas; f++) {
-        for (int c = 1; c <= totalColumnas; c++) {
-            insertarAsientoLibre(f, c);
-        }
-    }
-}
-
-// Reservar un asiento si está libre
-bool MatrizDispersa::reservarAsiento(int fila, int columna, std::string nombreCliente) {
-    NodoMatriz* nodoFila = buscarFila(fila);
-    if (nodoFila == nullptr) {
-        std::cout << "Error: La fila " << fila << " no existe en esta sala." << std::endl;
-        return false;
-    }
-
-    NodoMatriz* actual = nodoFila->derecha;
-    while (actual != nullptr && actual->columna <= columna) {
-        if (actual->columna == columna) {
-            if (actual->cliente == "LIBRE") {
-                actual->cliente = nombreCliente;
-                std::cout << "Asiento F" << fila << "-C" << columna << " reservado a nombre de: " << nombreCliente << std::endl;
-                return true;
-            } else {
-                // El documento pide notificar si ya está ocupado
-                std::cout << "Lo sentimos, el asiento F" << fila << "-C" << columna << " ya esta ocupado por " << actual->cliente << std::endl;
-                return false;
-            }
-        }
-        actual = actual->derecha;
-    }
-
-    std::cout << "Error: La columna " << columna << " no existe." << std::endl;
-    return false;
-}
-
-// Cancelar una reserva usando fila y columna
-bool MatrizDispersa::cancelarReserva(int fila, int columna) {
-    NodoMatriz* nodoFila = buscarFila(fila);
-    if (nodoFila == nullptr) return false;
-
-    NodoMatriz* actual = nodoFila->derecha;
-    while (actual != nullptr && actual->columna <= columna) {
-        if (actual->columna == columna) {
-            if (actual->cliente != "LIBRE") {
-                std::cout << "Reserva de " << actual->cliente << " en asiento F" << fila << "-C" << columna << " cancelada." << std::endl;
-                actual->cliente = "LIBRE";
-                return true;
-            } else {
-                std::cout << "El asiento ya se encuentra LIBRE." << std::endl;
-                return false;
-            }
-        }
-        actual = actual->derecha;
-    }
-    return false;
-}
-
-// Opcional pero recomendado: Cancelar todas las reservas de un cliente
-void MatrizDispersa::cancelarPorCliente(std::string nombreCliente) {
-    bool encontrada = false;
-    NodoMatriz* actualFila = raiz->abajo;
-
-    while (actualFila != nullptr) {
-        NodoMatriz* actualCol = actualFila->derecha;
-        while (actualCol != nullptr) {
-            if (actualCol->cliente == nombreCliente) {
-                actualCol->cliente = "LIBRE";
-                std::cout << "Reserva cancelada para " << nombreCliente << " en F" << actualCol->fila << "-C" << actualCol->columna << std::endl;
-                encontrada = true;
-            }
-            actualCol = actualCol->derecha;
-        }
-        actualFila = actualFila->abajo;
-    }
-
-    if (!encontrada) {
-        std::cout << "No se encontraron reservas a nombre de: " << nombreCliente << std::endl;
-    }
-}
 
 void MatrizDispersa::generarReporteGraphviz() {
     std::ofstream archivo("reporte_matriz.dot");
@@ -304,26 +220,171 @@ void MatrizDispersa::generarReporteGraphviz() {
         std::cout << "Reporte de la matriz generado: reporte_matriz.png" << std::endl;
     }
 }
-// --- MÉTODO PARA OBTENER EL ESTADO DE UN ASIENTO ESPECÍFICO ---
-std::string MatrizDispersa::obtenerEstadoAsiento(int fila, int columna) {
-    // 1. Buscamos la fila
-    NodoMatriz* nodoFila = buscarFila(fila);
 
-    // Si la fila no existe, devolvemos un código de error (No Disponible)
-    if (nodoFila == nullptr) {
-        return "ND";
+// ==========================================
+// ADAPTACIONES FASE 2: GESTIÓN DE MEMORIA Y RESERVAS
+// ==========================================
+void MatrizDispersa::vaciarMatriz() {
+    // 1. Recorrer y eliminar todos los nodos internos y las cabeceras de fila
+    NodoMatriz* filaActual = raiz->abajo;
+
+    while (filaActual != nullptr) {
+        NodoMatriz* actualValor = filaActual->derecha;
+
+        // Borrar los asientos de la fila
+        while (actualValor != nullptr) {
+            NodoMatriz* aBorrar = actualValor;
+            actualValor = actualValor->derecha;
+            delete aBorrar;
+        }
+
+        // Borrar la cabecera de la fila
+        NodoMatriz* filaBorrar = filaActual;
+        filaActual = filaActual->abajo;
+        delete filaBorrar;
     }
 
-    // 2. Recorremos hacia la derecha buscando la columna
+    // 2. Eliminar cabeceras de columnas
+    NodoMatriz* colActual = raiz->derecha;
+    while (colActual != nullptr) {
+        NodoMatriz* colBorrar = colActual;
+        colActual = colActual->derecha;
+        delete colBorrar;
+    }
+
+    // 3. Reiniciar los punteros del nodo raíz para dejar la matriz limpia
+    raiz->abajo = nullptr;
+    raiz->derecha = nullptr;
+}
+
+void MatrizDispersa::inicializarSala(int totalFilas, int totalColumnas, std::string pelicula, std::string horario, std::string numSala) {
+    vaciarMatriz(); // Limpieza obligatoria antes de cargar una nueva función
+
+    peliculaActual = pelicula;
+    horarioActual = horario;
+    salaActual = numSala;
+
+    for (int f = 1; f <= totalFilas; f++) {
+        for (int c = 1; c <= totalColumnas; c++) {
+            insertarAsientoLibre(f, c);
+        }
+    }
+}
+
+// Ahora recibe codigo_reserva en lugar del nombre del cliente
+bool MatrizDispersa::reservarAsiento(int fila, int columna, std::string codigo_reserva) {
+    NodoMatriz* nodoFila = buscarFila(fila);
+    if (nodoFila == nullptr) return false;
+
     NodoMatriz* actual = nodoFila->derecha;
     while (actual != nullptr && actual->columna <= columna) {
         if (actual->columna == columna) {
-            // ¡Lo encontramos! Retornamos "LIBRE" o el nombre del cliente
-            return actual->cliente;
+            if (actual->cliente == "LIBRE") {
+                actual->cliente = codigo_reserva; // Se almacena exclusivamente el código
+                return true;
+            }
+            return false;
         }
         actual = actual->derecha;
     }
+    return false;
+}
 
-    // Si terminamos de recorrer la fila y no hallamos la columna
+bool MatrizDispersa::cancelarReserva(int fila, int columna) {
+    NodoMatriz* nodoFila = buscarFila(fila);
+    if (nodoFila == nullptr) return false;
+
+    NodoMatriz* actual = nodoFila->derecha;
+    while (actual != nullptr && actual->columna <= columna) {
+        if (actual->columna == columna) {
+            if (actual->cliente != "LIBRE") {
+                actual->cliente = "LIBRE";
+                return true;
+            }
+            return false;
+        }
+        actual = actual->derecha;
+    }
+    return false;
+}
+
+std::string MatrizDispersa::obtenerEstadoAsiento(int fila, int columna) {
+    NodoMatriz* nodoFila = buscarFila(fila);
+    if (nodoFila == nullptr) return "ND";
+
+    NodoMatriz* actual = nodoFila->derecha;
+    while (actual != nullptr && actual->columna <= columna) {
+        if (actual->columna == columna) return actual->cliente; // Retorna "LIBRE" o el codigo_reserva
+        actual = actual->derecha;
+    }
     return "ND";
+}
+
+// ==========================================
+// ADAPTACIONES FASE 2: PERSISTENCIA JSON
+// ==========================================
+void MatrizDispersa::guardarEnArchivo(std::string nombreArchivo, std::string codigoFuncion) {
+    std::ofstream archivo(nombreArchivo);
+    if (!archivo.is_open()) return;
+
+    archivo << "{\n";
+    archivo << "  \"codigo_funcion\": \"" << codigoFuncion << "\",\n";
+    archivo << "  \"asientos_ocupados\": [\n";
+
+    bool primerElemento = true;
+    NodoMatriz* actualF = raiz->abajo;
+
+    // Solo se guardan en el JSON las celdas que contienen reservas[cite: 1]
+    while (actualF != nullptr) {
+        NodoMatriz* actualC = actualF->derecha;
+        while (actualC != nullptr) {
+            if (actualC->cliente != "LIBRE") {
+                if (!primerElemento) archivo << ",\n";
+                archivo << "    {\n";
+                archivo << "      \"fila\": " << actualC->fila << ",\n";
+                archivo << "      \"columna\": " << actualC->columna << ",\n";
+                archivo << "      \"codigo_reserva\": \"" << actualC->cliente << "\"\n";
+                archivo << "    }";
+                primerElemento = false;
+            }
+            actualC = actualC->derecha;
+        }
+        actualF = actualF->abajo;
+    }
+
+    archivo << "\n  ]\n}\n";
+    archivo.close();
+}
+
+void MatrizDispersa::cargarDesdeArchivo(std::string nombreArchivo, int totalFilas, int totalColumnas, std::string pelicula, std::string horario, std::string numSala) {
+    // 1. Pre-llenar la matriz con asientos libres para mantener la estructura visual requerida[cite: 1]
+    inicializarSala(totalFilas, totalColumnas, pelicula, horario, numSala);
+
+    // 2. Leer el JSON y actualizar únicamente los asientos ocupados[cite: 1]
+    std::ifstream archivo(nombreArchivo);
+    if (!archivo.is_open()) return;
+
+    std::string linea;
+    int f = -1, c = -1;
+    std::string codReserva = "";
+
+    while (std::getline(archivo, linea)) {
+        if (linea.find("\"fila\"") != std::string::npos) {
+            f = std::stoi(linea.substr(linea.find(":") + 1));
+        }
+        else if (linea.find("\"columna\"") != std::string::npos) {
+            c = std::stoi(linea.substr(linea.find(":") + 1));
+        }
+        else if (linea.find("\"codigo_reserva\"") != std::string::npos) {
+            int inicio = linea.find("\"", linea.find(":") + 1) + 1;
+            int fin = linea.find("\"", inicio);
+            codReserva = linea.substr(inicio, fin - inicio);
+
+            if (f != -1 && c != -1 && !codReserva.empty()) {
+                reservarAsiento(f, c, codReserva);
+                f = -1; c = -1; codReserva = "";
+            }
+        }
+    }
+    archivo.close();
 }

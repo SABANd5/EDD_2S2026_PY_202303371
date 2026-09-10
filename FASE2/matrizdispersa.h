@@ -6,7 +6,7 @@
 struct NodoMatriz {
     int fila;
     int columna;
-    std::string cliente; // "LIBRE" o el nombre del cliente
+    std::string cliente; // Almacenará "LIBRE" o el codigo_reserva
 
     NodoMatriz* arriba;
     NodoMatriz* abajo;
@@ -24,11 +24,21 @@ public:
     MatrizDispersa();
 
     // Genera la cuadrícula base de la sala
-    void inicializarSala(int totalFilas, int totalColumnas, std::string pelicula, std::string horario, std::string numSala);    bool reservarAsiento(int fila, int columna, std::string nombreCliente);
+    void inicializarSala(int totalFilas, int totalColumnas, std::string pelicula, std::string horario, std::string numSala);
+
+    // Se cambia nombreCliente por codigo_reserva
+    bool reservarAsiento(int fila, int columna, std::string codigo_reserva);
     bool cancelarReserva(int fila, int columna);
-    void cancelarPorCliente(std::string nombreCliente); // Extra útil
+
+    // Se eliminó cancelarPorCliente()
+
     void generarReporteGraphviz();
     std::string obtenerEstadoAsiento(int fila, int columna);
+
+    // Nuevos métodos de la Fase 2
+    void vaciarMatriz();
+    void cargarDesdeArchivo(std::string nombreArchivo, int totalFilas, int totalColumnas, std::string pelicula, std::string horario, std::string numSala);
+    void guardarEnArchivo(std::string nombreArchivo, std::string codigoFuncion);
 
 private:
     NodoMatriz* raiz;
@@ -38,9 +48,11 @@ private:
     NodoMatriz* buscarColumna(int columna);
     NodoMatriz* crearFila(int fila);
     NodoMatriz* crearColumna(int columna);
+
     std::string peliculaActual;
     std::string horarioActual;
     std::string salaActual;
+
     // Método interno para cruzar punteros
     void insertarAsientoLibre(int fila, int columna);
 };
