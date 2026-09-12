@@ -57,6 +57,14 @@ private slots:
     void actualizarCombosPeliculas();
 
     // Sugerencia: Puedes agregar un slot nuevo para el botón de carga de clientes
+
+
+    void on_btnReporteAVL_clicked();
+
+    void on_btnReporteArbolB_clicked();
+
+    void on_btnReporteHash_clicked();
+
     void on_btnCargaMasivaClientes_clicked();
 
 private:
@@ -76,6 +84,8 @@ private:
     // 5. Declaración de los métodos de parseo JSON
     void cargarMasivaPeliculas(const QString& rutaArchivo);
     void cargarMasivaClientes(const QString& rutaArchivo);
+    void actualizarTablaPeliculas();
+    void actualizarTablaClientes();
 };
 
 #endif // MAINWINDOW_H

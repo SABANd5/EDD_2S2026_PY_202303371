@@ -161,3 +161,23 @@ void ArbolFunciones::generarReporteGraphviz() {
         system("dot -Tpng reporte_avl.dot -o reporte_avl.png");
     }
 }
+
+// ==========================================
+// BÚSQUEDA DE FUNCIÓN
+// ==========================================
+Funcion* ArbolFunciones::buscarFuncion(std::string codigo_funcion) {
+    NodoAVL* actual = raiz;
+
+    // Búsqueda binaria estándar aprovechando la estructura del AVL
+    while (actual != nullptr) {
+        if (codigo_funcion == actual->dato.codigo_funcion) {
+            return &(actual->dato); // Retorna el puntero directo a los datos
+        } else if (codigo_funcion < actual->dato.codigo_funcion) {
+            actual = actual->izquierdo;
+        } else {
+            actual = actual->derecho;
+        }
+    }
+
+    return nullptr; // Retorna nulo si la función no existe
+}

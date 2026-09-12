@@ -68,29 +68,6 @@ void MainWindow::on_btnReportes_clicked()
     QMessageBox::information(this, "Reportes Generados", "Los archivos .png de Graphviz se han generado en la carpeta del proyecto (build).");
 }
 
-
-
-void MainWindow::on_btnCargaMasiva_clicked()
-{
-    // Abre el explorador de archivos y filtra para que solo muestre archivos .csv
-    QString rutaArchivoQt = QFileDialog::getOpenFileName(this, "Seleccionar archivo CSV", "", "Archivos CSV (*.csv)");
-
-    // Verificamos si el usuario seleccionó un archivo o canceló la ventana
-    if (rutaArchivoQt.isEmpty()) {
-        QMessageBox::information(this, "Cancelado", "No se seleccionó ningún archivo.");
-        return;
-    }
-
-    // Convertimos el QString a std::string para nuestro backend
-    std::string rutaArchivo = rutaArchivoQt.toStdString();
-
-    // Llamamos a la función que construimos en el backend
-    cartelera.cargarDesdeCSV(rutaArchivo);
-    actualizarCombosPeliculas();
-    QMessageBox::information(this, "Éxito", "La carga masiva se ha completado. Revisa la consola para más detalles.");
-}
-
-
 void MainWindow::on_btnReservar_clicked()
 {
     // 1. Leer TODOS los datos ingresados en la interfaz
@@ -158,37 +135,26 @@ void MainWindow::on_btnCancelarReserva_clicked()
 }
 
 // --- LÓGICA DE INICIO DE SESIÓN ---
-void MainWindow::on_btnIniciarSesion_clicked()
-{
-    // Extraemos el correo y contraseña ingresados
+void MainWindow::on_btnIniciarSesion_clicked() {
+    // Ejemplo de validación básica:
     QString correo = ui->txtCorreo->text();
-    QString password = ui->txtPassword->text();
+    QString pass = ui->txtPassword->text();
 
-    // 1. Validar Credenciales de Administrador
-    if (correo == "admin@usac.edu.gt" && password == "admin123") {
-        // Cambiamos a la vista del Administrador
+    if (correo == "AdminCine@gmail.com" && pass == "admin123Pass") { // Credenciales obligatorias[cite: 1]
+        // Redirigir a la página de Administrador
         ui->B->setCurrentWidget(ui->page2Admin);
-        ui->txtCorreo->clear();
-        ui->txtPassword->clear();
-    }
-    // 2. Validar Credenciales de Cliente en Taquilla[cite: 1]
-    else if (correo == "cliente@gmail.com" && password == "cliente123") {
-        // Cambiamos a la vista del Cliente
+    } else {
+        // Lógica para validar clientes (requeriría buscar en el Árbol B)[cite: 1]
         ui->B->setCurrentWidget(ui->page3Usuario);
-        ui->txtCorreo->clear();
-        ui->txtPassword->clear();
-    }
-    // 3. Credenciales incorrectas
-    else {
-        QMessageBox::critical(this, "Error de Autenticación", "Correo o contraseña incorrectos. Por favor, intenta de nuevo.");
     }
 }
 
 
 // --- LÓGICA PARA CERRAR SESIÓN ---
-void MainWindow::on_btnCerrarSesionAdmin_clicked()
-{
-    // Devolvemos al usuario a la página de Login
+void MainWindow::on_btnCerrarSesionAdmin_clicked() {
+    // Limpiar campos y volver al Login
+    ui->txtCorreo->clear();
+    ui->txtPassword->clear();
     ui->B->setCurrentWidget(ui->page1Login);
 }
 
@@ -414,41 +380,56 @@ void MainWindow::on_btnCrearFuncion_clicked()
 
 void MainWindow::on_btnRefrescarSala_clicked()
 {
-    // Leemos las dimensiones directamente de lo que el Admin configuró en sus SpinBoxes
-    int totalFilas = ui->spinFilasSala->value();
-    int totalColumnas = ui->spinColumnasSala->value();
+    // 1. Obtener el código de la función seleccionada en la interfaz
+    // (Ajusta 'txtCodigoFuncion' al nombre del QLineEdit o QComboBox que estés usando)
+    std::string codigoFuncion = ui->txtBuscarCodigoPelicula->text().toStdString();
 
-    if (totalFilas == 0 || totalColumnas == 0) {
-        QMessageBox::warning(this, "Aviso", "Aún no se ha creado una función con asientos válidos.");
+    if (codigoFuncion.empty()) {
+        QMessageBox::warning(this, "Aviso", "Por favor ingresa o selecciona un código de función.");
         return;
     }
 
-    // Preparamos la tabla visual
+    // 2. Buscar la función en el Árbol AVL
+    Funcion* f = avlFunciones.buscarFuncion(codigoFuncion);
+
+    if (f == nullptr) {
+        QMessageBox::warning(this, "Aviso", "La función seleccionada no existe en el sistema.");
+        return;
+    }
+
+    // 3. Vaciar matriz actual y cargar asientos ocupados desde el archivo JSON de la función
+    sala.cargarDesdeArchivo(f->archivo_asientos, f->filas, f->columnas, f->codigo_pelicula, f->horario, f->sala);
+
+    // 4. Preparar la tabla visual utilizando las dimensiones exactas guardadas en el AVL
+    int totalFilas = f->filas;
+    int totalColumnas = f->columnas;
+
     ui->tablaAsientos->setRowCount(totalFilas);
     ui->tablaAsientos->setColumnCount(totalColumnas);
     ui->tablaAsientos->horizontalHeader()->setVisible(false);
     ui->tablaAsientos->verticalHeader()->setVisible(false);
 
-    // Pintamos la tabla consultando a nuestro nuevo método
-    for (int f = 1; f <= totalFilas; f++) {
-        for (int c = 1; c <= totalColumnas; c++) {
+    // 5. Pintar la tabla
+    for (int fila = 1; fila <= totalFilas; fila++) {
+        for (int col = 1; col <= totalColumnas; col++) {
 
-            std::string estado = sala.obtenerEstadoAsiento(f, c);
+            std::string estado = sala.obtenerEstadoAsiento(fila, col);
             QTableWidgetItem *asientoItem = new QTableWidgetItem();
 
             if (estado == "LIBRE") {
                 asientoItem->setBackground(QBrush(Qt::green));
                 asientoItem->setText("Libre");
             } else if (estado == "ND") {
-                asientoItem->setBackground(QBrush(Qt::gray)); // Por si hay algún error de punteros
+                asientoItem->setBackground(QBrush(Qt::gray));
                 asientoItem->setText("Error");
             } else {
                 asientoItem->setBackground(QBrush(Qt::red));
-                asientoItem->setText(QString::fromStdString(estado)); // Mostramos el nombre del cliente
+                // Ahora "estado" contiene el codigo_reserva, cumpliendo con no duplicar los datos del cliente[cite: 1]
+                asientoItem->setText(QString::fromStdString(estado));
             }
 
             asientoItem->setTextAlignment(Qt::AlignCenter);
-            ui->tablaAsientos->setItem(f - 1, c - 1, asientoItem);
+            ui->tablaAsientos->setItem(fila - 1, col - 1, asientoItem);
         }
     }
     ui->tablaAsientos->resizeColumnsToContents();
@@ -625,13 +606,24 @@ void MainWindow::cargarMasivaPeliculas(const QString& rutaArchivo) {
     for (const QJsonValue& valPelicula : arrayPeliculas) {
         QJsonObject objPel = valPelicula.toObject();
 
-        // Validaciones básicas exigidas
-        if (objPel["codigo"].toString().isEmpty() || objPel["titulo"].toString().isEmpty() || objPel["duracion"].toInt() <= 0) {
+
+        // --- INICIO DE VALIDACIONES CON DEBUG ---
+        if (objPel["codigo"].toString().isEmpty()) {
+            qDebug() << "Falla: El código está vacío o no es texto.";
+            continue;
+        }
+        if (objPel["titulo"].toString().isEmpty()) {
+            qDebug() << "Falla: El título de" << objPel["codigo"].toString() << "está vacío.";
+            continue;
+        }
+        if (objPel["duracion"].toInt() <= 0) {
+            qDebug() << "Falla: La duración de" << objPel["titulo"].toString() << "no es un número válido mayor a 0.";
             continue;
         }
 
-        QString fechaEstreno = objPel["fecha estreno"].toString();
+        QString fechaEstreno = objPel["fecha_estreno"].toString();
         if (!QDate::fromString(fechaEstreno, "yyyy-MM-dd").isValid()) {
+            qDebug() << "Falla: Fecha de estreno inválida en" << objPel["titulo"].toString() << ". Leído:" << fechaEstreno;
             continue;
         }
 
@@ -643,7 +635,7 @@ void MainWindow::cargarMasivaPeliculas(const QString& rutaArchivo) {
         nuevaPel.clasificacion = objPel["clasificacion"].toString().toStdString();
         nuevaPel.idioma = objPel["idioma"].toString().toStdString();
         nuevaPel.fechaEstreno = fechaEstreno.toStdString();
-        nuevaPel.fechaFin = objPel["fecha fin"].toString().toStdString();
+        nuevaPel.fechaFin = objPel["fecha_fin"].toString().toStdString();
 
         cartelera.insertar(nuevaPel);
         peliculasCargadas++;
@@ -719,3 +711,84 @@ void MainWindow::cargarMasivaClientes(const QString& rutaArchivo) {
     }
     QMessageBox::information(this, "Éxito", "Carga de clientes y reservas finalizada.");
 }
+
+
+
+void MainWindow::on_btnReporteAVL_clicked() {
+    avlFunciones.generarReporteGraphviz(); // Genera el árbol de funciones activas y realizadas[cite: 1]
+    QMessageBox::information(this, "Reporte", "Reporte del Árbol AVL generado con éxito.");
+    // Opcional: Cargar la imagen en un QLabel si lo tienes en tu UI
+     ui->lblVisorReportes->setPixmap(QPixmap("reporte_avl.png"));
+}
+
+
+void MainWindow::on_btnReporteArbolB_clicked() {
+    arbolClientes.generarReporteGraphviz(); // Genera la estructura de clientes[cite: 1]
+    QMessageBox::information(this, "Reporte", "Reporte del Árbol B generado con éxito.");
+    ui->lblVisorReportes->setPixmap(QPixmap("reporte_arbolB.png"));
+}
+
+
+void MainWindow::on_btnReporteHash_clicked() {
+    tablaReservas.generarReporteGraphviz(); // Muestra la distribución y colisiones de reservas[cite: 1]
+    QMessageBox::information(this, "Reporte", "Reporte de la Tabla Hash generado con éxito.");
+    ui->lblVisorReportes->setPixmap(QPixmap("reporte_Hash.png"));
+}
+
+void MainWindow::actualizarTablaPeliculas() {
+    // Obtenemos la lista ordenada desde el BST de la Fase 1
+    std::vector<Pelicula> lista = cartelera.obtenerCarteleraInorden();
+
+    ui->tablaCarteleraAdmin->setRowCount(0); // Limpia la tabla visual
+    for (int i = 0; i < (int)lista.size(); i++) {
+        ui->tablaCarteleraAdmin->insertRow(i);
+
+        // Columnas originales
+        ui->tablaCarteleraAdmin->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(lista[i].codigo)));
+        ui->tablaCarteleraAdmin->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(lista[i].titulo)));
+        ui->tablaCarteleraAdmin->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(lista[i].clasificacion)));
+        ui->tablaCarteleraAdmin->setItem(i, 3, new QTableWidgetItem(QString::number(lista[i].duracion) + " min"));
+
+        // Nuevas columnas agregadas
+        ui->tablaCarteleraAdmin->setItem(i, 4, new QTableWidgetItem(QString::fromStdString(lista[i].genero)));
+        ui->tablaCarteleraAdmin->setItem(i, 5, new QTableWidgetItem(QString::fromStdString(lista[i].idioma)));
+        ui->tablaCarteleraAdmin->setItem(i, 6, new QTableWidgetItem(QString::fromStdString(lista[i].fechaEstreno)));
+        ui->tablaCarteleraAdmin->setItem(i, 7, new QTableWidgetItem(QString::fromStdString(lista[i].fechaFin)));
+    }
+}
+
+void MainWindow::actualizarTablaClientes() {
+    // Obtenemos los clientes ordenados por ID desde el Árbol B[cite: 1]
+    std::vector<Cliente> lista = arbolClientes.obtenerClientes();
+    // 1. Forzar la creación de las 4 columnas
+    ui->tblAdminClientes->setColumnCount(4);
+
+    // 2. Colocar los títulos de las cabeceras
+    ui->tblAdminClientes->setHorizontalHeaderLabels({"ID", "Nombre", "Correo", "Teléfono"});
+    ui->tblAdminClientes->setRowCount(0); // Limpia la tabla visual
+    for (int i = 0; i < (int)lista.size(); i++) {
+        ui->tblAdminClientes->insertRow(i);
+        ui->tblAdminClientes->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(lista[i].id)));
+        ui->tblAdminClientes->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(lista[i].nombre)));
+        ui->tblAdminClientes->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(lista[i].correo)));
+        ui->tblAdminClientes->setItem(i, 3, new QTableWidgetItem(QString::fromStdString(lista[i].telefono)));
+    }
+    ui->tblAdminClientes->resizeColumnsToContents();
+}
+
+void MainWindow::on_btnCargaMasiva_clicked() {
+    QString ruta = QFileDialog::getOpenFileName(this, "Seleccionar JSON de Películas", "", "Archivos JSON (*.json)");
+    if (!ruta.isEmpty()) {
+        cargarMasivaPeliculas(ruta);
+        actualizarTablaPeliculas(); // <--- Refresca la UI
+    }
+}
+
+void MainWindow::on_btnCargaMasivaClientes_clicked() {
+    QString ruta = QFileDialog::getOpenFileName(this, "Seleccionar JSON de Clientes", "", "Archivos JSON (*.json)");
+    if (!ruta.isEmpty()) {
+        cargarMasivaClientes(ruta);
+        actualizarTablaClientes(); // <--- Refresca la UI
+    }
+}
+

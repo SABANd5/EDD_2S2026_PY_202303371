@@ -37,7 +37,7 @@ struct NodoB {
 class ArbolBClientes {
 public:
     ArbolBClientes();
-
+    std::vector<Cliente> obtenerClientes();
     void insertar(Cliente c);
     Cliente* buscar(std::string id);
     void listarClientes(); // Recorrido inorden para listados[cite: 1]
@@ -46,7 +46,7 @@ public:
 private:
     NodoB* raiz;
     int t; // Grado mínimo (t=2 para Orden 4)
-
+    void obtenerClientesRecursivo(NodoB* nodo, std::vector<Cliente>& lista);
     // Métodos internos del Árbol B
     void dividirHijo(NodoB* padre, int i, NodoB* hijo);
     void insertarNoLleno(NodoB* nodo, Cliente c);

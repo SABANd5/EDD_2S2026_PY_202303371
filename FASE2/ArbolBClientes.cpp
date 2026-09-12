@@ -157,3 +157,24 @@ void ArbolBClientes::generarReporteGraphviz() {
         system("dot -Tpng reporte_arbolb.dot -o reporte_arbolb.png");
     }
 }
+
+std::vector<Cliente> ArbolBClientes::obtenerClientes() {
+    std::vector<Cliente> lista;
+    if (raiz != nullptr && raiz->numClaves > 0) {
+        obtenerClientesRecursivo(raiz, lista);
+    }
+    return lista;
+}
+
+void ArbolBClientes::obtenerClientesRecursivo(NodoB* nodo, std::vector<Cliente>& lista) {
+    if (nodo == nullptr) return;
+    int i;
+    for (i = 0; i < nodo->numClaves; i++) {
+        // Visitar hijo izquierdo antes de la clave
+        if (!nodo->hoja) obtenerClientesRecursivo(nodo->hijos[i], lista);
+        // Guardar la clave actual
+        lista.push_back(nodo->claves[i]);
+    }
+    // Visitar el último hijo
+    if (!nodo->hoja) obtenerClientesRecursivo(nodo->hijos[i], lista);
+}
