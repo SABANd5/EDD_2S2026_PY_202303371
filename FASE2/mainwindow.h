@@ -67,6 +67,10 @@ private slots:
 
     void on_btnCargaMasivaClientes_clicked();
 
+    void on_btnRegistrarUsuario_clicked();
+
+    void on_btnConsulEstado_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -86,6 +90,7 @@ private:
     void cargarMasivaClientes(const QString& rutaArchivo);
     void actualizarTablaPeliculas();
     void actualizarTablaClientes();
+    std::string clienteLogueadoID;
 };
 
 #endif // MAINWINDOW_H

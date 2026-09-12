@@ -136,16 +136,48 @@ void MainWindow::on_btnCancelarReserva_clicked()
 
 // --- LÓGICA DE INICIO DE SESIÓN ---
 void MainWindow::on_btnIniciarSesion_clicked() {
-    // Ejemplo de validación básica:
-    QString correo = ui->txtCorreo->text();
+    // Asumiendo que tus inputs se llaman txtLoginCorreo y txtLoginPass
+    QString correo = ui->txtCorreo->text().trimmed();
     QString pass = ui->txtPassword->text();
 
-    if (correo == "AdminCine@gmail.com" && pass == "admin123Pass") { // Credenciales obligatorias[cite: 1]
-        // Redirigir a la página de Administrador
+    if (correo.isEmpty() || pass.isEmpty()) {
+        QMessageBox::warning(this, "Aviso", "Por favor ingresa tu correo y contraseña.");
+        return;
+    }
+
+    // 1. Verificación estricta del Administrador
+    if (correo == "AdminCine@gmail.com" && pass == "admin123Pass") {
         ui->B->setCurrentWidget(ui->page2Admin);
-    } else {
-        // Lógica para validar clientes (requeriría buscar en el Árbol B)[cite: 1]
-        ui->B->setCurrentWidget(ui->page3Usuario);
+        QMessageBox::information(this, "Bienvenido", "Sesión iniciada como Administrador.");
+
+        ui->txtCorreo->clear();
+        ui->txtPassword->clear();
+        return;
+    }
+
+    // 2. Búsqueda de clientes en la estructura
+    std::vector<Cliente> clientesActuales = arbolClientes.obtenerClientes();
+    bool autenticado = false;
+
+    for (const Cliente& c : clientesActuales) {
+        if (c.correo == correo.toStdString() && c.password == pass.toStdString()) {
+            autenticado = true;
+
+            // Guardamos el ID en memoria para usarlo en la pestaña de reservas
+            clienteLogueadoID = c.id;
+
+            // Redirección a la interfaz de Taquilla
+            ui->B->setCurrentWidget(ui->page3Usuario);
+            QMessageBox::information(this, "Bienvenido", QString("Sesión iniciada. Hola, %1").arg(QString::fromStdString(c.nombre)));
+
+            ui->txtCorreo->clear();
+            ui->txtPassword->clear();
+            break;
+        }
+    }
+
+    if (!autenticado) {
+        QMessageBox::warning(this, "Error de Autenticación", "Correo o contraseña incorrectos.");
     }
 }
 
@@ -693,15 +725,15 @@ void MainWindow::cargarMasivaClientes(const QString& rutaArchivo) {
         for (const QJsonValue& valReserva : arrayReservas) {
             QJsonObject objRes = valReserva.toObject();
 
-            if (objRes["codigo reserva"].toString().isEmpty()) continue;
+            if (objRes["codigo_reserva"].toString().isEmpty()) continue;
 
             Reserva nuevaRes;
-            nuevaRes.codigo_reserva = objRes["codigo reserva"].toString().toStdString();
+            nuevaRes.codigo_reserva = objRes["codigo_reserva"].toString().toStdString();
             nuevaRes.id_cliente = nuevoCli.id;
-            nuevaRes.codigo_funcion = objRes["codigo funcion"].toString().toStdString();
+            nuevaRes.codigo_funcion = objRes["codigo_funcion"].toString().toStdString();
             nuevaRes.fila = objRes["fila"].toInt();
             nuevaRes.columna = objRes["columna"].toInt();
-            nuevaRes.fecha_reserva = objRes["fecha reserva"].toString().toStdString();
+            nuevaRes.fecha_reserva = objRes["fecha_reserva"].toString().toStdString();
 
             tablaReservas.insertar(nuevaRes);
             nuevoCli.codigos_reservas.push_back(nuevaRes.codigo_reserva);
@@ -791,4 +823,96 @@ void MainWindow::on_btnCargaMasivaClientes_clicked() {
         actualizarTablaClientes(); // <--- Refresca la UI
     }
 }
+
+
+void MainWindow::on_btnRegistrarUsuario_clicked() {
+    // 1. Capturar los datos de los QLineEdit
+    QString nombre = ui->txtRegNombre->text().trimmed();
+    QString correo = ui->txtRegCorreo->text().trimmed();
+    QString telefono = ui->txtRegTel->text().trimmed();
+    QString pass = ui->txtRegPass->text();
+
+    // 2. Validación de campos obligatorios
+    if (nombre.isEmpty() || correo.isEmpty() || telefono.isEmpty() || pass.isEmpty()) {
+        QMessageBox::warning(this, "Registro Fallido", "Todos los campos son obligatorios.");
+        return;
+    }
+
+    // 3. Verificación de correo único exigida por el sistema
+    std::vector<Cliente> clientesActuales = arbolClientes.obtenerClientes();
+    for (const Cliente& c : clientesActuales) {
+        if (c.correo == correo.toStdString()) {
+            QMessageBox::warning(this, "Registro Fallido", "El correo ingresado ya se encuentra registrado.");
+            return;
+        }
+    }
+
+    // 4. Generación de ID único (Formato 4 dígitos, ej: "0005")
+    int nuevoIdNum = clientesActuales.size() + 1;
+    QString nuevoId = QString("%1").arg(nuevoIdNum, 4, 10, QChar('0'));
+
+    // 5. Creación del objeto Cliente e inserción en el Árbol B de Orden 4
+    Cliente nuevoCli;
+    nuevoCli.id = nuevoId.toStdString();
+    nuevoCli.nombre = nombre.toStdString();
+    nuevoCli.correo = correo.toStdString();
+    nuevoCli.telefono = telefono.toStdString();
+    nuevoCli.password = pass.toStdString();
+    nuevoCli.tipo = "cliente"; // Rol por defecto para la taquilla[cite: 1]
+
+    arbolClientes.insertar(nuevoCli);
+
+    // 6. Actualizar las tablas administrativas en segundo plano y limpiar UI
+    actualizarTablaClientes();
+
+    QMessageBox::information(this, "Éxito", "Usuario registrado correctamente. Tu ID es: " + nuevoId);
+
+    // Limpiar los campos para el siguiente registro
+    ui->txtRegNombre->clear();
+    ui->txtRegCorreo->clear();
+    ui->txtRegTel->clear();
+    ui->txtRegPass->clear();
+}
+
+
+void MainWindow::on_btnConsulEstado_clicked() {
+    QString idCliente = ui->txtBuscarClienteID->text().trimmed();
+
+    if (idCliente.isEmpty()) {
+        QMessageBox::warning(this, "Aviso", "Ingresa un ID de cliente válido.");
+        return;
+    }
+
+    // 1. Ubicar al cliente en el Árbol B[cite: 1]
+    Cliente* c = arbolClientes.buscar(idCliente.toStdString());
+
+    if (c == nullptr) {
+        QMessageBox::warning(this, "Error", "No se encontró ningún cliente con ese ID.");
+        return;
+    }
+
+    // 2. Limpiar la tabla visual antes de llenarla
+    ui->tablaReservasAdmin->setRowCount(0);
+    ui->tablaReservasAdmin->setColumnCount(4);
+    ui->tablaReservasAdmin->setHorizontalHeaderLabels({"Código Reserva", "Función", "Fila", "Columna"});
+
+    // 3. Iterar sobre las referencias del cliente y buscar en la Tabla Hash[cite: 1]
+    int filaVisual = 0;
+    for (const std::string& codReserva : c->codigos_reservas) {
+        Reserva* res = tablaReservas.buscar(codReserva);
+
+        if (res != nullptr) {
+            ui->tablaReservasAdmin->insertRow(filaVisual);
+            ui->tablaReservasAdmin->setItem(filaVisual, 0, new QTableWidgetItem(QString::fromStdString(res->codigo_reserva)));
+            ui->tablaReservasAdmin->setItem(filaVisual, 1, new QTableWidgetItem(QString::fromStdString(res->codigo_funcion)));
+            ui->tablaReservasAdmin->setItem(filaVisual, 2, new QTableWidgetItem(QString::number(res->fila)));
+            ui->tablaReservasAdmin->setItem(filaVisual, 3, new QTableWidgetItem(QString::number(res->columna)));
+            filaVisual++;
+        }
+    }
+
+    ui->tablaReservasAdmin->resizeColumnsToContents();
+    QMessageBox::information(this, "Consulta Exitosa", QString("Se encontraron %1 reservas para %2.").arg(filaVisual).arg(QString::fromStdString(c->nombre)));
+}
+
 

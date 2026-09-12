@@ -181,3 +181,58 @@ Funcion* ArbolFunciones::buscarFuncion(std::string codigo_funcion) {
 
     return nullptr; // Retorna nulo si la función no existe
 }
+
+// ==========================================
+// EDICIÓN DE FUNCIÓN
+// ==========================================
+void ArbolFunciones::editar(std::string codigo_funcion, Funcion fModificada) {
+    Funcion* f = buscarFuncion(codigo_funcion);
+    if (f != nullptr) {
+        *f = fModificada; // Actualiza los datos manteniendo el mismo nodo en memoria
+    }
+}
+
+// ==========================================
+// RECORRIDOS PARA LISTADOS
+// ==========================================
+void ArbolFunciones::recorridoPreorden(NodoAVL* nodo, std::vector<Funcion>& lista) {
+    if (nodo != nullptr) {
+        lista.push_back(nodo->dato);
+        recorridoPreorden(nodo->izquierdo, lista);
+        recorridoPreorden(nodo->derecho, lista);
+    }
+}
+
+void ArbolFunciones::recorridoInorden(NodoAVL* nodo, std::vector<Funcion>& lista) {
+    if (nodo != nullptr) {
+        recorridoInorden(nodo->izquierdo, lista);
+        lista.push_back(nodo->dato);
+        recorridoInorden(nodo->derecho, lista);
+    }
+}
+
+void ArbolFunciones::recorridoPostorden(NodoAVL* nodo, std::vector<Funcion>& lista) {
+    if (nodo != nullptr) {
+        recorridoPostorden(nodo->izquierdo, lista);
+        recorridoPostorden(nodo->derecho, lista);
+        lista.push_back(nodo->dato);
+    }
+}
+
+std::vector<Funcion> ArbolFunciones::obtenerFuncionesPreorden() {
+    std::vector<Funcion> lista;
+    recorridoPreorden(raiz, lista);
+    return lista;
+}
+
+std::vector<Funcion> ArbolFunciones::obtenerFuncionesInorden() {
+    std::vector<Funcion> lista;
+    recorridoInorden(raiz, lista);
+    return lista;
+}
+
+std::vector<Funcion> ArbolFunciones::obtenerFuncionesPostorden() {
+    std::vector<Funcion> lista;
+    recorridoPostorden(raiz, lista);
+    return lista;
+}
