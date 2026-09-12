@@ -118,3 +118,28 @@ void TablaHashReservas::eliminar(std::string codigo_reserva) {
         actual = actual->siguiente;
     }
 }
+
+void TablaHashReservas::eliminarPorFuncion(std::string codigo_funcion) {
+    // Recorremos toda la tabla (asumiendo que tu variable de tamaño se llama 'capacidad' o 'tamano')
+    for (int i = 0; i < capacidad; i++) { // Ajusta 'tamano' al nombre de tu variable
+        NodoHash* actual = tabla[i];
+        NodoHash* anterior = nullptr;
+
+        while (actual != nullptr) {
+            if (actual->dato.codigo_funcion == codigo_funcion) {
+                NodoHash* aBorrar = actual;
+                if (anterior == nullptr) {
+                    tabla[i] = actual->siguiente;
+                    actual = tabla[i];
+                } else {
+                    anterior->siguiente = actual->siguiente;
+                    actual = actual->siguiente;
+                }
+                delete aBorrar;
+            } else {
+                anterior = actual;
+                actual = actual->siguiente;
+            }
+        }
+    }
+}

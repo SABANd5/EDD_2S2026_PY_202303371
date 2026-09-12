@@ -1560,7 +1560,7 @@ QTabBar::tab:hover {
 }</string>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>3</number>
       </property>
       <property name="tabBarAutoHide">
        <bool>false</bool>
@@ -2067,7 +2067,7 @@ background: transparent;</string>
         <property name="geometry">
          <rect>
           <x>20</x>
-          <y>250</y>
+          <y>230</y>
           <width>661</width>
           <height>161</height>
          </rect>
@@ -2094,7 +2094,7 @@ QHeaderView::section {
         <property name="geometry">
          <rect>
           <x>690</x>
-          <y>250</y>
+          <y>350</y>
           <width>111</width>
           <height>30</height>
          </rect>
@@ -2156,10 +2156,10 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnCargaMasivaClientes">
         <property name="geometry">
          <rect>
-          <x>730</x>
-          <y>320</y>
-          <width>80</width>
-          <height>24</height>
+          <x>500</x>
+          <y>323</y>
+          <width>91</width>
+          <height>31</height>
          </rect>
         </property>
         <property name="text">
@@ -2171,7 +2171,7 @@ QPushButton:pressed {
          <rect>
           <x>30</x>
           <y>170</y>
-          <width>621</width>
+          <width>461</width>
           <height>181</height>
          </rect>
         </property>
@@ -2726,16 +2726,39 @@ QComboBox QAbstractItemView {
 }</string>
         </property>
        </widget>
+       <widget class="QLineEdit" name="txtCodigoFuncionAdmin">
+        <property name="geometry">
+         <rect>
+          <x>80</x>
+          <y>290</y>
+          <width>113</width>
+          <height>24</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_55">
+        <property name="geometry">
+         <rect>
+          <x>80</x>
+          <y>260</y>
+          <width>101</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>CODIGO FUNCION</string>
+        </property>
+       </widget>
       </widget>
       <widget class="QWidget" name="tab_11">
        <attribute name="title">
         <string>GESTION FUNCIONES</string>
        </attribute>
-       <widget class="QLineEdit" name="txtBuscarFuncion">
+       <widget class="QLineEdit" name="txtBuscarFuncionID">
         <property name="geometry">
          <rect>
-          <x>60</x>
-          <y>120</y>
+          <x>50</x>
+          <y>60</y>
           <width>113</width>
           <height>24</height>
          </rect>
@@ -2771,20 +2794,20 @@ QComboBox QAbstractItemView {
          </rect>
         </property>
        </widget>
-       <widget class="QSpinBox" name="spinBox">
+       <widget class="QSpinBox" name="spinEditCol">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>580</x>
           <y>180</y>
           <width>42</width>
           <height>25</height>
          </rect>
         </property>
        </widget>
-       <widget class="QSpinBox" name="spinBox_2">
+       <widget class="QSpinBox" name="spinEditFila">
         <property name="geometry">
          <rect>
-          <x>120</x>
+          <x>630</x>
           <y>180</y>
           <width>42</width>
           <height>25</height>
@@ -2804,14 +2827,14 @@ QComboBox QAbstractItemView {
        <widget class="QLabel" name="label_46">
         <property name="geometry">
          <rect>
-          <x>60</x>
-          <y>90</y>
-          <width>61</width>
+          <x>50</x>
+          <y>30</y>
+          <width>91</width>
           <height>20</height>
          </rect>
         </property>
         <property name="text">
-         <string>FUNCION</string>
+         <string>FUNCION ID</string>
         </property>
        </widget>
        <widget class="QLabel" name="label_47">
@@ -2879,7 +2902,7 @@ QComboBox QAbstractItemView {
          <string>ELIMINAR</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="btnActualizarFuncion">
+       <widget class="QPushButton" name="btnActualizarTablaFuncion">
         <property name="geometry">
          <rect>
           <x>460</x>
@@ -2895,8 +2918,8 @@ QComboBox QAbstractItemView {
        <widget class="QPushButton" name="btnBuscarFuncion">
         <property name="geometry">
          <rect>
-          <x>560</x>
-          <y>180</y>
+          <x>50</x>
+          <y>100</y>
           <width>80</width>
           <height>24</height>
          </rect>
@@ -2905,30 +2928,37 @@ QComboBox QAbstractItemView {
          <string>BUSCAR</string>
         </property>
        </widget>
-       <widget class="QComboBox" name="cmbOrdenClientes_2">
+       <widget class="QLineEdit" name="txtEditCodigoFuncion">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
         <property name="geometry">
          <rect>
-          <x>60</x>
-          <y>40</y>
-          <width>101</width>
-          <height>31</height>
+          <x>640</x>
+          <y>120</y>
+          <width>113</width>
+          <height>24</height>
          </rect>
         </property>
-        <item>
-         <property name="text">
-          <string>Inorden</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Preorden</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Postorden</string>
-         </property>
-        </item>
+        <property name="cursor">
+         <cursorShape>SizeAllCursor</cursorShape>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_56">
+        <property name="geometry">
+         <rect>
+          <x>640</x>
+          <y>90</y>
+          <width>101</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>CODIGO FUNCION</string>
+        </property>
        </widget>
       </widget>
       <widget class="QWidget" name="tab_7">

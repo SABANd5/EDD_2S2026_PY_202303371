@@ -372,41 +372,81 @@ void MainWindow::on_btnAnadirBeneficio_clicked()
 // --- ADMIN: CREAR FUNCIÓN Y GENERAR MATRIZ ---
 void MainWindow::on_btnCrearFuncion_clicked()
 {
+    // 1. Leer los campos (Asegúrate de agregar txtCodigoFuncionAdmin en Qt Designer)
+    std::string codigoFuncion = ui->txtCodigoFuncionAdmin->text().trimmed().toStdString();
+    std::string peliculaTitulo = ui->cmbPeliculaAdmin->currentText().toStdString();
+    std::string salaNum = ui->txtSala->text().trimmed().toStdString();
+    std::string horario = ui->txtHorario->text().trimmed().toStdString();
     int filas = ui->spinFilasSala->value();
     int columnas = ui->spinColumnasSala->value();
 
-    // Leemos los campos
-    std::string pelicula = ui->cmbPeliculaReserva->currentText().toStdString(); // O ui->txtPelicula si así lo nombraste
-    std::string salaNum = ui->txtSala->text().toStdString();
-    std::string horario = ui->txtHorario->text().toStdString();
-
-    // 1. Validar que no haya campos vacíos o dimensiones cero
-    if (filas <= 0 || columnas <= 0 || pelicula.empty() || salaNum.empty() || horario.empty()) {
-        QMessageBox::warning(this, "Datos incompletos", "Por favor completa todos los datos (película, sala, horario y dimensiones).");
+    if (codigoFuncion.empty() || peliculaTitulo.empty() || salaNum.empty() || horario.empty() || filas <= 0 || columnas <= 0) {
+        QMessageBox::warning(this, "Datos incompletos", "Por favor completa todos los datos, incluyendo el Código de Función.");
         return;
     }
 
-    // 2. ¡LA NUEVA VALIDACIÓN DEL ADMIN! Verificamos si la película existe en la cartelera
-    if (!cartelera.existePeliculaPorTitulo(pelicula)) {
-        QMessageBox::critical(this, "Error de Consistencia", "La película '" + QString::fromStdString(pelicula) + "' no se encuentra en el sistema. Regístrala en la cartelera antes de asignarle una función.");
+    // 2. Buscar el código real de la película en el BST usando su título
+    std::string codigoPelicula = "";
+    std::vector<Pelicula> listaPelis = cartelera.obtenerCarteleraInorden();
+    for (const Pelicula& p : listaPelis) {
+        if (p.titulo == peliculaTitulo) {
+            codigoPelicula = p.codigo;
+            break;
+        }
+    }
+
+    if (codigoPelicula.empty()) {
+        QMessageBox::critical(this, "Error", "La película seleccionada no se encuentra en el sistema.");
         return;
     }
 
-    // 3. Todo correcto, reiniciamos la matriz y creamos la función
-    sala = MatrizDispersa();
+    // 3. Validar que el código de función no exista ya en el AVL
+    if (avlFunciones.buscarFuncion(codigoFuncion) != nullptr) {
+        QMessageBox::warning(this, "Código Duplicado", "Ya existe una función con el código: " + QString::fromStdString(codigoFuncion));
+        return;
+    }
 
-    sala.inicializarSala(filas, columnas, pelicula, horario, salaNum);
+    // 4. Crear el objeto e insertarlo en el Árbol AVL
+    Funcion nuevaFun;
+    nuevaFun.codigo_funcion = codigoFuncion;
+    nuevaFun.codigo_pelicula = codigoPelicula;
+    nuevaFun.horario = horario;
+    nuevaFun.sala = salaNum;
+    nuevaFun.filas = filas;
+    nuevaFun.columnas = columnas;
+    nuevaFun.archivo_asientos = codigoFuncion + "_asientos.json"; // Se asigna el nombre del archivo
+    nuevaFun.ya_realizada = false;
+
+    avlFunciones.insertar(nuevaFun); // Esto balancea el árbol automáticamente
+
+    // 5. Crear físicamente el archivo JSON vacío para los asientos
+    QJsonObject raizJSON;
+    raizJSON["codigo_pelicula"] = QString::fromStdString(codigoPelicula);
+    raizJSON["horario"] = QString::fromStdString(horario);
+    raizJSON["sala"] = QString::fromStdString(salaNum);
+    raizJSON["asientos"] = QJsonArray(); // Arreglo vacío, listo para recibir reservas
+
+    QJsonDocument doc(raizJSON);
+    QFile archivo(QString::fromStdString(nuevaFun.archivo_asientos));
+    if (archivo.open(QIODevice::WriteOnly)) {
+        archivo.write(doc.toJson());
+        archivo.close();
+    }
 
     QMessageBox::information(this, "Función Creada",
-                             QString("Se generó la función para %1 a las %2 en la %3.")
-                                 .arg(QString::fromStdString(pelicula))
-                                 .arg(QString::fromStdString(horario))
-                                 .arg(QString::fromStdString(salaNum)));
+                             QString("Se generó la función %1 para la sala %2.\nArchivo base creado: %3")
+                                 .arg(QString::fromStdString(codigoFuncion))
+                                 .arg(QString::fromStdString(salaNum))
+                                 .arg(QString::fromStdString(nuevaFun.archivo_asientos)));
 
-    // Limpiamos los campos
-
+    // 6. Limpiar campos
+    ui->txtCodigoFuncionAdmin->clear();
     ui->txtSala->clear();
     ui->txtHorario->clear();
+    ui->spinFilasSala->setValue(0);
+    ui->spinColumnasSala->setValue(0);
+
+    // Opcional: actualizarTablaFunciones(); si tienes una tabla visual para las funciones
 }
 
 
@@ -768,25 +808,38 @@ void MainWindow::on_btnReporteHash_clicked() {
 }
 
 void MainWindow::actualizarTablaPeliculas() {
-    // Obtenemos la lista ordenada desde el BST de la Fase 1
-    std::vector<Pelicula> lista = cartelera.obtenerCarteleraInorden();
+    // 1. Leemos qué opción está seleccionada en el ComboBox
+    QString orden = ui->cmbOrdenPeliculas->currentText();
+    std::vector<Pelicula> lista;
 
-    ui->tablaCarteleraAdmin->setRowCount(0); // Limpia la tabla visual
+    // 2. Extraemos la lista en el orden solicitado
+    if (orden == "Preorden") {
+        lista = cartelera.obtenerCarteleraPreorden();
+    } else if (orden == "Postorden") {
+        lista = cartelera.obtenerCarteleraPostorden();
+    } else {
+        lista = cartelera.obtenerCarteleraInorden(); // Inorden por defecto
+    }
+
+    // 3. Preparamos la tabla visual
+    ui->tablaCarteleraAdmin->setRowCount(0);
+    ui->tablaCarteleraAdmin->setColumnCount(8);
+    ui->tablaCarteleraAdmin->setHorizontalHeaderLabels({"Código", "Título", "Clasificación", "Duración", "Género", "Idioma", "Estreno", "Fin"});
+
+    // 4. Llenamos los datos
     for (int i = 0; i < (int)lista.size(); i++) {
         ui->tablaCarteleraAdmin->insertRow(i);
-
-        // Columnas originales
         ui->tablaCarteleraAdmin->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(lista[i].codigo)));
         ui->tablaCarteleraAdmin->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(lista[i].titulo)));
         ui->tablaCarteleraAdmin->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(lista[i].clasificacion)));
         ui->tablaCarteleraAdmin->setItem(i, 3, new QTableWidgetItem(QString::number(lista[i].duracion) + " min"));
-
-        // Nuevas columnas agregadas
         ui->tablaCarteleraAdmin->setItem(i, 4, new QTableWidgetItem(QString::fromStdString(lista[i].genero)));
         ui->tablaCarteleraAdmin->setItem(i, 5, new QTableWidgetItem(QString::fromStdString(lista[i].idioma)));
         ui->tablaCarteleraAdmin->setItem(i, 6, new QTableWidgetItem(QString::fromStdString(lista[i].fechaEstreno)));
         ui->tablaCarteleraAdmin->setItem(i, 7, new QTableWidgetItem(QString::fromStdString(lista[i].fechaFin)));
     }
+
+    ui->tablaCarteleraAdmin->resizeColumnsToContents();
 }
 
 void MainWindow::actualizarTablaClientes() {
@@ -821,6 +874,7 @@ void MainWindow::on_btnCargaMasiva_clicked() {
     if (!ruta.isEmpty()) {
         cargarMasivaPeliculas(ruta);
         actualizarTablaPeliculas(); // <--- Refresca la UI
+        actualizarComboPeliculasAdmin();
     }
 }
 
@@ -993,3 +1047,205 @@ void MainWindow::on_cmbOrdenClientes_currentTextChanged(const QString &ordenSele
     actualizarTablaClientes(); // Se dispara cada vez que el administrador cambia la opción
 }
 
+
+void MainWindow::on_cmbOrdenPeliculas_currentTextChanged(const QString &ordenSeleccionado) {
+    actualizarTablaPeliculas(); // Se dispara automáticamente al cambiar la opción
+}
+
+
+// ==========================================
+// 1. CARGAR Y ACTUALIZAR TABLA
+// ==========================================
+void MainWindow::actualizarTablaFunciones() {
+    std::vector<Funcion> lista = avlFunciones.obtenerFuncionesInorden();
+
+    ui->tblFuncionesRegistradas->setRowCount(0);
+    ui->tblFuncionesRegistradas->setColumnCount(6);
+    ui->tblFuncionesRegistradas->setHorizontalHeaderLabels({"Código", "Película", "Sala", "Horario", "Filas", "Columnas"});
+
+    for (int i = 0; i < (int)lista.size(); i++) {
+        ui->tblFuncionesRegistradas->insertRow(i);
+        ui->tblFuncionesRegistradas->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(lista[i].codigo_funcion)));
+
+        // Cruzamos datos con el Árbol Binario para mostrar el Título en lugar del código
+        Pelicula* p = cartelera.buscarPelicula(lista[i].codigo_pelicula);
+        QString titulo = p ? QString::fromStdString(p->titulo) : QString::fromStdString(lista[i].codigo_pelicula);
+
+        ui->tblFuncionesRegistradas->setItem(i, 1, new QTableWidgetItem(titulo));
+        ui->tblFuncionesRegistradas->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(lista[i].sala)));
+        ui->tblFuncionesRegistradas->setItem(i, 3, new QTableWidgetItem(QString::fromStdString(lista[i].horario)));
+        ui->tblFuncionesRegistradas->setItem(i, 4, new QTableWidgetItem(QString::number(lista[i].filas)));
+        ui->tblFuncionesRegistradas->setItem(i, 5, new QTableWidgetItem(QString::number(lista[i].columnas)));
+    }
+    ui->tblFuncionesRegistradas->resizeColumnsToContents();
+}
+
+void MainWindow::on_btnActualizarTablaFuncion_clicked() {
+    actualizarTablaFunciones();
+}
+
+// ==========================================
+// 2. SELECCIÓN CON CLIC EN LA TABLA
+// ==========================================
+void MainWindow::on_tblFuncionesRegistradas_cellClicked(int row, int column) {
+    QString codigo = ui->tblFuncionesRegistradas->item(row, 0)->text();
+    Funcion* f = avlFunciones.buscarFuncion(codigo.toStdString());
+
+    if (f) {
+        ui->txtEditCodigoFuncion->setText(QString::fromStdString(f->codigo_funcion));
+
+        Pelicula* p = cartelera.buscarPelicula(f->codigo_pelicula);
+        QString titulo = p ? QString::fromStdString(p->titulo) : QString::fromStdString(f->codigo_pelicula);
+
+        ui->txtEditPelicula->setText(titulo);
+        ui->txtEditSala->setText(QString::fromStdString(f->sala));
+        ui->txtEditHorario->setText(QString::fromStdString(f->horario));
+        ui->spinEditFila->setValue(f->filas);
+        ui->spinEditCol->setValue(f->columnas);
+    }
+}
+
+// ==========================================
+// 3. BUSCAR POR ID
+// ==========================================
+void MainWindow::on_btnBuscarFuncion_clicked() {
+    QString idBusqueda = ui->txtBuscarFuncionID->text().trimmed();
+
+    if (idBusqueda.isEmpty()) {
+        QMessageBox::warning(this, "Aviso", "Ingresa un ID de función válido.");
+        return;
+    }
+
+    Funcion* f = avlFunciones.buscarFuncion(idBusqueda.toStdString());
+    if (f) {
+        ui->txtEditCodigoFuncion->setText(QString::fromStdString(f->codigo_funcion));
+
+        Pelicula* p = cartelera.buscarPelicula(f->codigo_pelicula);
+        QString titulo = p ? QString::fromStdString(p->titulo) : QString::fromStdString(f->codigo_pelicula);
+
+        ui->txtEditPelicula->setText(titulo);
+        ui->txtEditSala->setText(QString::fromStdString(f->sala));
+        ui->txtEditHorario->setText(QString::fromStdString(f->horario));
+        ui->spinEditFila->setValue(f->filas);
+        ui->spinEditCol->setValue(f->columnas);
+
+        QMessageBox::information(this, "Encontrada", "Datos de la función cargados para su edición.");
+    } else {
+        QMessageBox::warning(this, "No Encontrado", "No existe ninguna función con ese ID.");
+    }
+}
+
+// ==========================================
+// 4. EDITAR FUNCIÓN
+// ==========================================
+void MainWindow::on_btnEditFuncion_clicked() {
+    QString codigo = ui->txtEditCodigoFuncion->text().trimmed();
+
+    if (codigo.isEmpty()) {
+        QMessageBox::warning(this, "Aviso", "Selecciona o busca una función primero.");
+        return;
+    }
+
+    Funcion* f = avlFunciones.buscarFuncion(codigo.toStdString());
+    if (!f) return;
+
+    QString nuevaSala = ui->txtEditSala->text().trimmed();
+    QString nuevoHorario = ui->txtEditHorario->text().trimmed();
+    QString tituloInput = ui->txtEditPelicula->text().trimmed();
+    int nuevasFilas = ui->spinEditFila->value();
+    int nuevasCols = ui->spinEditCol->value();
+
+    if (nuevaSala.isEmpty() || nuevoHorario.isEmpty() || tituloInput.isEmpty() || nuevasFilas <= 0 || nuevasCols <= 0) {
+        QMessageBox::warning(this, "Aviso", "Completa todos los campos correctamente.");
+        return;
+    }
+
+    // Validar si el título de la película ingresado existe
+    std::string nuevoCodPel = f->codigo_pelicula;
+    if (tituloInput.toStdString() != cartelera.buscarPelicula(f->codigo_pelicula)->titulo) {
+        bool peliEncontrada = false;
+        std::vector<Pelicula> pelis = cartelera.obtenerCarteleraInorden();
+        for (auto& pel : pelis) {
+            if (pel.titulo == tituloInput.toStdString()) {
+                nuevoCodPel = pel.codigo;
+                peliEncontrada = true;
+                break;
+            }
+        }
+        if (!peliEncontrada) {
+            QMessageBox::critical(this, "Error", "La película ingresada no existe en la cartelera.");
+            return;
+        }
+    }
+
+    // Reutilizar el método editar del Árbol AVL
+    Funcion fModificada = *f;
+    fModificada.codigo_pelicula = nuevoCodPel;
+    fModificada.sala = nuevaSala.toStdString();
+    fModificada.horario = nuevoHorario.toStdString();
+    fModificada.filas = nuevasFilas;
+    fModificada.columnas = nuevasCols;
+
+    avlFunciones.editar(codigo.toStdString(), fModificada);
+    actualizarTablaFunciones();
+
+    QMessageBox::information(this, "Éxito", "Función actualizada correctamente.");
+}
+
+// ==========================================
+// 5. ELIMINAR FUNCIÓN Y EN CASCADA
+// ==========================================
+void MainWindow::on_btnEliminarFun_clicked() {
+    QString codigo = ui->txtEditCodigoFuncion->text().trimmed();
+
+    if (codigo.isEmpty()) {
+        QMessageBox::warning(this, "Aviso", "Selecciona o busca una función primero.");
+        return;
+    }
+
+    if (avlFunciones.buscarFuncion(codigo.toStdString()) == nullptr) {
+        QMessageBox::warning(this, "Error", "La función no existe.");
+        return;
+    }
+
+    QMessageBox::StandardButton respuesta;
+    respuesta = QMessageBox::question(this, "Confirmar Eliminación",
+                                      "¿Estás seguro de eliminar la función " + codigo + "?\n¡Se cancelarán todas las reservas asociadas!",
+                                      QMessageBox::Yes | QMessageBox::No);
+
+    if (respuesta == QMessageBox::Yes) {
+        // 1. Borrar todas las reservas huérfanas en la Tabla Hash
+        tablaReservas.eliminarPorFuncion(codigo.toStdString());
+
+        // 2. Borrar del Árbol AVL
+        avlFunciones.eliminar(codigo.toStdString());
+
+        // 3. Limpiar vista
+        ui->txtEditCodigoFuncion->clear();
+        ui->txtEditPelicula->clear();
+        ui->txtEditSala->clear();
+        ui->txtEditHorario->clear();
+        ui->spinEditFila->setValue(0);
+        ui->spinEditCol->setValue(0);
+        ui->txtBuscarFuncionID->clear();
+
+        actualizarTablaFunciones();
+        QMessageBox::information(this, "Éxito", "Función y reservas eliminadas correctamente.");
+    }
+}
+
+void MainWindow::actualizarComboPeliculasAdmin() {
+    // 1. Limpiar el ComboBox por si tenía datos anteriores
+    ui->cmbPeliculaAdmin->clear();
+
+    // 2. Obtener la lista de películas desde el Árbol BST
+    std::vector<Pelicula> listaPelis = cartelera.obtenerCarteleraInorden();
+
+    // 3. Agregar una opción por defecto (opcional pero recomendado)
+    ui->cmbPeliculaAdmin->addItem("Seleccione una película...");
+
+    // 4. Llenar el ComboBox con los títulos
+    for (const Pelicula& p : listaPelis) {
+        ui->cmbPeliculaAdmin->addItem(QString::fromStdString(p.titulo));
+    }
+}

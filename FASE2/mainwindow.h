@@ -77,6 +77,13 @@ private slots:
 
     void on_cmbOrdenClientes_currentTextChanged(const QString &arg1);
 
+    void on_cmbOrdenPeliculas_currentTextChanged(const QString &arg1);
+    void on_tblFuncionesRegistradas_cellClicked(int row, int column);
+    void on_btnEditFuncion_clicked();
+    void on_btnEliminarFun_clicked();
+    void on_btnActualizarTablaFuncion_clicked();
+    void on_btnBuscarFuncion_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -97,6 +104,8 @@ private:
     void actualizarTablaPeliculas();
     void actualizarTablaClientes();
     std::string clienteLogueadoID;
+    void actualizarTablaFunciones();
+    void actualizarComboPeliculasAdmin();
 };
 
 #endif // MAINWINDOW_H

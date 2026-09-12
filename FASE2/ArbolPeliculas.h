@@ -40,6 +40,8 @@ public:
     // Añade esto a la sección public:
     Pelicula* buscarPelicula(std::string codigo);
     bool existePeliculaPorTitulo(std::string titulo);
+    std::vector<Pelicula> obtenerCarteleraPreorden();
+    std::vector<Pelicula> obtenerCarteleraPostorden();
 
 private:
     NodoBST* raiz;
@@ -51,6 +53,8 @@ private:
     void generarCuerpoDot(NodoBST* nodo, std::string& dotContent);
     void recorridoInorden(NodoBST* nodo, std::vector<Pelicula>& lista);
     bool buscarPorTituloRecursivo(NodoBST* nodo, std::string titulo);
+    void recorridoPreorden(NodoBST* nodo, std::vector<Pelicula>& lista);
+    void recorridoPostorden(NodoBST* nodo, std::vector<Pelicula>& lista);
 };
 
 #endif // ARBOLPELICULAS_H

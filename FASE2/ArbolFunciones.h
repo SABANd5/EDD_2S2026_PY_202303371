@@ -45,6 +45,7 @@ public:
     // Generación del reporte
     void generarReporteGraphviz();
 
+
 private:
     NodoAVL* raiz;
 
@@ -69,6 +70,7 @@ private:
 
     // Auxiliar de reporte
     void generarCuerpoDot(NodoAVL* nodo, std::string& dotContent);
+    NodoAVL* obtenerMinimo(NodoAVL* nodo);
 };
 
 #endif // ARBOLFUNCIONES_H

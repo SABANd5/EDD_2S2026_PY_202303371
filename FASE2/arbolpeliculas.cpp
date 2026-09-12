@@ -240,3 +240,37 @@ bool ArbolPeliculas::buscarPorTituloRecursivo(NodoBST* nodo, std::string titulo)
     return buscarPorTituloRecursivo(nodo->izquierdo, titulo) ||
            buscarPorTituloRecursivo(nodo->derecho, titulo);
 }
+
+// ==========================================
+// RECORRIDOS DEL ÁRBOL DE PELÍCULAS (BST)
+// ==========================================
+
+// PREORDEN: Raíz -> Izquierda -> Derecha
+std::vector<Pelicula> ArbolPeliculas::obtenerCarteleraPreorden() {
+    std::vector<Pelicula> lista;
+    recorridoPreorden(raiz, lista);
+    return lista;
+}
+
+void ArbolPeliculas::recorridoPreorden(NodoBST* nodo, std::vector<Pelicula>& lista) {
+    if (nodo != nullptr) {
+        lista.push_back(nodo->dato);
+        recorridoPreorden(nodo->izquierdo, lista);
+        recorridoPreorden(nodo->derecho, lista);
+    }
+}
+
+// POSTORDEN: Izquierda -> Derecha -> Raíz
+std::vector<Pelicula> ArbolPeliculas::obtenerCarteleraPostorden() {
+    std::vector<Pelicula> lista;
+    recorridoPostorden(raiz, lista);
+    return lista;
+}
+
+void ArbolPeliculas::recorridoPostorden(NodoBST* nodo, std::vector<Pelicula>& lista) {
+    if (nodo != nullptr) {
+        recorridoPostorden(nodo->izquierdo, lista);
+        recorridoPostorden(nodo->derecho, lista);
+        lista.push_back(nodo->dato);
+    }
+}

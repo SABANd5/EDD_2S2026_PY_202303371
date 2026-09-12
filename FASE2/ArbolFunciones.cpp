@@ -145,7 +145,7 @@ void ArbolFunciones::generarReporteGraphviz() {
     std::ofstream archivo("reporte_avl.dot");
     if (archivo.is_open()) {
         std::string dotContent = "digraph AVLFunciones {\n";
-        dotContent += "  node [shape=circle, fontname=\"Arial\"];\n"; // Nodos circulares[cite: 1]
+        dotContent += "  node [shape=circle, fontname=\"Arial\"];\n"; // Nodos circulares
 
         if (raiz != nullptr) {
             generarCuerpoDot(raiz, dotContent);
@@ -235,4 +235,70 @@ std::vector<Funcion> ArbolFunciones::obtenerFuncionesPostorden() {
     std::vector<Funcion> lista;
     recorridoPostorden(raiz, lista);
     return lista;
+}
+
+// ==========================================
+// NUEVO: ELIMINACIÓN Y BALANCEO AVL
+// ==========================================
+void ArbolFunciones::eliminar(std::string codigo_funcion) {
+    raiz = eliminarRecursivo(raiz, codigo_funcion);
+}
+
+NodoAVL* ArbolFunciones::obtenerMinimo(NodoAVL* nodo) {
+    NodoAVL* actual = nodo;
+    while (actual->izquierdo != nullptr) actual = actual->izquierdo;
+    return actual;
+}
+
+NodoAVL* ArbolFunciones::eliminarRecursivo(NodoAVL* nodo, std::string codigo_funcion) {
+    if (nodo == nullptr) return nodo;
+
+    // 1. Búsqueda binaria
+    if (codigo_funcion < nodo->dato.codigo_funcion) {
+        nodo->izquierdo = eliminarRecursivo(nodo->izquierdo, codigo_funcion);
+    } else if (codigo_funcion > nodo->dato.codigo_funcion) {
+        nodo->derecho = eliminarRecursivo(nodo->derecho, codigo_funcion);
+    } else {
+        // 2. Nodo encontrado: Casos de eliminación
+        if ((nodo->izquierdo == nullptr) || (nodo->derecho == nullptr)) {
+            NodoAVL* temp = nodo->izquierdo ? nodo->izquierdo : nodo->derecho;
+            if (temp == nullptr) {
+                temp = nodo;
+                nodo = nullptr;
+            } else {
+                *nodo = *temp; // Copia el contenido
+            }
+            delete temp;
+        } else {
+            // Nodo con dos hijos: obtener el sucesor inorden
+            NodoAVL* temp = obtenerMinimo(nodo->derecho);
+            nodo->dato = temp->dato;
+            nodo->derecho = eliminarRecursivo(nodo->derecho, temp->dato.codigo_funcion);
+        }
+    }
+
+    if (nodo == nullptr) return nodo;
+
+    // 3. Actualizar altura y balancear utilizando las funciones existentes
+    actualizarAltura(nodo);
+    int balance = obtenerFactorBalance(nodo);
+
+    // Casos de rotación
+    if (balance > 1 && obtenerFactorBalance(nodo->izquierdo) >= 0)
+        return rotacionDerecha(nodo);
+
+    if (balance > 1 && obtenerFactorBalance(nodo->izquierdo) < 0) {
+        nodo->izquierdo = rotacionIzquierda(nodo->izquierdo);
+        return rotacionDerecha(nodo);
+    }
+
+    if (balance < -1 && obtenerFactorBalance(nodo->derecho) <= 0)
+        return rotacionIzquierda(nodo);
+
+    if (balance < -1 && obtenerFactorBalance(nodo->derecho) > 0) {
+        nodo->derecho = rotacionDerecha(nodo->derecho);
+        return rotacionIzquierda(nodo);
+    }
+
+    return nodo;
 }
