@@ -42,6 +42,12 @@ public:
     Cliente* buscar(std::string id);
     void listarClientes(); // Recorrido inorden para listados[cite: 1]
     void generarReporteGraphviz();
+    void eliminar(std::string id);
+
+    // Nuevos métodos para los recorridos de la tabla
+    std::vector<Cliente> obtenerClientesInorden();
+    std::vector<Cliente> obtenerClientesPreorden();
+    std::vector<Cliente> obtenerClientesPostorden();
 
 private:
     NodoB* raiz;
@@ -56,6 +62,19 @@ private:
     // Auxiliares para Graphviz
     void generarNodosDot(NodoB* nodo, std::string& dotContent, int& contador);
     void generarEnlacesDot(NodoB* nodo, std::string& dotContent, int idActual, int& contador);
+    void recorridoInordenRecursivo(NodoB* nodo, std::vector<Cliente>& lista);
+    void recorridoPreordenRecursivo(NodoB* nodo, std::vector<Cliente>& lista);
+    void recorridoPostordenRecursivo(NodoB* nodo, std::vector<Cliente>& lista);
+    int buscarClave(NodoB* nodo, std::string id);
+    void eliminarDeNodo(NodoB* nodo, std::string id);
+    void removerDeHoja(NodoB* nodo, int idx);
+    void removerDeNoHoja(NodoB* nodo, int idx);
+    Cliente obtenerPredecesor(NodoB* nodo, int idx);
+    Cliente obtenerSucesor(NodoB* nodo, int idx);
+    void llenar(NodoB* nodo, int idx);
+    void prestarDeAnterior(NodoB* nodo, int idx);
+    void prestarDeSiguiente(NodoB* nodo, int idx);
+    void fusionar(NodoB* nodo, int idx);
 };
 
 #endif // ARBOLBCLIENTES_H

@@ -52,26 +52,6 @@ Reserva* TablaHashReservas::buscar(std::string codigo_reserva) {
     return nullptr;
 }
 
-void TablaHashReservas::eliminar(std::string codigo_reserva) {
-    int indice = funcionHash(codigo_reserva);
-    NodoHash* actual = tabla[indice];
-    NodoHash* anterior = nullptr;
-
-    while (actual != nullptr) {
-        if (actual->dato.codigo_reserva == codigo_reserva) {
-            if (anterior == nullptr) {
-                tabla[indice] = actual->siguiente;
-            } else {
-                anterior->siguiente = actual->siguiente;
-            }
-            delete actual;
-            elementos--;
-            return;
-        }
-        anterior = actual;
-        actual = actual->siguiente;
-    }
-}
 
 // ==========================================
 // REPORTE GRAPHVIZ
@@ -113,5 +93,28 @@ void TablaHashReservas::generarReporteGraphviz() {
         archivo.close();
 
         system("dot -Tpng reporte_hash.dot -o reporte_hash.png");
+    }
+}
+
+void TablaHashReservas::eliminar(std::string codigo_reserva) {
+    int indice = funcionHash(codigo_reserva);
+    NodoHash* actual = tabla[indice];
+    NodoHash* anterior = nullptr;
+
+    while (actual != nullptr) {
+        // Cambiamos "reserva" por "dato"
+        if (actual->dato.codigo_reserva == codigo_reserva) {
+            if (anterior == nullptr) {
+                // Es el primer elemento de la lista enlazada
+                tabla[indice] = actual->siguiente;
+            } else {
+                // Está en medio o al final
+                anterior->siguiente = actual->siguiente;
+            }
+            delete actual;
+            return;
+        }
+        anterior = actual;
+        actual = actual->siguiente;
     }
 }

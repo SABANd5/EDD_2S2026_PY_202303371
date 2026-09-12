@@ -71,6 +71,12 @@ private slots:
 
     void on_btnConsulEstado_clicked();
 
+    void on_btnBuscarCliente_clicked();
+
+    void on_btnEliminarCliente_clicked();
+
+    void on_cmbOrdenClientes_currentTextChanged(const QString &arg1);
+
 private:
     Ui::MainWindow *ui;
 

@@ -30,6 +30,7 @@ public:
     void eliminar(std::string codigo_reserva);
     void generarReporteGraphviz();
 
+
 private:
     int capacidad;
     int elementos;

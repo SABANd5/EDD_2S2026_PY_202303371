@@ -790,14 +790,22 @@ void MainWindow::actualizarTablaPeliculas() {
 }
 
 void MainWindow::actualizarTablaClientes() {
-    // Obtenemos los clientes ordenados por ID desde el Árbol B[cite: 1]
-    std::vector<Cliente> lista = arbolClientes.obtenerClientes();
-    // 1. Forzar la creación de las 4 columnas
-    ui->tblAdminClientes->setColumnCount(4);
+    QString orden = ui->cmbOrdenClientes->currentText();
+    std::vector<Cliente> lista;
 
-    // 2. Colocar los títulos de las cabeceras
+    // Seleccionamos el recorrido correspondiente
+    if (orden == "Preorden") {
+        lista = arbolClientes.obtenerClientesPreorden();
+    } else if (orden == "Postorden") {
+        lista = arbolClientes.obtenerClientesPostorden();
+    } else {
+        lista = arbolClientes.obtenerClientesInorden(); // Inorden por defecto (Ordenado por ID)
+    }
+
+    ui->tblAdminClientes->setRowCount(0);
+    ui->tblAdminClientes->setColumnCount(4);
     ui->tblAdminClientes->setHorizontalHeaderLabels({"ID", "Nombre", "Correo", "Teléfono"});
-    ui->tblAdminClientes->setRowCount(0); // Limpia la tabla visual
+
     for (int i = 0; i < (int)lista.size(); i++) {
         ui->tblAdminClientes->insertRow(i);
         ui->tblAdminClientes->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(lista[i].id)));
@@ -915,4 +923,73 @@ void MainWindow::on_btnConsulEstado_clicked() {
     QMessageBox::information(this, "Consulta Exitosa", QString("Se encontraron %1 reservas para %2.").arg(filaVisual).arg(QString::fromStdString(c->nombre)));
 }
 
+
+void MainWindow::on_btnBuscarCliente_clicked() {
+    QString idCliente = ui->txtBuscarUsuarioID->text().trimmed();
+
+    if (idCliente.isEmpty()) {
+        QMessageBox::warning(this, "Aviso", "Por favor, ingresa un ID válido para buscar.");
+        return;
+    }
+
+    Cliente* c = arbolClientes.buscar(idCliente.toStdString());
+
+    if (c != nullptr) {
+        QString info = QString("ID: %1\nNombre: %2\nCorreo: %3\nTeléfono: %4\nTipo: %5\nReservas Activas: %6")
+                           .arg(QString::fromStdString(c->id))
+                           .arg(QString::fromStdString(c->nombre))
+                           .arg(QString::fromStdString(c->correo))
+                           .arg(QString::fromStdString(c->telefono))
+                           .arg(QString::fromStdString(c->tipo))
+                           .arg(c->codigos_reservas.size());
+
+        QMessageBox::information(this, "Cliente Encontrado", info);
+    } else {
+        QMessageBox::warning(this, "No Encontrado", "No se encontró ningún cliente con el ID: " + idCliente);
+    }
+}
+
+void MainWindow::on_btnEliminarCliente_clicked() {
+    QString idCliente = ui->txtBuscarUsuarioID->text().trimmed();
+
+    if (idCliente.isEmpty()) {
+        QMessageBox::warning(this, "Aviso", "Por favor, ingresa el ID del cliente a eliminar.");
+        return;
+    }
+
+    Cliente* c = arbolClientes.buscar(idCliente.toStdString());
+
+    if (c == nullptr) {
+        QMessageBox::warning(this, "Error", "El cliente no existe en el sistema.");
+        return;
+    }
+
+    // Confirmación de seguridad
+    QMessageBox::StandardButton respuesta;
+    respuesta = QMessageBox::question(this, "Confirmar Eliminación",
+                                      "¿Estás seguro de que deseas eliminar a " + QString::fromStdString(c->nombre) +
+                                          "? Se cancelarán todas sus reservas activas.",
+                                      QMessageBox::Yes | QMessageBox::No);
+
+    if (respuesta == QMessageBox::Yes) {
+        // 1. Eliminación en cascada: Borrar sus reservas de la Tabla Hash
+        for (const std::string& codReserva : c->codigos_reservas) {
+            tablaReservas.eliminar(codReserva);
+        }
+
+        // 2. Eliminar al cliente del Árbol B
+        arbolClientes.eliminar(idCliente.toStdString());
+
+        // 3. Limpiar input y actualizar tabla visual
+        ui->txtBuscarUsuarioID->clear();
+        actualizarTablaClientes();
+
+        QMessageBox::information(this, "Éxito", "Cliente y reservas eliminados correctamente.");
+    }
+}
+
+
+void MainWindow::on_cmbOrdenClientes_currentTextChanged(const QString &ordenSeleccionado) {
+    actualizarTablaClientes(); // Se dispara cada vez que el administrador cambia la opción
+}
 

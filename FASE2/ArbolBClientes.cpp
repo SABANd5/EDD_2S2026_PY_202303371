@@ -178,3 +178,229 @@ void ArbolBClientes::obtenerClientesRecursivo(NodoB* nodo, std::vector<Cliente>&
     // Visitar el último hijo
     if (!nodo->hoja) obtenerClientesRecursivo(nodo->hijos[i], lista);
 }
+
+// INORDEN: Izquierda -> Raíz -> Derecha (Orden natural)
+std::vector<Cliente> ArbolBClientes::obtenerClientesInorden() {
+    std::vector<Cliente> lista;
+    if (raiz != nullptr) recorridoInordenRecursivo(raiz, lista);
+    return lista;
+}
+
+void ArbolBClientes::recorridoInordenRecursivo(NodoB* nodo, std::vector<Cliente>& lista) {
+    if (nodo == nullptr) return;
+    int i;
+    for (i = 0; i < nodo->numClaves; i++) {
+        if (!nodo->hoja) recorridoInordenRecursivo(nodo->hijos[i], lista);
+        lista.push_back(nodo->claves[i]);
+    }
+    if (!nodo->hoja) recorridoInordenRecursivo(nodo->hijos[i], lista);
+}
+
+// PREORDEN: Raíz -> Izquierda -> Derecha
+std::vector<Cliente> ArbolBClientes::obtenerClientesPreorden() {
+    std::vector<Cliente> lista;
+    if (raiz != nullptr) recorridoPreordenRecursivo(raiz, lista);
+    return lista;
+}
+
+void ArbolBClientes::recorridoPreordenRecursivo(NodoB* nodo, std::vector<Cliente>& lista) {
+    if (nodo == nullptr) return;
+    // Primero guardamos todas las claves del nodo actual (Raíz)
+    for (int i = 0; i < nodo->numClaves; i++) {
+        lista.push_back(nodo->claves[i]);
+    }
+    // Luego recorremos los hijos de izquierda a derecha
+    if (!nodo->hoja) {
+        for (int i = 0; i <= nodo->numClaves; i++) {
+            recorridoPreordenRecursivo(nodo->hijos[i], lista);
+        }
+    }
+}
+
+// POSTORDEN: Izquierda -> Derecha -> Raíz
+std::vector<Cliente> ArbolBClientes::obtenerClientesPostorden() {
+    std::vector<Cliente> lista;
+    if (raiz != nullptr) recorridoPostordenRecursivo(raiz, lista);
+    return lista;
+}
+
+void ArbolBClientes::recorridoPostordenRecursivo(NodoB* nodo, std::vector<Cliente>& lista) {
+    if (nodo == nullptr) return;
+    // Primero recorremos todos los hijos hasta el fondo
+    if (!nodo->hoja) {
+        for (int i = 0; i <= nodo->numClaves; i++) {
+            recorridoPostordenRecursivo(nodo->hijos[i], lista);
+        }
+    }
+    // Finalmente guardamos las claves del nodo
+    for (int i = 0; i < nodo->numClaves; i++) {
+        lista.push_back(nodo->claves[i]);
+    }
+}
+
+// ==========================================
+// ELIMINACIÓN DEL ÁRBOL B (ORDEN 4)
+// ==========================================
+void ArbolBClientes::eliminar(std::string id) {
+    if (raiz == nullptr) return;
+
+    eliminarDeNodo(raiz, id);
+
+    // Si la raíz se queda vacía tras fusionar, reducimos la altura del árbol
+    if (raiz->numClaves == 0) {
+        NodoB* temp = raiz;
+        if (raiz->hoja) {
+            raiz = nullptr;
+        } else {
+            raiz = raiz->hijos[0];
+        }
+        delete temp;
+    }
+}
+
+int ArbolBClientes::buscarClave(NodoB* nodo, std::string id) {
+    int idx = 0;
+    while (idx < nodo->numClaves && nodo->claves[idx].id < id) {
+        ++idx;
+    }
+    return idx;
+}
+
+void ArbolBClientes::eliminarDeNodo(NodoB* nodo, std::string id) {
+    int idx = buscarClave(nodo, id);
+
+    // Caso 1: La clave está en el nodo actual
+    if (idx < nodo->numClaves && nodo->claves[idx].id == id) {
+        if (nodo->hoja) removerDeHoja(nodo, idx);
+        else removerDeNoHoja(nodo, idx);
+    }
+    // Caso 2: La clave NO está en el nodo actual
+    else {
+        if (nodo->hoja) return; // La clave no existe en el árbol
+
+        bool esUltimo = (idx == nodo->numClaves);
+
+        // Balancear si el nodo hijo tiene el mínimo de claves (1)
+        if (nodo->hijos[idx]->numClaves < 2) {
+            llenar(nodo, idx);
+        }
+
+        if (esUltimo && idx > nodo->numClaves) {
+            eliminarDeNodo(nodo->hijos[idx - 1], id);
+        } else {
+            eliminarDeNodo(nodo->hijos[idx], id);
+        }
+    }
+}
+
+void ArbolBClientes::removerDeHoja(NodoB* nodo, int idx) {
+    for (int i = idx + 1; i < nodo->numClaves; ++i) {
+        nodo->claves[i - 1] = nodo->claves[i];
+    }
+    nodo->numClaves--;
+}
+
+void ArbolBClientes::removerDeNoHoja(NodoB* nodo, int idx) {
+    std::string id = nodo->claves[idx].id;
+
+    if (nodo->hijos[idx]->numClaves >= 2) {
+        Cliente pred = obtenerPredecesor(nodo, idx);
+        nodo->claves[idx] = pred;
+        eliminarDeNodo(nodo->hijos[idx], pred.id);
+    } else if (nodo->hijos[idx + 1]->numClaves >= 2) {
+        Cliente suc = obtenerSucesor(nodo, idx);
+        nodo->claves[idx] = suc;
+        eliminarDeNodo(nodo->hijos[idx + 1], suc.id);
+    } else {
+        fusionar(nodo, idx);
+        eliminarDeNodo(nodo->hijos[idx], id);
+    }
+}
+
+Cliente ArbolBClientes::obtenerPredecesor(NodoB* nodo, int idx) {
+    NodoB* actual = nodo->hijos[idx];
+    while (!actual->hoja) {
+        actual = actual->hijos[actual->numClaves];
+    }
+    return actual->claves[actual->numClaves - 1];
+}
+
+Cliente ArbolBClientes::obtenerSucesor(NodoB* nodo, int idx) {
+    NodoB* actual = nodo->hijos[idx + 1];
+    while (!actual->hoja) {
+        actual = actual->hijos[0];
+    }
+    return actual->claves[0];
+}
+
+void ArbolBClientes::llenar(NodoB* nodo, int idx) {
+    if (idx != 0 && nodo->hijos[idx - 1]->numClaves >= 2) {
+        prestarDeAnterior(nodo, idx);
+    } else if (idx != nodo->numClaves && nodo->hijos[idx + 1]->numClaves >= 2) {
+        prestarDeSiguiente(nodo, idx);
+    } else {
+        if (idx != nodo->numClaves) fusionar(nodo, idx);
+        else fusionar(nodo, idx - 1);
+    }
+}
+
+void ArbolBClientes::prestarDeAnterior(NodoB* nodo, int idx) {
+    NodoB* hijo = nodo->hijos[idx];
+    NodoB* hermano = nodo->hijos[idx - 1];
+
+    for (int i = hijo->numClaves - 1; i >= 0; --i) hijo->claves[i + 1] = hijo->claves[i];
+    if (!hijo->hoja) {
+        for (int i = hijo->numClaves; i >= 0; --i) hijo->hijos[i + 1] = hijo->hijos[i];
+    }
+
+    hijo->claves[0] = nodo->claves[idx - 1];
+    if (!hijo->hoja) hijo->hijos[0] = hermano->hijos[hermano->numClaves];
+
+    nodo->claves[idx - 1] = hermano->claves[hermano->numClaves - 1];
+    hijo->numClaves++;
+    hermano->numClaves--;
+}
+
+void ArbolBClientes::prestarDeSiguiente(NodoB* nodo, int idx) {
+    NodoB* hijo = nodo->hijos[idx];
+    NodoB* hermano = nodo->hijos[idx + 1];
+
+    hijo->claves[hijo->numClaves] = nodo->claves[idx];
+    if (!hijo->hoja) hijo->hijos[hijo->numClaves + 1] = hermano->hijos[0];
+
+    nodo->claves[idx] = hermano->claves[0];
+
+    for (int i = 1; i < hermano->numClaves; ++i) hermano->claves[i - 1] = hermano->claves[i];
+    if (!hermano->hoja) {
+        for (int i = 1; i <= hermano->numClaves; ++i) hermano->hijos[i - 1] = hermano->hijos[i];
+    }
+
+    hijo->numClaves++;
+    hermano->numClaves--;
+}
+
+void ArbolBClientes::fusionar(NodoB* nodo, int idx) {
+    NodoB* hijo = nodo->hijos[idx];
+    NodoB* hermano = nodo->hijos[idx + 1];
+
+    hijo->claves[hijo->numClaves] = nodo->claves[idx];
+
+    for (int i = 0; i < hermano->numClaves; ++i)
+        hijo->claves[i + hijo->numClaves + 1] = hermano->claves[i];
+
+    if (!hijo->hoja) {
+        for (int i = 0; i <= hermano->numClaves; ++i)
+            hijo->hijos[i + hijo->numClaves + 1] = hermano->hijos[i];
+    }
+
+    for (int i = idx + 1; i < nodo->numClaves; ++i)
+        nodo->claves[i - 1] = nodo->claves[i];
+
+    for (int i = idx + 2; i <= nodo->numClaves; ++i)
+        nodo->hijos[i - 1] = nodo->hijos[i];
+
+    hijo->numClaves += hermano->numClaves + 1;
+    nodo->numClaves--;
+
+    delete hermano;
+}
