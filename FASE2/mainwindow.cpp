@@ -181,24 +181,101 @@ void MainWindow::on_btnReservar_clicked() {
 }
 
 // --- 2. CANCELAR RESERVA ---
-void MainWindow::on_btnCancelarReserva_clicked()
-{
-    // Para cancelar, el PDF indica que el cliente debe ingresar su nombre.
-    // Utilizaremos el método extra que creamos para buscar por nombre en toda la matriz.
-    std::string cliente = ui->txtNombreCliente->text().toStdString();
+void MainWindow::on_btnCancelarReserva_clicked() {
+    QString codCancelar = ui->txtIdCancelar->text().trimmed();
 
-    if (cliente.empty()) {
-        QMessageBox::warning(this, "Datos incompletos", "Ingresa tu nombre para buscar y cancelar tus reservas.");
+    if (codCancelar.isEmpty()) {
+        QMessageBox::warning(this, "Aviso", "Por favor, ingresa el código de la reserva a cancelar.");
         return;
     }
 
-    // Llamamos al backend para que libere los asientos
-    //sala.cancelarPorCliente(cliente);
+    if (clienteLogueadoID.empty()) return;
 
-    QMessageBox::information(this, "Cancelación",
-                             "Se han procesado las cancelaciones. Si tenías asientos a tu nombre, ahora están libres.");
+    // 1. Buscar en la Tabla Hash
+    Reserva* res = tablaReservas.buscar(codCancelar.toStdString());
 
-    ui->txtNombreCliente->clear();
+    if (res == nullptr) {
+        QMessageBox::warning(this, "Error", "La reserva no existe.");
+        return;
+    }
+
+    // 2. Validar que pertenezca al usuario actual
+    if (res->id_cliente != clienteLogueadoID) {
+        QMessageBox::critical(this, "Acceso Denegado", "Esta reserva pertenece a otro usuario.");
+        return;
+    }
+
+    // 3. Validar que la reserva no esté vencida
+    QDate fechaReserva = QDate::fromString(QString::fromStdString(res->fecha_reserva), "yyyy-MM-dd");
+    if (fechaReserva < QDate::currentDate()) {
+        QMessageBox::warning(this, "Reserva Vencida", "No puedes cancelar una reserva de una función que ya pasó.");
+        return;
+    }
+
+    // Confirmación del usuario
+    QMessageBox::StandardButton respuesta;
+    respuesta = QMessageBox::question(this, "Confirmar Cancelación",
+                                      "¿Estás seguro de cancelar la reserva " + codCancelar + "?\nSe liberará tu asiento.",
+                                      QMessageBox::Yes | QMessageBox::No);
+
+    if (respuesta == QMessageBox::Yes) {
+        // ==========================================
+        // PASO A: Liberar el asiento del archivo JSON
+        // ==========================================
+        Funcion* f = avlFunciones.buscarFuncion(res->codigo_funcion);
+        if (f != nullptr) {
+            QString rutaArchivo = QString::fromStdString(f->archivo_asientos);
+            QFile archivoIn(rutaArchivo);
+
+            if (archivoIn.open(QIODevice::ReadOnly)) {
+                QJsonDocument doc = QJsonDocument::fromJson(archivoIn.readAll());
+                QJsonObject raizJSON = doc.object();
+                archivoIn.close();
+
+                QJsonArray asientosOcupados = raizJSON["asientos_ocupados"].toArray();
+                QJsonArray asientosActualizados;
+
+                // Copiamos todos los asientos EXCEPTO el que estamos cancelando
+                for (const QJsonValue& valor : asientosOcupados) {
+                    QJsonObject asientoObj = valor.toObject();
+                    if (asientoObj["fila"].toInt() == res->fila && asientoObj["columna"].toInt() == res->columna) {
+                        continue; // Lo saltamos (así se elimina)
+                    }
+                    asientosActualizados.append(asientoObj);
+                }
+
+                // Guardar los cambios físicos
+                raizJSON["asientos_ocupados"] = asientosActualizados;
+                QFile archivoOut(rutaArchivo);
+                if (archivoOut.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+                    archivoOut.write(QJsonDocument(raizJSON).toJson());
+                    archivoOut.close();
+                }
+            }
+        }
+
+        // ==========================================
+        // PASO B: Eliminar referencia en el Árbol B
+        // ==========================================
+        Cliente* c = arbolClientes.buscar(clienteLogueadoID);
+        if (c != nullptr) {
+            auto it = std::find(c->codigos_reservas.begin(), c->codigos_reservas.end(), codCancelar.toStdString());
+            if (it != c->codigos_reservas.end()) {
+                c->codigos_reservas.erase(it);
+            }
+        }
+
+        // ==========================================
+        // PASO C: Eliminar de la Tabla Hash
+        // ==========================================
+        tablaReservas.eliminar(codCancelar.toStdString());
+
+        // Limpiar interfaz y actualizar la tabla visual
+        ui->txtIdCancelar->clear();
+        on_btnActualizarReservaUsuario_clicked();
+
+        QMessageBox::information(this, "Éxito", "Reserva cancelada y asiento liberado correctamente.");
+    }
 }
 
 // --- LÓGICA DE INICIO DE SESIÓN ---
@@ -234,6 +311,7 @@ void MainWindow::on_btnIniciarSesion_clicked() {
             // Guardamos el ID en memoria para usarlo en la pestaña de reservas
             clienteLogueadoID = c.id;
             actualizarComboPeliculasUsuario();
+            on_btnActualizarReservaUsuario_clicked();
             // Redirección a la interfaz de Taquilla
             ui->B->setCurrentWidget(ui->page3Usuario);
             QMessageBox::information(this, "Bienvenido", QString("Sesión iniciada. Hola, %1").arg(QString::fromStdString(c.nombre)));
@@ -1370,4 +1448,118 @@ void MainWindow::actualizarComboPeliculasUsuario() {
     for (const Pelicula& p : listaPelis) {
         ui->cmbPeliculaReserva->addItem(QString::fromStdString(p.titulo));
     }
+}
+
+void MainWindow::on_btnActualizarReservaUsuario_clicked()
+{
+    if (clienteLogueadoID.empty()) {
+        QMessageBox::warning(this, "Sesión", "No hay un cliente logueado.");
+        return;
+    }
+
+    Cliente* c = arbolClientes.buscar(clienteLogueadoID);
+
+    if (c == nullptr) {
+        return;
+    }
+
+    ui->tblHistorialReservas->setRowCount(0);
+    ui->tblHistorialReservas->setColumnCount(6);
+
+    ui->tblHistorialReservas->setHorizontalHeaderLabels({
+        "Código",
+        "Función",
+        "Fecha",
+        "Fila",
+        "Columna",
+        "Estado"
+    });
+
+    int filaVisual = 0;
+    QDate fechaActual = QDate::currentDate();
+
+    // Recorremos las reservas asociadas al cliente
+    for (const std::string& codReserva : c->codigos_reservas) {
+
+        Reserva* res = tablaReservas.buscar(codReserva);
+
+        if (res != nullptr) {
+
+            ui->tblHistorialReservas->insertRow(filaVisual);
+
+            ui->tblHistorialReservas->setItem(
+                filaVisual,
+                0,
+                new QTableWidgetItem(
+                    QString::fromStdString(res->codigo_reserva)
+                    )
+                );
+
+            ui->tblHistorialReservas->setItem(
+                filaVisual,
+                1,
+                new QTableWidgetItem(
+                    QString::fromStdString(res->codigo_funcion)
+                    )
+                );
+
+            ui->tblHistorialReservas->setItem(
+                filaVisual,
+                2,
+                new QTableWidgetItem(
+                    QString::fromStdString(res->fecha_reserva)
+                    )
+                );
+
+            ui->tblHistorialReservas->setItem(
+                filaVisual,
+                3,
+                new QTableWidgetItem(
+                    QString::number(res->fila)
+                    )
+                );
+
+            ui->tblHistorialReservas->setItem(
+                filaVisual,
+                4,
+                new QTableWidgetItem(
+                    QString::number(res->columna)
+                    )
+                );
+
+            // Convertir la fecha
+            QDate fechaReserva = QDate::fromString(
+                QString::fromStdString(res->fecha_reserva),
+                "yyyy-MM-dd"
+                );
+
+            QString estado;
+
+            if (fechaReserva < fechaActual) {
+                estado = "VENCIDA";
+            } else {
+                estado = "VÁLIDA";
+            }
+
+            // Crear el item ANTES de modificarlo
+            QTableWidgetItem* itemEstado =
+                new QTableWidgetItem(estado);
+
+            if (estado == "VENCIDA") {
+                itemEstado->setForeground(QBrush(Qt::red));
+            } else {
+                itemEstado->setForeground(QBrush(Qt::darkGreen));
+            }
+
+            ui->tblHistorialReservas->setItem(
+                filaVisual,
+                5,
+                itemEstado
+                );
+
+            filaVisual++;
+        }
+    }
+
+    ui->tblHistorialReservas->resizeColumnsToContents();
 }

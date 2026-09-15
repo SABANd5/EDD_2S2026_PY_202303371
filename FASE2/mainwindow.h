@@ -84,6 +84,8 @@ private slots:
     void on_btnBuscarFuncion_clicked();
     void on_cmbPeliculaReserva_currentTextChanged(const QString &tituloPelicula);
 
+    void on_btnActualizarReservaUsuario_clicked();
+
 private:
     Ui::MainWindow *ui;
 

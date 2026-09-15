@@ -35,7 +35,7 @@
 </string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="page1Login">
      <widget class="QTabWidget" name="tabWidget_3">
@@ -388,7 +388,7 @@ QTabBar::tab:hover {
 </string>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
@@ -416,41 +416,6 @@ QTabBar::tab:hover {
 QLineEdit:focus {
     border: 1px solid #4A6FA5;
 }</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="btnCancelarReserva">
-        <property name="geometry">
-         <rect>
-          <x>520</x>
-          <y>110</y>
-          <width>191</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">/* RECHAZAR */
-QPushButton {
-    background-color: transparent;
-    color: #FF3B4E;
-    border: 1px solid #FF3B4E;
-    border-radius: 6px;
-    padding: 8px 16px;
-    font-family: &quot;Montserrat SemiBold&quot;;
-    font-weight: 600;
-    letter-spacing: 1px;
-}
-QPushButton:hover {
-    background-color: #FF3B4E;
-    color: #F1FAEE;
-}
-QPushButton:pressed {
-    background-color: #D62638;
-    border: 1px solid #D62638;
-    color: #F1FAEE;
-}</string>
-        </property>
-        <property name="text">
-         <string>CANCELAR RESERVA</string>
         </property>
        </widget>
        <widget class="QSpinBox" name="spinColumna">
@@ -632,9 +597,9 @@ background: transparent;</string>
        <widget class="QPushButton" name="btnReservar">
         <property name="geometry">
          <rect>
-          <x>520</x>
-          <y>73</y>
-          <width>191</width>
+          <x>720</x>
+          <y>20</y>
+          <width>111</width>
           <height>31</height>
          </rect>
         </property>
@@ -907,9 +872,9 @@ QComboBox QAbstractItemView {
        <widget class="QComboBox" name="cbmFuncionPeli">
         <property name="geometry">
          <rect>
-          <x>520</x>
-          <y>170</y>
-          <width>171</width>
+          <x>500</x>
+          <y>100</y>
+          <width>241</width>
           <height>31</height>
          </rect>
         </property>
@@ -953,8 +918,8 @@ QComboBox QAbstractItemView {
        <widget class="QLabel" name="label_57">
         <property name="geometry">
          <rect>
-          <x>520</x>
-          <y>150</y>
+          <x>500</x>
+          <y>80</y>
           <width>71</width>
           <height>16</height>
          </rect>
@@ -1062,23 +1027,10 @@ font: 900 </string>
        <attribute name="title">
         <string>HISTORIAL RESERVA</string>
        </attribute>
-       <widget class="QPushButton" name="btnCancelarReservaUsuario">
-        <property name="geometry">
-         <rect>
-          <x>290</x>
-          <y>350</y>
-          <width>80</width>
-          <height>24</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>CANCELAR</string>
-        </property>
-       </widget>
        <widget class="QPushButton" name="btnActualizarReservaUsuario">
         <property name="geometry">
          <rect>
-          <x>390</x>
+          <x>440</x>
           <y>350</y>
           <width>80</width>
           <height>24</height>
@@ -1088,7 +1040,7 @@ font: 900 </string>
          <string>ACTUALIZAR</string>
         </property>
        </widget>
-       <widget class="QTableWidget" name="tableWidget_3">
+       <widget class="QTableWidget" name="tblHistorialReservas">
         <property name="geometry">
          <rect>
           <x>60</x>
@@ -1096,6 +1048,64 @@ font: 900 </string>
           <width>701</width>
           <height>271</height>
          </rect>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="txtIdCancelar">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>380</y>
+          <width>111</width>
+          <height>24</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_58">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>360</y>
+          <width>81</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>ID CLIENTE</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnCancelarReserva">
+        <property name="geometry">
+         <rect>
+          <x>240</x>
+          <y>350</y>
+          <width>181</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">/* RECHAZAR */
+QPushButton {
+    background-color: transparent;
+    color: #FF3B4E;
+    border: 1px solid #FF3B4E;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-family: &quot;Montserrat SemiBold&quot;;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+QPushButton:hover {
+    background-color: #FF3B4E;
+    color: #F1FAEE;
+}
+QPushButton:pressed {
+    background-color: #D62638;
+    border: 1px solid #D62638;
+    color: #F1FAEE;
+}</string>
+        </property>
+        <property name="text">
+         <string>CANCELAR RESERVA</string>
         </property>
        </widget>
       </widget>
@@ -1619,7 +1629,7 @@ QTabBar::tab:hover {
 }</string>
       </property>
       <property name="currentIndex">
-       <number>5</number>
+       <number>0</number>
       </property>
       <property name="tabBarAutoHide">
        <bool>false</bool>
