@@ -35,7 +35,7 @@
 </string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="page1Login">
      <widget class="QTabWidget" name="tabWidget_3">
@@ -1629,7 +1629,7 @@ QTabBar::tab:hover {
 }</string>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>5</number>
       </property>
       <property name="tabBarAutoHide">
        <bool>false</bool>
@@ -1669,39 +1669,6 @@ QPushButton:pressed {
         </property>
         <property name="text">
          <string>CARGA MASIVA</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="btnReportes">
-        <property name="geometry">
-         <rect>
-          <x>170</x>
-          <y>30</y>
-          <width>105</width>
-          <height>30</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QPushButton {
-    background-color: transparent;
-    color: #A8B2C1;
-    border: 1px solid #A8B2C1;
-    border-radius: 6px;
-    padding: 6px 14px;
-    font-family: &quot;Montserrat&quot;;
-    font-weight: 600;
-}
-QPushButton:hover {
-    background-color: #A8B2C1;
-    color: #0D1321;
-}
-QPushButton:pressed {
-    background-color: #8A94A5;
-    border: 1px solid #8A94A5;
-    color: #0D1321;
-}</string>
-        </property>
-        <property name="text">
-         <string>REPORTES</string>
         </property>
        </widget>
        <widget class="QLineEdit" name="txtTitulo">
@@ -2851,7 +2818,7 @@ QComboBox QAbstractItemView {
        <widget class="QTableWidget" name="tblFuncionesRegistradas">
         <property name="geometry">
          <rect>
-          <x>50</x>
+          <x>80</x>
           <y>230</y>
           <width>651</width>
           <height>171</height>
@@ -2913,8 +2880,8 @@ QComboBox QAbstractItemView {
        <widget class="QPushButton" name="btnEditFuncion">
         <property name="geometry">
          <rect>
-          <x>240</x>
-          <y>190</y>
+          <x>220</x>
+          <y>180</y>
           <width>80</width>
           <height>24</height>
          </rect>
@@ -3024,7 +2991,7 @@ QPushButton:pressed {
        <widget class="QLabel" name="lblVisorReportes">
         <property name="geometry">
          <rect>
-          <x>30</x>
+          <x>20</x>
           <y>50</y>
           <width>791</width>
           <height>281</height>
@@ -3043,8 +3010,8 @@ QPushButton:pressed {
        <widget class="QLabel" name="label_33">
         <property name="geometry">
          <rect>
-          <x>30</x>
-          <y>20</y>
+          <x>20</x>
+          <y>30</y>
           <width>131</width>
           <height>16</height>
          </rect>
@@ -3060,177 +3027,12 @@ font: 900 </string>
          <string>VISUALIZACIÓN</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="btnVerRepCartelera">
-        <property name="geometry">
-         <rect>
-          <x>70</x>
-          <y>340</y>
-          <width>160</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QPushButton {
-    background-color: transparent;
-    color: #7FB2E5;
-    border: 1px solid #7FB2E5;
-    border-radius: 6px;
-    padding: 6px 14px;
-    font-family: &quot;Montserrat&quot;;
-    font-weight: 600;
-}
-QPushButton:hover {
-    background-color: #7FB2E5;
-    color: #0D1321;
-}
-QPushButton:pressed {
-    background-color: #5A94CC;
-    border: 1px solid #5A94CC;
-    color: #0D1321;
-}</string>
-        </property>
-        <property name="text">
-         <string>Ver Árbol Cartelera</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="btnVerRepSolicitudes">
-        <property name="geometry">
-         <rect>
-          <x>250</x>
-          <y>340</y>
-          <width>160</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QPushButton {
-    background-color: transparent;
-    color: #7FB2E5;
-    border: 1px solid #7FB2E5;
-    border-radius: 6px;
-    padding: 6px 14px;
-    font-family: &quot;Montserrat&quot;;
-    font-weight: 600;
-}
-QPushButton:hover {
-    background-color: #7FB2E5;
-    color: #0D1321;
-}
-QPushButton:pressed {
-    background-color: #5A94CC;
-    border: 1px solid #5A94CC;
-    color: #0D1321;
-}</string>
-        </property>
-        <property name="text">
-         <string>Ver Lista Solicitudes</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="btnVerRepSala">
-        <property name="geometry">
-         <rect>
-          <x>430</x>
-          <y>340</y>
-          <width>160</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QPushButton {
-    background-color: transparent;
-    color: #7FB2E5;
-    border: 1px solid #7FB2E5;
-    border-radius: 6px;
-    padding: 6px 14px;
-    font-family: &quot;Montserrat&quot;;
-    font-weight: 600;
-}
-QPushButton:hover {
-    background-color: #7FB2E5;
-    color: #0D1321;
-}
-QPushButton:pressed {
-    background-color: #5A94CC;
-    border: 1px solid #5A94CC;
-    color: #0D1321;
-}</string>
-        </property>
-        <property name="text">
-         <string>Ver Matriz Sala</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="btnVerRepPromos">
-        <property name="geometry">
-         <rect>
-          <x>610</x>
-          <y>340</y>
-          <width>160</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QPushButton {
-    background-color: transparent;
-    color: #7FB2E5;
-    border: 1px solid #7FB2E5;
-    border-radius: 6px;
-    padding: 6px 14px;
-    font-family: &quot;Montserrat&quot;;
-    font-weight: 600;
-}
-QPushButton:hover {
-    background-color: #7FB2E5;
-    color: #0D1321;
-}
-QPushButton:pressed {
-    background-color: #5A94CC;
-    border: 1px solid #5A94CC;
-    color: #0D1321;
-}</string>
-        </property>
-        <property name="text">
-         <string>Ver Promociones</string>
-        </property>
-       </widget>
        <widget class="QPushButton" name="btnReporteAVL">
         <property name="geometry">
          <rect>
-          <x>120</x>
-          <y>390</y>
-          <width>101</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QPushButton {
-    background-color: transparent;
-    color: #7FB2E5;
-    border: 1px solid #7FB2E5;
-    border-radius: 6px;
-    padding: 6px 14px;
-    font-family: &quot;Montserrat&quot;;
-    font-weight: 600;
-}
-QPushButton:hover {
-    background-color: #7FB2E5;
-    color: #0D1321;
-}
-QPushButton:pressed {
-    background-color: #5A94CC;
-    border: 1px solid #5A94CC;
-    color: #0D1321;
-}</string>
-        </property>
-        <property name="text">
-         <string>REPORTE 1</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="btnReporteArbolB">
-        <property name="geometry">
-         <rect>
-          <x>240</x>
-          <y>390</y>
-          <width>101</width>
+          <x>290</x>
+          <y>370</y>
+          <width>111</width>
           <height>31</height>
          </rect>
         </property>
@@ -3258,11 +3060,11 @@ QPushButton:pressed {
          <string>REPORTE 2</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="btnReporteHash">
+       <widget class="QPushButton" name="btnReporteArbolB">
         <property name="geometry">
          <rect>
-          <x>360</x>
-          <y>390</y>
+          <x>400</x>
+          <y>370</y>
           <width>101</width>
           <height>31</height>
          </rect>
@@ -3291,12 +3093,12 @@ QPushButton:pressed {
          <string>REPORTE 3</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="btnVerRepCartelera_5">
+       <widget class="QPushButton" name="btnVerRepCartelera">
         <property name="geometry">
          <rect>
-          <x>480</x>
-          <y>390</y>
-          <width>101</width>
+          <x>170</x>
+          <y>370</y>
+          <width>111</width>
           <height>31</height>
          </rect>
         </property>
@@ -3321,14 +3123,14 @@ QPushButton:pressed {
 }</string>
         </property>
         <property name="text">
-         <string>RESERVAS</string>
+         <string>REPORTE 1</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="btnVerRepCartelera_6">
+       <widget class="QPushButton" name="btnReporteMatrizDispersa">
         <property name="geometry">
          <rect>
-          <x>590</x>
-          <y>390</y>
+          <x>510</x>
+          <y>370</y>
           <width>101</width>
           <height>31</height>
          </rect>
@@ -3354,7 +3156,81 @@ QPushButton:pressed {
 }</string>
         </property>
         <property name="text">
-         <string>SALA</string>
+         <string>REPORTE 5</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="tab_15">
+       <attribute name="title">
+        <string>R. RESERVAS</string>
+       </attribute>
+       <widget class="QScrollArea" name="scrollArea">
+        <property name="geometry">
+         <rect>
+          <x>150</x>
+          <y>30</y>
+          <width>551</width>
+          <height>311</height>
+         </rect>
+        </property>
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="scrollAreaWidgetContents">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>549</width>
+           <height>309</height>
+          </rect>
+         </property>
+         <widget class="QLabel" name="lblVisorHASH">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>10</y>
+            <width>531</width>
+            <height>291</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+         </widget>
+        </widget>
+       </widget>
+       <widget class="QPushButton" name="btnReportesReservas">
+        <property name="geometry">
+         <rect>
+          <x>600</x>
+          <y>350</y>
+          <width>101</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+    background-color: transparent;
+    color: #7FB2E5;
+    border: 1px solid #7FB2E5;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-family: &quot;Montserrat&quot;;
+    font-weight: 600;
+}
+QPushButton:hover {
+    background-color: #7FB2E5;
+    color: #0D1321;
+}
+QPushButton:pressed {
+    background-color: #5A94CC;
+    border: 1px solid #5A94CC;
+    color: #0D1321;
+}</string>
+        </property>
+        <property name="text">
+         <string>REPORTE 4</string>
         </property>
        </widget>
       </widget>

@@ -29,7 +29,6 @@ public:
 private slots:
     // Slots de botones heredados de la Fase 1
     void on_btnAgregarPelicula_clicked();
-    void on_btnReportes_clicked();
     void on_btnCargaMasiva_clicked();
     void on_btnReservar_clicked();
     void on_btnCancelarReserva_clicked();
@@ -45,10 +44,6 @@ private slots:
     void on_btnAnadirBeneficio_clicked();
     void on_btnCrearFuncion_clicked();
     void on_btnRefrescarSala_clicked();
-    void on_btnVerRepPromos_clicked();
-    void on_btnVerRepCartelera_clicked();
-    void on_btnVerRepSolicitudes_clicked();
-    void on_btnVerRepSala_clicked();
     void on_btnConsultarEstado_clicked();
     void on_btnBuscarPelicula_clicked();
     void on_btnVerPromociones_clicked();
@@ -61,8 +56,6 @@ private slots:
     void on_btnReporteAVL_clicked();
 
     void on_btnReporteArbolB_clicked();
-
-    void on_btnReporteHash_clicked();
 
     void on_btnCargaMasivaClientes_clicked();
 
@@ -86,6 +79,10 @@ private slots:
 
     void on_btnActualizarReservaUsuario_clicked();
     void on_btnGuardarPerfil_clicked();
+    void on_btnReportesReservas_clicked();
+    void on_btnVerRepCartelera_clicked();
+    void on_btnReporteMatrizDispersa_clicked();
+
 private:
     Ui::MainWindow *ui;
 

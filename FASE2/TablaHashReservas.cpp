@@ -1,7 +1,7 @@
 #include "TablaHashReservas.h"
 #include <fstream>
 #include <iostream>
-
+#include <string>
 TablaHashReservas::TablaHashReservas(int tamano) {
     capacidad = tamano;
     elementos = 0;
@@ -53,48 +53,6 @@ Reserva* TablaHashReservas::buscar(std::string codigo_reserva) {
 }
 
 
-// ==========================================
-// REPORTE GRAPHVIZ
-// ==========================================
-void TablaHashReservas::generarReporteGraphviz() {
-    std::ofstream archivo("reporte_hash.dot");
-    if (archivo.is_open()) {
-        std::string dotContent = "digraph TablaHash {\n";
-        dotContent += "  rankdir=LR;\n"; // De izquierda a derecha para mostrar los buckets y listas
-        dotContent += "  node [shape=box];\n";
-
-        for (int i = 0; i < capacidad; i++) {
-            // Diferenciar color si el bucket está vacío o tiene elementos[cite: 1]
-            std::string colorBucket = (tabla[i] == nullptr) ? "lightgrey" : "orange";
-            dotContent += "  bucket" + std::to_string(i) + " [label=\"Bucket " + std::to_string(i) + "\", style=filled, fillcolor=" + colorBucket + "];\n";
-
-            NodoHash* actual = tabla[i];
-            if (actual != nullptr) {
-                std::string nodoAnterior = "bucket" + std::to_string(i);
-                int contadorColision = 0;
-
-                while (actual != nullptr) {
-                    std::string idNodo = "nodo_" + std::to_string(i) + "_" + std::to_string(contadorColision);
-                    // Formato exigido: codigo_reserva, id_cliente -> codigo_funcion[cite: 1]
-                    std::string label = actual->dato.codigo_reserva + "\\n" + actual->dato.id_cliente + " -> " + actual->dato.codigo_funcion;
-
-                    dotContent += "  " + idNodo + " [label=\"" + label + "\"];\n";
-                    dotContent += "  " + nodoAnterior + " -> " + idNodo + ";\n";
-
-                    nodoAnterior = idNodo;
-                    actual = actual->siguiente;
-                    contadorColision++;
-                }
-            }
-        }
-
-        dotContent += "}\n";
-        archivo << dotContent;
-        archivo.close();
-
-        system("dot -Tpng reporte_hash.dot -o reporte_hash.png");
-    }
-}
 
 void TablaHashReservas::eliminar(std::string codigo_reserva) {
     int indice = funcionHash(codigo_reserva);
@@ -161,4 +119,84 @@ std::vector<Reserva> TablaHashReservas::obtenerReservasPorFuncion(std::string co
     }
 
     return encontradas;
+}
+
+
+
+// ==========================================
+// REPORTE GRAPHVIZ (TABLA HASH)
+// ==========================================
+void TablaHashReservas::generarReporteGraphviz() {
+    std::ofstream archivo("reporte_hash.dot");
+    if (!archivo.is_open()) return;
+
+    int total_reservas = 0;
+    int buckets_ocupados = 0;
+    int colisiones = 0;
+
+    std::string dotContent = "digraph TablaHash {\n";
+    dotContent += "  rankdir=LR;\n"; // De izquierda a derecha
+    dotContent += "  node [shape=record, fontname=\"Arial\"];\n";
+
+    // 1. Dibujar el arreglo principal (Buckets) usando un nodo HTML
+    dotContent += "  HashArray [shape=none, margin=0, label=<<table border=\"0\" cellborder=\"1\" cellspacing=\"0\" cellpadding=\"6\">\n";
+
+    // NOTA: Ajusta "tamano" al nombre de la variable de capacidad de tu tabla
+    for (int i = 0; i < capacidad; i++) {
+        if (tabla[i] == nullptr) {
+            // Bucket Vacío (Color Grisáceo)
+            dotContent += "    <tr><td port=\"p" + std::to_string(i) + "\" bgcolor=\"#E0E0E0\">" + std::to_string(i) + "</td></tr>\n";
+        } else {
+            // Bucket Ocupado (Color Verde Claro)
+            dotContent += "    <tr><td port=\"p" + std::to_string(i) + "\" bgcolor=\"#C8E6C9\">" + std::to_string(i) + "</td></tr>\n";
+        }
+    }
+    dotContent += "  </table>>];\n\n";
+
+    // 2. Dibujar las listas enlazadas (Reservas y Colisiones)
+    for (int i = 0; i < capacidad; i++) {
+        NodoHash* actual = tabla[i];
+        if (actual != nullptr) {
+            buckets_ocupados++;
+            int count_nodo = 0;
+            std::string prevNode = "HashArray:p" + std::to_string(i); // Iniciamos apuntando desde el bucket
+
+            while (actual != nullptr) {
+                total_reservas++;
+                count_nodo++;
+                if (count_nodo > 1) colisiones++; // Si hay más de 1 en el mismo bucket, es colisión
+
+                // Crear nodo para la reserva (Color Azul Claro)
+                std::string nodeId = "node_" + std::to_string(i) + "_" + std::to_string(count_nodo);
+                std::string label = "Clave (Cód): " + actual->dato.codigo_reserva +
+                                    "\\nCliente: " + actual->dato.id_cliente +
+                                    "\\nFunción: " + actual->dato.codigo_funcion;
+
+                dotContent += "  " + nodeId + " [label=\"" + label + "\", style=filled, fillcolor=\"#BBDEFB\"];\n";
+
+                // Conectar con el nodo anterior
+                dotContent += "  " + prevNode + " -> " + nodeId + ";\n";
+
+                prevNode = nodeId; // El nodo actual será el "anterior" para la siguiente iteración
+                actual = actual->siguiente;
+            }
+        }
+    }
+
+    // 3. Crear el Cuadro de Estadísticas Generales (Color Amarillo Claro)
+    std::string statsLabel = "ESTADÍSTICAS DEL SISTEMA\\n"
+                             "-------------------------------\\n"
+                             "Tamaño de la tabla: " + std::to_string(capacidad) + "\\n"
+                                                        "Reservas almacenadas: " + std::to_string(total_reservas) + "\\n"
+                                                                "Buckets ocupados: " + std::to_string(buckets_ocupados) + "\\n"
+                                                                  "Total de Colisiones: " + std::to_string(colisiones);
+
+    dotContent += "\n  Stats [shape=note, label=\"" + statsLabel + "\", style=filled, fillcolor=\"#FFF9C4\"];\n";
+
+    dotContent += "}\n";
+    archivo << dotContent;
+    archivo.close();
+
+    // Ejecutar Graphviz para generar la imagen PNG
+    system("dot -Tpng reporte_hash.dot -o reporte_hash.png");
 }

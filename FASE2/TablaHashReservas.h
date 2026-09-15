@@ -32,6 +32,7 @@ public:
     void eliminarPorFuncion(std::string codigo_funcion);
     std::vector<Reserva> obtenerReservasPorFuncion(std::string codigo_funcion);
 
+
 private:
     int capacidad;
     int elementos;

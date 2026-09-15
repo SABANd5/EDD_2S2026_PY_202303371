@@ -11,6 +11,8 @@
 #include <QDateTime>
 #include <QColor>
 #include <QTableWidgetItem>
+#include <fstream>
+#include <map>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -55,19 +57,6 @@ void MainWindow::on_btnAgregarPelicula_clicked()
     ui->txtCodigo->clear();
     ui->txtTitulo->clear();
     // ... limpiar el resto
-}
-void MainWindow::on_btnReportes_clicked()
-{
-    // Aquí puedes disparar todos los reportes al mismo tiempo,
-    // o crear un menú para que el admin elija cuál generar.
-    // Por ahora, generaremos los 4 de golpe para asegurar esos 18 puntos[cite: 1].
-
-    cartelera.generarReporteGraphviz();
-    solicitudes.generarReporteGraphviz();
-    sala.generarReporteGraphviz();
-    promociones.generarReporteGraphviz();
-
-    QMessageBox::information(this, "Reportes Generados", "Los archivos .png de Graphviz se han generado en la carpeta del proyecto (build).");
 }
 
 void MainWindow::on_btnReservar_clicked() {
@@ -679,31 +668,6 @@ void cargarImagenEnVisor(QLabel* label, QString rutaImagen) {
 
 // --- VISORES DE REPORTES GRAPHVIZ ---
 
-void MainWindow::on_btnVerRepCartelera_clicked()
-{
-    // Ejecuta la generación por si hubo cambios recientes
-    cartelera.generarReporteGraphviz();
-    cargarImagenEnVisor(ui->lblVisorReportes, "reporte_cartelera.png");
-}
-
-void MainWindow::on_btnVerRepSolicitudes_clicked()
-{
-    solicitudes.generarReporteGraphviz();
-    cargarImagenEnVisor(ui->lblVisorReportes, "reporte_solicitudes.png");
-}
-
-void MainWindow::on_btnVerRepSala_clicked()
-{
-    sala.generarReporteGraphviz();
-    cargarImagenEnVisor(ui->lblVisorReportes, "reporte_matriz.png");
-}
-
-void MainWindow::on_btnVerRepPromos_clicked()
-{
-    promociones.generarReporteGraphviz();
-    cargarImagenEnVisor(ui->lblVisorReportes, "reporte_promociones.png");
-}
-
 
 void MainWindow::on_btnConsultarEstado_clicked()
 {
@@ -947,10 +911,11 @@ void MainWindow::on_btnReporteArbolB_clicked() {
 }
 
 
-void MainWindow::on_btnReporteHash_clicked() {
-    tablaReservas.generarReporteGraphviz(); // Muestra la distribución y colisiones de reservas[cite: 1]
-    QMessageBox::information(this, "Reporte", "Reporte de la Tabla Hash generado con éxito.");
-    ui->lblVisorReportes->setPixmap(QPixmap("reporte_Hash.png"));
+void MainWindow::on_btnVerRepCartelera_clicked()
+{
+    // Ejecuta la generación por si hubo cambios recientes
+    cartelera.generarReporteGraphviz();
+    cargarImagenEnVisor(ui->lblVisorReportes, "reporte_cartelera.png");
 }
 
 void MainWindow::actualizarTablaPeliculas() {
@@ -1625,4 +1590,186 @@ void MainWindow::on_btnGuardarPerfil_clicked() {
     actualizarTablaClientes();
 
     QMessageBox::information(this, "Éxito", "Tu perfil se ha actualizado correctamente.");
+}
+
+void MainWindow::on_btnReportesReservas_clicked()
+{
+    // 1. Generar reporte
+    tablaReservas.generarReporteGraphviz();
+
+    // 2. Cargar imagen generada
+    QPixmap pixmap("reporte_hash.png");
+
+    if (!pixmap.isNull()) {
+
+        // 3. Mostrar imagen en su tamaño ORIGINAL
+        ui->lblVisorHASH->setPixmap(pixmap);
+
+        // 4. QLabel toma el tamaño exacto de la imagen
+        ui->lblVisorHASH->setFixedSize(pixmap.size());
+
+        // 5. Mostrar desde la esquina superior izquierda
+        ui->lblVisorHASH->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+
+        // 6. El widget interno también debe crecer con la imagen
+        ui->scrollAreaWidgetContents->setMinimumSize(pixmap.size());
+
+        // 7. Activar barras cuando el contenido sea mayor
+        ui->scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+        ui->scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+
+    } else {
+        QMessageBox::warning(
+            this,
+            "Error de Reporte",
+            "No se pudo cargar la imagen del reporte. "
+            "Asegúrate de tener Graphviz instalado y agregado al PATH."
+            );
+    }
+}
+
+void MainWindow::on_btnReporteMatrizDispersa_clicked() {
+    // 1. Obtener la función actualmente seleccionada en el panel de administrador
+    QString codigoFuncion = ui->txtEditCodigoFuncion->text().trimmed();
+
+    if (codigoFuncion.isEmpty()) {
+        QMessageBox::warning(this, "Aviso", "Primero selecciona o busca una función en la pestaña de Gestión de Funciones para generar su reporte.");
+        return;
+    }
+
+    Funcion* f = avlFunciones.buscarFuncion(codigoFuncion.toStdString());
+    if (f == nullptr) return;
+
+    // Obtener el título de la película
+    Pelicula* p = cartelera.buscarPelicula(f->codigo_pelicula);
+    QString tituloPelicula = p ? QString::fromStdString(p->titulo) : QString::fromStdString(f->codigo_pelicula);
+
+    // 2. Extraer los asientos ocupados usando la Tabla Hash
+    std::vector<Reserva> reservas = tablaReservas.obtenerReservasPorFuncion(codigoFuncion.toStdString());
+
+    // Usamos un mapa rápido para saber en O(1) si una coordenada (fila, columna) está ocupada
+    std::map<std::pair<int, int>, std::string> asientosOcupados;
+    for (const Reserva& r : reservas) {
+        asientosOcupados[{r.fila, r.columna}] = r.id_cliente;
+    }
+
+    int totalAsientos = f->filas * f->columnas;
+    int cantReservados = reservas.size();
+    int cantLibres = totalAsientos - cantReservados;
+
+    // 3. Comenzar a escribir el archivo Graphviz (.dot)
+    std::ofstream archivo("reporte_matriz.dot");
+    if (!archivo.is_open()) return;
+
+    std::string dot = "digraph MatrizDispersa {\n";
+    dot += "  rankdir=TB;\n";
+    dot += "  node [fontname=\"Arial\"];\n";
+    dot += "  edge [dir=none];\n"; // Líneas sin flechas para que parezca una matriz
+    dot += "  splines=ortho;\n";  // Fuerza a que las líneas sean completamente rectas y ortogonales
+
+    // Título General
+    std::string tituloGraph = "Función: " + tituloPelicula.toStdString() + " - " + f->horario + " - Sala " + f->sala;
+    dot += "  labelloc=\"t\";\n";
+    dot += "  label=\"" + tituloGraph + "\";\n";
+    dot += "  fontsize=20;\n\n";
+
+    // ==========================================
+    // Nodos de Cabecera (Rectángulos)
+    // ==========================================
+    dot += "  Raiz [label=\"Matriz\", shape=box, style=filled, fillcolor=\"#ECEFF1\", group=0];\n";
+
+    // Cabeceras de Columnas
+    for (int c = 1; c <= f->columnas; c++) {
+        dot += "  C" + std::to_string(c) + " [label=\"Col " + std::to_string(c) + "\", shape=box, style=filled, fillcolor=\"#FFF59D\", group=" + std::to_string(c) + "];\n";
+    }
+
+    // Cabeceras de Filas
+    for (int fila = 1; fila <= f->filas; fila++) {
+        dot += "  F" + std::to_string(fila) + " [label=\"Fila " + std::to_string(fila) + "\", shape=box, style=filled, fillcolor=\"#81D4FA\", group=0];\n";
+    }
+
+    // ==========================================
+    // Enlaces de Cabeceras
+    // ==========================================
+    dot += "  Raiz -> C1;\n";
+    for (int c = 1; c < f->columnas; c++) {
+        dot += "  C" + std::to_string(c) + " -> C" + std::to_string(c + 1) + ";\n";
+    }
+
+    dot += "  Raiz -> F1;\n";
+    for (int fila = 1; fila < f->filas; fila++) {
+        dot += "  F" + std::to_string(fila) + " -> F" + std::to_string(fila + 1) + ";\n";
+    }
+
+    // Alinear las columnas horizontalmente con la Raíz
+    dot += "  { rank = same; Raiz; ";
+    for (int c = 1; c <= f->columnas; c++) dot += "C" + std::to_string(c) + "; ";
+    dot += "}\n\n";
+
+    // ==========================================
+    // Nodos de Valor (Círculos) y Conexiones Horizontales
+    // ==========================================
+    for (int fila = 1; fila <= f->filas; fila++) {
+        dot += "  { rank = same; F" + std::to_string(fila) + "; ";
+
+        for (int c = 1; c <= f->columnas; c++) {
+            std::string idNodo = "N_" + std::to_string(fila) + "_" + std::to_string(c);
+
+            if (asientosOcupados.find({fila, c}) != asientosOcupados.end()) {
+                // ASIENTO RESERVADO (Rojo)
+                std::string idCliente = asientosOcupados[{fila, c}];
+                Cliente* cliente = arbolClientes.buscar(idCliente);
+                std::string nombreVisible = cliente ? cliente->nombre : idCliente; // Cruce con el Árbol B
+
+                dot += "  " + idNodo + " [label=\"" + nombreVisible + "\", shape=circle, style=filled, fillcolor=\"#EF5350\", group=" + std::to_string(c) + "]; ";
+            } else {
+                // ASIENTO LIBRE (Verde)
+                dot += "  " + idNodo + " [label=\"Libre\", shape=circle, style=filled, fillcolor=\"#81C784\", group=" + std::to_string(c) + "]; ";
+            }
+        }
+        dot += "}\n";
+
+        // Conectar la fila con sus nodos horizontalmente
+        dot += "  F" + std::to_string(fila) + " -> N_" + std::to_string(fila) + "_1;\n";
+        for (int c = 1; c < f->columnas; c++) {
+            dot += "  N_" + std::to_string(fila) + "_" + std::to_string(c) + " -> N_" + std::to_string(fila) + "_" + std::to_string(c + 1) + ";\n";
+        }
+    }
+
+    // ==========================================
+    // Conexiones Verticales
+    // ==========================================
+    for (int c = 1; c <= f->columnas; c++) {
+        dot += "  C" + std::to_string(c) + " -> N_1_" + std::to_string(c) + ";\n";
+        for (int fila = 1; fila < f->filas; fila++) {
+            dot += "  N_" + std::to_string(fila) + "_" + std::to_string(c) + " -> N_" + std::to_string(fila + 1) + "_" + std::to_string(c) + ";\n";
+        }
+    }
+
+    // ==========================================
+    // Cuadro de Estadísticas
+    // ==========================================
+    std::string statsText = "ESTADÍSTICAS\\nTotal Asientos: " + std::to_string(totalAsientos) +
+                            "\\nReservados: " + std::to_string(cantReservados) +
+                            "\\nLibres: " + std::to_string(cantLibres);
+    dot += "\n  Stats [shape=note, label=\"" + statsText + "\", style=filled, fillcolor=\"#FFF9C4\"];\n";
+
+    dot += "}\n";
+    archivo << dot;
+    archivo.close();
+
+    // 4. Ejecutar Graphviz y mostrar la imagen
+    system("dot -Tpng reporte_matriz.dot -o reporte_matriz.png");
+
+    QPixmap pixmap("reporte_matriz.png");
+    if (!pixmap.isNull()) {
+        int ancho = ui->lblVisorReportes->width();
+        int alto = ui->lblVisorReportes->height();
+
+        // Ajustamos al JLabel sin deformar la imagen
+        ui->lblVisorReportes->setPixmap(pixmap.scaled(ancho, alto, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        ui->lblVisorReportes->setAlignment(Qt::AlignCenter);
+    } else {
+        QMessageBox::warning(this, "Error", "No se pudo cargar la imagen de la matriz.");
+    }
 }
