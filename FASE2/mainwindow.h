@@ -50,7 +50,6 @@ private slots:
     void on_btnVerRepSolicitudes_clicked();
     void on_btnVerRepSala_clicked();
     void on_btnConsultarEstado_clicked();
-    void on_btnEliminarFuncion_clicked();
     void on_btnBuscarPelicula_clicked();
     void on_btnVerPromociones_clicked();
     void on_btnVerCarteleraUsuario_clicked();
@@ -83,6 +82,7 @@ private slots:
     void on_btnEliminarFun_clicked();
     void on_btnActualizarTablaFuncion_clicked();
     void on_btnBuscarFuncion_clicked();
+    void on_cmbPeliculaReserva_currentTextChanged(const QString &tituloPelicula);
 
 private:
     Ui::MainWindow *ui;
@@ -106,6 +106,7 @@ private:
     std::string clienteLogueadoID;
     void actualizarTablaFunciones();
     void actualizarComboPeliculasAdmin();
+    void actualizarComboPeliculasUsuario();
 };
 
 #endif // MAINWINDOW_H

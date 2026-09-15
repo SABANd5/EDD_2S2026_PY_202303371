@@ -8,7 +8,9 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
-
+#include <QDateTime>
+#include <QColor>
+#include <QTableWidgetItem>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -68,49 +70,114 @@ void MainWindow::on_btnReportes_clicked()
     QMessageBox::information(this, "Reportes Generados", "Los archivos .png de Graphviz se han generado en la carpeta del proyecto (build).");
 }
 
-void MainWindow::on_btnReservar_clicked()
-{
-    // 1. Leer TODOS los datos ingresados en la interfaz
-    std::string pelicula = ui->cmbPeliculaReserva->currentText().toStdString();    int fila = ui->spinFila->value();
+void MainWindow::on_btnReservar_clicked() {
+    // 1. Validar que el usuario seleccionó una función válida
+    QString codigoFuncion = ui->cbmFuncionPeli->currentData().toString();
+
+    if (codigoFuncion.isEmpty()) {
+        QMessageBox::warning(this, "Aviso", "Por favor, selecciona una función válida antes de reservar.");
+        return;
+    }
+
+    // 2. Leer fila y columna de los SpinBoxes
+    int fila = ui->spinFila->value();
     int columna = ui->spinColumna->value();
-    std::string cliente = ui->txtNombreCliente->text().toStdString();
 
-    // 2. Validación de campos vacíos
-    if (cliente.empty() || pelicula.empty()) {
-        QMessageBox::warning(this, "Datos incompletos", "Por favor, ingresa tu nombre y la película para realizar la reserva.");
+    // 3. Validar dimensiones de la sala usando el Árbol AVL
+    Funcion* f = avlFunciones.buscarFuncion(codigoFuncion.toStdString());
+    if (f == nullptr) {
+        QMessageBox::critical(this, "Error", "La función seleccionada ya no existe en el sistema.");
         return;
     }
 
-    // 3. ¡LA NUEVA VALIDACIÓN! Verificamos si la película existe en la cartelera
-    if (!cartelera.existePeliculaPorTitulo(pelicula)) {
-        QMessageBox::critical(this, "Película Inválida", "La película '" + QString::fromStdString(pelicula) + "' no existe en nuestra cartelera. Revisa bien el título.");
+    if (fila <= 0 || fila > f->filas || columna <= 0 || columna > f->columnas) {
+        QMessageBox::warning(this, "Asiento Inválido",
+                             QString("Las dimensiones de la sala son: %1 filas x %2 columnas. Por favor elige un asiento dentro del rango.")
+                                 .arg(f->filas).arg(f->columnas));
         return;
     }
 
-    if (!cartelera.existePeliculaPorTitulo(pelicula)) {
-        QMessageBox::critical(this, "Error de Consistencia", "La película '" + QString::fromStdString(pelicula) + "' no se encuentra en el sistema. Regístrala en la cartelera antes de asignarle una función.");
+    // 4. Validar que tengamos un usuario logueado en memoria (Árbol B)
+    if (clienteLogueadoID.empty()) {
+        QMessageBox::critical(this, "Error de Sesión", "No hay ningún cliente logueado.");
         return;
     }
-    // (Opcional) Validación estricta de Fase 1: Validar que sea la función activa actualmente
-    // if (pelicula != sala.peliculaActual) {
-    //     QMessageBox::warning(this, "Función No Disponible", "La película existe, pero en este momento la sala está configurada para: " + QString::fromStdString(sala.peliculaActual));
-    //     return;
-    // }
 
-    // 4. Intentamos reservar en la Matriz Dispersa
-    bool exito = sala.reservarAsiento(fila, columna, cliente);
+    Cliente* clienteActual = arbolClientes.buscar(clienteLogueadoID);
+    if (clienteActual == nullptr) return;
 
-    if (exito) {
-        QMessageBox::information(this, "Reserva Confirmada",
-                                 QString("¡Asiento F%1-C%2 reservado con éxito para %3!")
-                                     .arg(fila).arg(columna).arg(QString::fromStdString(cliente)));
+    // 5. Leer el archivo JSON de la función para verificar disponibilidad
+    QString rutaArchivo = QString::fromStdString(f->archivo_asientos);
+    QFile archivoIn(rutaArchivo);
+    QJsonDocument doc;
+    QJsonObject raizJSON;
+    QJsonArray asientosOcupados;
 
-        ui->txtNombreCliente->clear();
-
+    if (archivoIn.open(QIODevice::ReadOnly)) {
+        doc = QJsonDocument::fromJson(archivoIn.readAll());
+        raizJSON = doc.object();
+        asientosOcupados = raizJSON["asientos_ocupados"].toArray();
+        archivoIn.close();
     } else {
-        QMessageBox::critical(this, "Asiento No Disponible",
-                              "Lo sentimos, ese asiento ya está ocupado o no existe en esta sala. Por favor, selecciona otro.");
+        QMessageBox::critical(this, "Error de Archivo", "No se pudo leer el archivo de la sala: " + rutaArchivo);
+        return;
     }
+
+    // 6. Verificar si el asiento ya está ocupado en el JSON
+    for (const QJsonValue& valor : asientosOcupados) {
+        QJsonObject asientoObj = valor.toObject();
+        if (asientoObj["fila"].toInt() == fila && asientoObj["columna"].toInt() == columna) {
+            QMessageBox::warning(this, "Asiento Ocupado",
+                                 QString("El asiento en la fila %1, columna %2 ya se encuentra reservado.").arg(fila).arg(columna));
+            return;
+        }
+    }
+
+    // 7. Generar código único para la reserva (Ej: "R-0005-F001-F3C5")
+    QString codReserva = QString("R-%1-%2-F%3C%4")
+                             .arg(QString::fromStdString(clienteLogueadoID))
+                             .arg(codigoFuncion)
+                             .arg(fila).arg(columna);
+
+    QString fechaActual = QDateTime::currentDateTime().toString("yyyy-MM-dd");
+
+    // 8. Crear la reserva e insertarla en la TABLA HASH
+    Reserva nuevaReserva;
+    nuevaReserva.codigo_reserva = codReserva.toStdString();
+    nuevaReserva.codigo_funcion = codigoFuncion.toStdString();
+    nuevaReserva.id_cliente = clienteLogueadoID;
+    nuevaReserva.fila = fila;
+    nuevaReserva.columna = columna;
+    nuevaReserva.fecha_reserva = fechaActual.toStdString();
+
+    tablaReservas.insertar(nuevaReserva);
+
+    // 9. Vincular la reserva con el cliente en el ÁRBOL B
+    clienteActual->codigos_reservas.push_back(nuevaReserva.codigo_reserva);
+
+    // 10. Actualizar el archivo JSON de la función para bloquear el asiento
+    QJsonObject nuevoAsiento;
+    nuevoAsiento["fila"] = fila;
+    nuevoAsiento["columna"] = columna;
+    nuevoAsiento["id_cliente"] = QString::fromStdString(clienteLogueadoID);
+
+    asientosOcupados.append(nuevoAsiento);
+    raizJSON["asientos_ocupados"] = asientosOcupados;
+
+    QFile archivoOut(rutaArchivo);
+    if (archivoOut.open(QIODevice::WriteOnly)) {
+        QJsonDocument docOut(raizJSON);
+        archivoOut.write(docOut.toJson());
+        archivoOut.close();
+    }
+
+    // 11. Mensaje de éxito y limpieza de SpinBoxes
+    QMessageBox::information(this, "Reserva Exitosa",
+                             QString("¡Tu reserva se ha procesado con éxito!\n\nCódigo de Reserva: %1\nAsiento: Fila %2, Columna %3")
+                                 .arg(codReserva).arg(fila).arg(columna));
+
+    ui->spinFila->setValue(0);
+    ui->spinColumna->setValue(0);
 }
 
 // --- 2. CANCELAR RESERVA ---
@@ -147,6 +214,7 @@ void MainWindow::on_btnIniciarSesion_clicked() {
 
     // 1. Verificación estricta del Administrador
     if (correo == "AdminCine@gmail.com" && pass == "admin123Pass") {
+
         ui->B->setCurrentWidget(ui->page2Admin);
         QMessageBox::information(this, "Bienvenido", "Sesión iniciada como Administrador.");
 
@@ -165,7 +233,7 @@ void MainWindow::on_btnIniciarSesion_clicked() {
 
             // Guardamos el ID en memoria para usarlo en la pestaña de reservas
             clienteLogueadoID = c.id;
-
+            actualizarComboPeliculasUsuario();
             // Redirección a la interfaz de Taquilla
             ui->B->setCurrentWidget(ui->page3Usuario);
             QMessageBox::information(this, "Bienvenido", QString("Sesión iniciada. Hola, %1").arg(QString::fromStdString(c.nombre)));
@@ -449,64 +517,88 @@ void MainWindow::on_btnCrearFuncion_clicked()
     // Opcional: actualizarTablaFunciones(); si tienes una tabla visual para las funciones
 }
 
+void MainWindow::on_btnRefrescarSala_clicked() {
+    // 1. Obtener el código de la función desde el dato oculto (userData) del ComboBox
+    QString codigoFuncion = ui->cbmFuncionPeli->currentData().toString();
 
-void MainWindow::on_btnRefrescarSala_clicked()
-{
-    // 1. Obtener el código de la función seleccionada en la interfaz
-    // (Ajusta 'txtCodigoFuncion' al nombre del QLineEdit o QComboBox que estés usando)
-    std::string codigoFuncion = ui->txtBuscarCodigoPelicula->text().toStdString();
-
-    if (codigoFuncion.empty()) {
-        QMessageBox::warning(this, "Aviso", "Por favor ingresa o selecciona un código de función.");
+    if (codigoFuncion.isEmpty()) {
+        QMessageBox::warning(this, "Aviso", "Por favor, selecciona una función válida.");
         return;
     }
 
-    // 2. Buscar la función en el Árbol AVL
-    Funcion* f = avlFunciones.buscarFuncion(codigoFuncion);
-
+    // 2. Buscar la función en el Árbol AVL para saber las dimensiones de la sala
+    Funcion* f = avlFunciones.buscarFuncion(codigoFuncion.toStdString());
     if (f == nullptr) {
-        QMessageBox::warning(this, "Aviso", "La función seleccionada no existe en el sistema.");
+        QMessageBox::critical(this, "Error", "La función ya no se encuentra en el sistema.");
         return;
     }
 
-    // 3. Vaciar matriz actual y cargar asientos ocupados desde el archivo JSON de la función
-    sala.cargarDesdeArchivo(f->archivo_asientos, f->filas, f->columnas, f->codigo_pelicula, f->horario, f->sala);
+    // 3. Preparar la tabla visual (QTableWidget)
+    ui->tablaAsientos->setRowCount(f->filas);
+    ui->tablaAsientos->setColumnCount(f->columnas);
 
-    // 4. Preparar la tabla visual utilizando las dimensiones exactas guardadas en el AVL
-    int totalFilas = f->filas;
-    int totalColumnas = f->columnas;
+    // Opcional: Ajustar el tamaño de celdas para que se vean cuadradas como asientos
+    ui->tablaAsientos->horizontalHeader()->setDefaultSectionSize(60);
+    ui->tablaAsientos->verticalHeader()->setDefaultSectionSize(60);
 
-    ui->tablaAsientos->setRowCount(totalFilas);
-    ui->tablaAsientos->setColumnCount(totalColumnas);
-    ui->tablaAsientos->horizontalHeader()->setVisible(false);
-    ui->tablaAsientos->verticalHeader()->setVisible(false);
+    // 4. Inicializar toda la matriz visual como asientos "Libres" (Verdes)
+    // Nota: QTableWidget inicia en 0, pero para el usuario los asientos inician en 1
+    for (int i = 0; i < f->filas; i++) {
+        for (int j = 0; j < f->columnas; j++) {
+            QString textoCelda = QString("Libre\nF%1 C%2").arg(i + 1).arg(j + 1);
+            QTableWidgetItem* item = new QTableWidgetItem(textoCelda);
 
-    // 5. Pintar la tabla
-    for (int fila = 1; fila <= totalFilas; fila++) {
-        for (int col = 1; col <= totalColumnas; col++) {
+            item->setBackground(QColor(144, 238, 144)); // Color Verde Claro
+            item->setTextAlignment(Qt::AlignCenter);
+            item->setFlags(item->flags() & ~Qt::ItemIsEditable); // Evita que el usuario edite el texto doble clic
 
-            std::string estado = sala.obtenerEstadoAsiento(fila, col);
-            QTableWidgetItem *asientoItem = new QTableWidgetItem();
-
-            if (estado == "LIBRE") {
-                asientoItem->setBackground(QBrush(Qt::green));
-                asientoItem->setText("Libre");
-            } else if (estado == "ND") {
-                asientoItem->setBackground(QBrush(Qt::gray));
-                asientoItem->setText("Error");
-            } else {
-                asientoItem->setBackground(QBrush(Qt::red));
-                // Ahora "estado" contiene el codigo_reserva, cumpliendo con no duplicar los datos del cliente[cite: 1]
-                asientoItem->setText(QString::fromStdString(estado));
-            }
-
-            asientoItem->setTextAlignment(Qt::AlignCenter);
-            ui->tablaAsientos->setItem(fila - 1, col - 1, asientoItem);
+            ui->tablaAsientos->setItem(i, j, item);
         }
     }
-    ui->tablaAsientos->resizeColumnsToContents();
-}
 
+    // 5. Leer el archivo JSON de esta función específica
+    QString rutaArchivo = QString::fromStdString(f->archivo_asientos);
+    QFile archivo(rutaArchivo);
+
+    if (archivo.open(QIODevice::ReadOnly)) {
+        QJsonDocument doc = QJsonDocument::fromJson(archivo.readAll());
+        QJsonObject raizJSON = doc.object();
+        QJsonArray asientosOcupados = raizJSON["asientos_ocupados"].toArray();
+        archivo.close();
+
+        // 6. Recorrer los asientos ocupados y sobreescribir las celdas a "Ocupado" (Rojas)
+        for (const QJsonValue& valor : asientosOcupados) {
+            QJsonObject asientoObj = valor.toObject();
+            int filaAsiento = asientoObj["fila"].toInt();
+            int colAsiento = asientoObj["columna"].toInt();
+
+            // Convertimos a índice de interfaz (restando 1)
+            int filaUI = filaAsiento - 1;
+            int colUI = colAsiento - 1;
+
+            // Validamos que el asiento no exceda los límites de la tabla
+            if (filaUI >= 0 && filaUI < f->filas && colUI >= 0 && colUI < f->columnas) {
+                QTableWidgetItem* itemOcupado = ui->tablaAsientos->item(filaUI, colUI);
+                if (itemOcupado) {
+                    itemOcupado->setText(QString("Ocupado\nF%1 C%2").arg(filaAsiento).arg(colAsiento));
+                    itemOcupado->setBackground(QColor(255, 99, 71)); // Color Rojo Tomate
+                }
+            }
+        }
+    } else {
+        QMessageBox::warning(this, "Aviso", "No se pudo leer el archivo de la sala. Es posible que aún no tenga asientos reservados.");
+    }
+
+    /*
+     * NOTA DE ESTRUCTURAS DE DATOS (MATRIZ DISPERSA):
+     * Si necesitas generar el reporte de Graphviz de la sala actual, este es el lugar
+     * perfecto para inicializar tu objeto `MatrizDispersa`.
+     *
+     * sala = MatrizDispersa();
+     * // Luego, dentro del ciclo `for` de asientos ocupados (Paso 6):
+     * sala.insertar(filaAsiento, colAsiento, asientoObj["id_cliente"].toString().toStdString());
+     */
+}
 
 
 // Función auxiliar para cargar la imagen (puedes crearla o poner el código en cada botón)
@@ -560,18 +652,6 @@ void MainWindow::on_btnConsultarEstado_clicked()
     QMessageBox::information(this, "Estado de Solicitud", QString::fromStdString(resultado));
 }
 
-// --- ADMIN: ELIMINAR FUNCIÓN ---
-void MainWindow::on_btnEliminarFuncion_clicked()
-{
-    sala = MatrizDispersa(); // Reiniciamos la matriz a su estado vacío
-
-    // Si tienes la tabla visible, la limpiamos
-    ui->tablaAsientos->clear();
-    ui->tablaAsientos->setRowCount(0);
-    ui->tablaAsientos->setColumnCount(0);
-
-    QMessageBox::information(this, "Función Eliminada", "La función actual y su mapa de asientos han sido borrados del sistema.");
-}
 
 // --- CLIENTE: BUSCAR PELÍCULA ---
 void MainWindow::on_btnBuscarPelicula_clicked()
@@ -1247,5 +1327,60 @@ void MainWindow::actualizarComboPeliculasAdmin() {
     // 4. Llenar el ComboBox con los títulos
     for (const Pelicula& p : listaPelis) {
         ui->cmbPeliculaAdmin->addItem(QString::fromStdString(p.titulo));
+    }
+}
+
+void MainWindow::on_cmbPeliculaReserva_currentTextChanged(const QString &tituloPelicula) {
+    // 1. Limpiar el ComboBox de funciones
+    ui->cbmFuncionPeli->clear();
+
+    // Ignorar si es la opción por defecto o está vacío
+    if (tituloPelicula.isEmpty() || tituloPelicula == "Seleccione una película...") {
+        return;
+    }
+
+    // 2. Buscar el código de la película seleccionada comparando el título
+    std::string codigoPelicula = "";
+    std::vector<Pelicula> listaPelis = cartelera.obtenerCarteleraInorden();
+    for (const Pelicula& p : listaPelis) {
+        if (p.titulo == tituloPelicula.toStdString()) {
+            codigoPelicula = p.codigo;
+            break;
+        }
+    }
+
+    // Si no se encontró el código (por algún error), salir
+    if (codigoPelicula.empty()) return;
+
+    // 3. Filtrar el Árbol AVL buscando las funciones que coincidan con ese código
+    std::vector<Funcion> funciones = avlFunciones.obtenerFuncionesInorden();
+    ui->cbmFuncionPeli->addItem("Seleccione una función...", QVariant("")); // Opción por defecto
+
+    bool hayFunciones = false;
+    for (const Funcion& f : funciones) {
+        if (f.codigo_pelicula == codigoPelicula) {
+            // Texto que verá el usuario
+            QString textoVisible = QString::fromStdString("Sala: " + f.sala + " | Horario: " + f.horario);
+
+            // addItem permite guardar datos ocultos (UserData) usando QVariant
+            // Guardamos el f.codigo_funcion para usarlo más adelante en la reserva
+            ui->cbmFuncionPeli->addItem(textoVisible, QVariant(QString::fromStdString(f.codigo_funcion)));
+            hayFunciones = true;
+        }
+    }
+
+    // 4. Mensaje visual si la película no tiene funciones programadas
+    if (!hayFunciones) {
+        ui->cbmFuncionPeli->setItemText(0, "No hay funciones disponibles");
+    }
+}
+
+void MainWindow::actualizarComboPeliculasUsuario() {
+    ui->cmbPeliculaReserva->clear();
+    std::vector<Pelicula> listaPelis = cartelera.obtenerCarteleraInorden();
+
+    ui->cmbPeliculaReserva->addItem("Seleccione una película...");
+    for (const Pelicula& p : listaPelis) {
+        ui->cmbPeliculaReserva->addItem(QString::fromStdString(p.titulo));
     }
 }

@@ -35,7 +35,7 @@
 </string>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="page1Login">
      <widget class="QTabWidget" name="tabWidget_3">
@@ -388,7 +388,7 @@ QTabBar::tab:hover {
 </string>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
@@ -904,6 +904,65 @@ QComboBox QAbstractItemView {
 }</string>
         </property>
        </widget>
+       <widget class="QComboBox" name="cbmFuncionPeli">
+        <property name="geometry">
+         <rect>
+          <x>520</x>
+          <y>170</y>
+          <width>171</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QComboBox {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QComboBox:hover {
+    border: 1px solid #E63946;
+}
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 24px;
+    border-left: 1px solid #3A4A6B;
+}
+QComboBox::down-arrow {
+    width: 0px;
+    height: 0px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #F1FAEE;
+    margin-right: 6px;
+}
+QComboBox QAbstractItemView {
+    background-color: #1D2D44;
+    border: 1px solid #3A4A6B;
+    color: #F1FAEE;
+    selection-background-color: #E63946;
+    selection-color: #F1FAEE;
+    outline: none;
+}</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_57">
+        <property name="geometry">
+         <rect>
+          <x>520</x>
+          <y>150</y>
+          <width>71</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>FUNCIONES</string>
+        </property>
+       </widget>
       </widget>
       <widget class="QWidget" name="tab_6">
        <attribute name="title">
@@ -912,10 +971,10 @@ QComboBox QAbstractItemView {
        <widget class="QTableWidget" name="tablaAsientos">
         <property name="geometry">
          <rect>
-          <x>50</x>
-          <y>90</y>
-          <width>581</width>
-          <height>301</height>
+          <x>20</x>
+          <y>80</y>
+          <width>811</width>
+          <height>351</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -948,9 +1007,9 @@ QTableWidget::item:selected {
        <widget class="QPushButton" name="btnRefrescarSala">
         <property name="geometry">
          <rect>
-          <x>650</x>
-          <y>230</y>
-          <width>161</width>
+          <x>680</x>
+          <y>40</y>
+          <width>121</width>
           <height>31</height>
          </rect>
         </property>
@@ -975,7 +1034,7 @@ QPushButton:pressed {
 }</string>
         </property>
         <property name="text">
-         <string>REFRESCAR SALA</string>
+         <string>ACTUALIZAR</string>
         </property>
        </widget>
        <widget class="QLabel" name="label_32">
@@ -1142,9 +1201,9 @@ font: 900 </string>
        <widget class="QPushButton" name="pushButton">
         <property name="geometry">
          <rect>
-          <x>340</x>
-          <y>110</y>
-          <width>91</width>
+          <x>60</x>
+          <y>330</y>
+          <width>111</width>
           <height>31</height>
          </rect>
         </property>
@@ -1533,7 +1592,7 @@ QPushButton:pressed {
         <x>30</x>
         <y>90</y>
         <width>831</width>
-        <height>451</height>
+        <height>461</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -1560,7 +1619,7 @@ QTabBar::tab:hover {
 }</string>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>5</number>
       </property>
       <property name="tabBarAutoHide">
        <bool>false</bool>
@@ -2287,8 +2346,8 @@ QHeaderView::section {
          <rect>
           <x>40</x>
           <y>100</y>
-          <width>731</width>
-          <height>301</height>
+          <width>341</width>
+          <height>181</height>
          </rect>
         </property>
        </widget>
@@ -2582,41 +2641,6 @@ QPushButton:pressed {
          <string>CREAR FUNCION</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="btnEliminarFuncion">
-        <property name="geometry">
-         <rect>
-          <x>580</x>
-          <y>320</y>
-          <width>181</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">/* RECHAZAR */
-QPushButton {
-    background-color: transparent;
-    color: #FF3B4E;
-    border: 1px solid #FF3B4E;
-    border-radius: 6px;
-    padding: 8px 16px;
-    font-family: &quot;Montserrat SemiBold&quot;;
-    font-weight: 600;
-    letter-spacing: 1px;
-}
-QPushButton:hover {
-    background-color: #FF3B4E;
-    color: #F1FAEE;
-}
-QPushButton:pressed {
-    background-color: #D62638;
-    border: 1px solid #D62638;
-    color: #F1FAEE;
-}</string>
-        </property>
-        <property name="text">
-         <string>ELIMINAR FUNCION</string>
-        </property>
-       </widget>
        <widget class="QLineEdit" name="txtHorario">
         <property name="geometry">
          <rect>
@@ -2879,8 +2903,8 @@ QComboBox QAbstractItemView {
        <widget class="QPushButton" name="btnEditFuncion">
         <property name="geometry">
          <rect>
-          <x>260</x>
-          <y>180</y>
+          <x>240</x>
+          <y>190</y>
           <width>80</width>
           <height>24</height>
          </rect>
@@ -2892,11 +2916,33 @@ QComboBox QAbstractItemView {
        <widget class="QPushButton" name="btnEliminarFun">
         <property name="geometry">
          <rect>
-          <x>360</x>
+          <x>330</x>
           <y>180</y>
-          <width>80</width>
-          <height>24</height>
+          <width>121</width>
+          <height>31</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">/* RECHAZAR */
+QPushButton {
+    background-color: transparent;
+    color: #FF3B4E;
+    border: 1px solid #FF3B4E;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-family: &quot;Montserrat SemiBold&quot;;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+QPushButton:hover {
+    background-color: #FF3B4E;
+    color: #F1FAEE;
+}
+QPushButton:pressed {
+    background-color: #D62638;
+    border: 1px solid #D62638;
+    color: #F1FAEE;
+}</string>
         </property>
         <property name="text">
          <string>ELIMINAR</string>
@@ -3265,7 +3311,7 @@ QPushButton:pressed {
 }</string>
         </property>
         <property name="text">
-         <string>REPORTE 1</string>
+         <string>RESERVAS</string>
         </property>
        </widget>
        <widget class="QPushButton" name="btnVerRepCartelera_6">
@@ -3298,7 +3344,7 @@ QPushButton:pressed {
 }</string>
         </property>
         <property name="text">
-         <string>REPORTE 1</string>
+         <string>SALA</string>
         </property>
        </widget>
       </widget>
