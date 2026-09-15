@@ -550,54 +550,41 @@ void MainWindow::on_btnRefrescarSala_clicked() {
 
             item->setBackground(QColor(144, 238, 144)); // Color Verde Claro
             item->setTextAlignment(Qt::AlignCenter);
-            item->setFlags(item->flags() & ~Qt::ItemIsEditable); // Evita que el usuario edite el texto doble clic
+            item->setFlags(item->flags() & ~Qt::ItemIsEditable); // Evita que el usuario edite el texto con doble clic
 
             ui->tablaAsientos->setItem(i, j, item);
         }
     }
 
-    // 5. Leer el archivo JSON de esta función específica
-    QString rutaArchivo = QString::fromStdString(f->archivo_asientos);
-    QFile archivo(rutaArchivo);
-
-    if (archivo.open(QIODevice::ReadOnly)) {
-        QJsonDocument doc = QJsonDocument::fromJson(archivo.readAll());
-        QJsonObject raizJSON = doc.object();
-        QJsonArray asientosOcupados = raizJSON["asientos_ocupados"].toArray();
-        archivo.close();
-
-        // 6. Recorrer los asientos ocupados y sobreescribir las celdas a "Ocupado" (Rojas)
-        for (const QJsonValue& valor : asientosOcupados) {
-            QJsonObject asientoObj = valor.toObject();
-            int filaAsiento = asientoObj["fila"].toInt();
-            int colAsiento = asientoObj["columna"].toInt();
-
-            // Convertimos a índice de interfaz (restando 1)
-            int filaUI = filaAsiento - 1;
-            int colUI = colAsiento - 1;
-
-            // Validamos que el asiento no exceda los límites de la tabla
-            if (filaUI >= 0 && filaUI < f->filas && colUI >= 0 && colUI < f->columnas) {
-                QTableWidgetItem* itemOcupado = ui->tablaAsientos->item(filaUI, colUI);
-                if (itemOcupado) {
-                    itemOcupado->setText(QString("Ocupado\nF%1 C%2").arg(filaAsiento).arg(colAsiento));
-                    itemOcupado->setBackground(QColor(255, 99, 71)); // Color Rojo Tomate
-                }
-            }
-        }
-    } else {
-        QMessageBox::warning(this, "Aviso", "No se pudo leer el archivo de la sala. Es posible que aún no tenga asientos reservados.");
-    }
+    // ==============================================================
+    // 5. Extraer asientos consultando TU ESTRUCTURA EN MEMORIA (Tabla Hash)
+    // ==============================================================
+    std::vector<Reserva> reservas = tablaReservas.obtenerReservasPorFuncion(codigoFuncion.toStdString());
 
     /*
      * NOTA DE ESTRUCTURAS DE DATOS (MATRIZ DISPERSA):
-     * Si necesitas generar el reporte de Graphviz de la sala actual, este es el lugar
-     * perfecto para inicializar tu objeto `MatrizDispersa`.
-     *
+     * Si generas el reporte de Graphviz de la sala aquí, inicializa la matriz:
      * sala = MatrizDispersa();
-     * // Luego, dentro del ciclo `for` de asientos ocupados (Paso 6):
-     * sala.insertar(filaAsiento, colAsiento, asientoObj["id_cliente"].toString().toStdString());
      */
+
+    // 6. Recorrer las reservas encontradas y sobreescribir las celdas a "Ocupado" (Rojas)
+    for (const Reserva& res : reservas) {
+        // Convertimos a índice de interfaz (restando 1)
+        int filaUI = res.fila - 1;
+        int colUI = res.columna - 1;
+
+        // Si usas la Matriz Dispersa para graficar la sala:
+        // sala.insertar(res.fila, res.columna, res.id_cliente);
+
+        // Validamos que el asiento no exceda los límites de la tabla
+        if (filaUI >= 0 && filaUI < f->filas && colUI >= 0 && colUI < f->columnas) {
+            QTableWidgetItem* itemOcupado = ui->tablaAsientos->item(filaUI, colUI);
+            if (itemOcupado) {
+                itemOcupado->setText(QString("Ocupado\nF%1 C%2").arg(res.fila).arg(res.columna));
+                itemOcupado->setBackground(QColor(255, 99, 71)); // Color Rojo Tomate
+            }
+        }
+    }
 }
 
 

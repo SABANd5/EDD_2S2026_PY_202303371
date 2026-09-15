@@ -30,7 +30,7 @@ public:
     void eliminar(std::string codigo_reserva);
     void generarReporteGraphviz();
     void eliminarPorFuncion(std::string codigo_funcion);
-
+    std::vector<Reserva> obtenerReservasPorFuncion(std::string codigo_funcion);
 
 private:
     int capacidad;

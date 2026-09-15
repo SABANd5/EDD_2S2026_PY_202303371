@@ -143,3 +143,22 @@ void TablaHashReservas::eliminarPorFuncion(std::string codigo_funcion) {
         }
     }
 }
+
+std::vector<Reserva> TablaHashReservas::obtenerReservasPorFuncion(std::string codigo_funcion) {
+    std::vector<Reserva> encontradas;
+
+    // NOTA: Cambia "tamano" por el nombre de la variable que usaste
+    // en tu clase para definir la capacidad del arreglo (ej. capacidad, size)
+    for (int i = 0; i < capacidad; i++) {
+        NodoHash* actual = tabla[i];
+
+        while (actual != nullptr) {
+            if (actual->dato.codigo_funcion == codigo_funcion) {
+                encontradas.push_back(actual->dato);
+            }
+            actual = actual->siguiente;
+        }
+    }
+
+    return encontradas;
+}
