@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream> // Necesario para generar el archivo .dot
 #include <sstream>
+#include <QDate>
 // Constructor
 ArbolPeliculas::ArbolPeliculas() {
     raiz = nullptr;
@@ -39,20 +40,23 @@ void ArbolPeliculas::generarReporteGraphviz() {
     if (archivo.is_open()) {
         archivo << "digraph G {\n";
         archivo << "  rankdir=TB;\n"; // Top to Bottom
-        // Estilo base de los nodos según las características solicitadas
-        archivo << "  node [shape=record, style=filled, fillcolor=lightgreen, fontname=\"Arial\"];\n";
+
+        // Retiramos el "fillcolor" global para que el color individual de cada nodo tenga efecto
+        archivo << "  node [shape=record, style=filled, fontname=\"Arial\"];\n";
 
         if (raiz != nullptr) {
             std::string dotContent = "";
             generarCuerpoDot(raiz, dotContent);
             archivo << dotContent;
+        } else {
+            // Manejo de árbol vacío para que Graphviz no falle
+            archivo << "  \"Vacio\" [label=\"Cartelera Vacía\", shape=box, fillcolor=white];\n";
         }
 
         archivo << "}\n";
         archivo.close();
 
         // Ejecutamos el comando de consola para convertir el .dot a .png
-        // Asegúrate de tener Graphviz instalado y agregado al PATH de tu sistema
         int resultado = system("dot -Tpng reporte_cartelera.dot -o reporte_cartelera.png");
 
         if (resultado == 0) {
@@ -68,8 +72,25 @@ void ArbolPeliculas::generarReporteGraphviz() {
 // Método recursivo para armar las conexiones y el diseño de los nodos en DOT
 void ArbolPeliculas::generarCuerpoDot(NodoBST* nodo, std::string& dotContent) {
     if (nodo != nullptr) {
-        // Armamos la estructura del nodo con los datos solicitados en el PDF
-        dotContent += "  \"" + nodo->dato.codigo + "\" [label=\"{Código: " + nodo->dato.codigo +
+
+        // 1. Lógica para determinar el color (Verde o Amarillo)
+        std::string colorHex = "\"#81C784\""; // Verde por defecto (En cartelera)
+
+        // Convertimos el string de la fecha a un objeto QDate (Asumiendo formato yyyy-MM-dd)
+        QDate fechaFin = QDate::fromString(QString::fromStdString(nodo->dato.fechaFin), "yyyy-MM-dd");
+
+        if (fechaFin.isValid()) {
+            // Calculamos cuántos días faltan para que la película salga de cartelera
+            qint64 diasRestantes = QDate::currentDate().daysTo(fechaFin);
+
+            // Si faltan 7 días o menos, se considera "próximo a retirar"
+            if (diasRestantes <= 7) {
+                colorHex = "\"#FFF59D\""; // Amarillo pastel
+            }
+        }
+
+        // 2. Armamos la estructura del nodo aplicando el color calculado
+        dotContent += "  \"" + nodo->dato.codigo + "\" [fillcolor=" + colorHex + ", label=\"{Código: " + nodo->dato.codigo +
                       " | Título: " + nodo->dato.titulo +
                       " | Duración: " + std::to_string(nodo->dato.duracion) + " min" +
                       " | Clasificación: " + nodo->dato.clasificacion + "}\"];\n";
