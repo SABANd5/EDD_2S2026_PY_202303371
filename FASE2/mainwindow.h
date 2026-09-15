@@ -85,7 +85,7 @@ private slots:
     void on_cmbPeliculaReserva_currentTextChanged(const QString &tituloPelicula);
 
     void on_btnActualizarReservaUsuario_clicked();
-
+    void on_btnGuardarPerfil_clicked();
 private:
     Ui::MainWindow *ui;
 
@@ -109,6 +109,7 @@ private:
     void actualizarTablaFunciones();
     void actualizarComboPeliculasAdmin();
     void actualizarComboPeliculasUsuario();
+    void cargarDatosPerfilUsuario();
 };
 
 #endif // MAINWINDOW_H

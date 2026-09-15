@@ -312,6 +312,7 @@ void MainWindow::on_btnIniciarSesion_clicked() {
             clienteLogueadoID = c.id;
             actualizarComboPeliculasUsuario();
             on_btnActualizarReservaUsuario_clicked();
+            cargarDatosPerfilUsuario();
             // Redirección a la interfaz de Taquilla
             ui->B->setCurrentWidget(ui->page3Usuario);
             QMessageBox::information(this, "Bienvenido", QString("Sesión iniciada. Hola, %1").arg(QString::fromStdString(c.nombre)));
@@ -1562,4 +1563,66 @@ void MainWindow::on_btnActualizarReservaUsuario_clicked()
     }
 
     ui->tblHistorialReservas->resizeColumnsToContents();
+}
+
+// ==========================================
+// CARGAR DATOS AL ENTRAR AL PERFIL
+// ==========================================
+void MainWindow::cargarDatosPerfilUsuario() {
+    if (clienteLogueadoID.empty()) return;
+
+    // Buscamos al cliente en el Árbol B
+    Cliente* c = arbolClientes.buscar(clienteLogueadoID);
+
+    if (c != nullptr) {
+        // Llenamos los QLineEdit con sus datos actuales
+        ui->txtEditNombre->setText(QString::fromStdString(c->nombre));
+        ui->txtEditCorreo->setText(QString::fromStdString(c->correo));
+        ui->txtEditTel->setText(QString::fromStdString(c->telefono));
+        ui->txtEditPass->setText(QString::fromStdString(c->password));
+    }
+}
+
+// ==========================================
+// GUARDAR CAMBIOS DEL PERFIL
+// ==========================================
+void MainWindow::on_btnGuardarPerfil_clicked() {
+    if (clienteLogueadoID.empty()) return;
+
+    // 1. Obtener los nuevos textos
+    QString nuevoNombre = ui->txtEditNombre->text().trimmed();
+    QString nuevoCorreo = ui->txtEditCorreo->text().trimmed();
+    QString nuevoTel = ui->txtEditTel->text().trimmed();
+    QString nuevaPass = ui->txtEditPass->text();
+
+    if (nuevoNombre.isEmpty() || nuevoCorreo.isEmpty() || nuevoTel.isEmpty() || nuevaPass.isEmpty()) {
+        QMessageBox::warning(this, "Datos Incompletos", "Ningún campo puede quedar vacío.");
+        return;
+    }
+
+    // 2. Extraer el puntero real del Árbol B
+    Cliente* cActual = arbolClientes.buscar(clienteLogueadoID);
+    if (cActual == nullptr) return;
+
+    // 3. Validar que el nuevo correo no exista ya (solo si lo intentó cambiar)
+    if (nuevoCorreo.toStdString() != cActual->correo) {
+        std::vector<Cliente> todosLosClientes = arbolClientes.obtenerClientesInorden();
+        for (const Cliente& c : todosLosClientes) {
+            if (c.correo == nuevoCorreo.toStdString()) {
+                QMessageBox::warning(this, "Correo Inválido", "Este correo ya se encuentra registrado por otro usuario.");
+                return;
+            }
+        }
+    }
+
+    // 4. Actualizar directamente el nodo en memoria (Al ser un puntero, el Árbol B se actualiza al instante)
+    cActual->nombre = nuevoNombre.toStdString();
+    cActual->correo = nuevoCorreo.toStdString();
+    cActual->telefono = nuevoTel.toStdString();
+    cActual->password = nuevaPass.toStdString();
+
+    // Actualizamos la tabla del administrador por si acaso (Background sync)
+    actualizarTablaClientes();
+
+    QMessageBox::information(this, "Éxito", "Tu perfil se ha actualizado correctamente.");
 }
