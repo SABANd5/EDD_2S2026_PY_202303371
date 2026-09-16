@@ -897,10 +897,19 @@ void MainWindow::cargarMasivaClientes(const QString& rutaArchivo) {
 
 
 void MainWindow::on_btnReporteAVL_clicked() {
-    avlFunciones.generarReporteGraphviz(); // Genera el árbol de funciones activas y realizadas[cite: 1]
-    QMessageBox::information(this, "Reporte", "Reporte del Árbol AVL generado con éxito.");
-    // Opcional: Cargar la imagen en un QLabel si lo tienes en tu UI
-     ui->lblVisorReportes->setPixmap(QPixmap("reporte_avl.png"));
+    // Generamos la imagen pasando la referencia de la cartelera de películas
+    avlFunciones.generarReporteGraphviz(&cartelera);
+
+    // Cargamos el PNG en el visor
+    QPixmap pixmap("reporte_avl.png");
+    if (!pixmap.isNull()) {
+        int ancho = ui->lblVisorReportes->width();
+        int alto = ui->lblVisorReportes->height();
+        ui->lblVisorReportes->setPixmap(pixmap.scaled(ancho, alto, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        ui->lblVisorReportes->setAlignment(Qt::AlignCenter);
+    } else {
+        QMessageBox::warning(this, "Error", "No se pudo cargar el reporte del Árbol AVL.");
+    }
 }
 
 

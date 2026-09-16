@@ -2,7 +2,8 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm> // Para std::max
-
+#include "ArbolPeliculas.h"
+#include <QDate>
 ArbolFunciones::ArbolFunciones() : raiz(nullptr) {}
 
 // ==========================================
@@ -123,41 +124,65 @@ void ArbolFunciones::insertar(Funcion f) {
 // ==========================================
 // REPORTE GRAPHVIZ
 // ==========================================
-void ArbolFunciones::generarCuerpoDot(NodoAVL* nodo, std::string& dotContent) {
+void ArbolFunciones::generarCuerpoDot(NodoAVL* nodo, std::string& dotContent, ArbolPeliculas* cartelera) {
     if (nodo != nullptr) {
-        // Color verde si está programada, rojo si ya se realizó
-        std::string color = nodo->dato.ya_realizada ? "red" : "green";
+        bool peliculaVencida = false;
 
-        dotContent += "  \"" + nodo->dato.codigo_funcion + "\" [label=\"" + nodo->dato.codigo_funcion + "\\n" + nodo->dato.horario + "\\n" + nodo->dato.sala + "\", style=filled, fillcolor=" + color + "];\n";
+        // 1. Buscamos la película en la cartelera usando el código que tiene la función
+        if (cartelera != nullptr) {
+            Pelicula* p = cartelera->buscarPelicula(nodo->dato.codigo_pelicula);
 
+            if (p != nullptr) {
+                // Convertimos el string a fecha real
+                QDate fechaFin = QDate::fromString(QString::fromStdString(p->fechaFin), "yyyy-MM-dd");
+
+                // Comparamos: si la fecha fin ya pasó, marcamos la película como vencida
+                if (fechaFin.isValid() && fechaFin < QDate::currentDate()) {
+                    peliculaVencida = true;
+                }
+            }
+        }
+
+        // 2. Aplicamos la regla del auxiliar: Rojo pastel si venció, Verde pastel si está vigente
+        std::string colorHex = peliculaVencida ? "\"#EF5350\"" : "\"#81C784\"";
+
+        // Armamos el nodo circular
+        dotContent += "  \"" + nodo->dato.codigo_funcion + "\" [fillcolor=" + colorHex +
+                      ", label=\"" + nodo->dato.codigo_funcion + "\\n" +
+                      nodo->dato.horario + "\\nSala " + nodo->dato.sala + "\"];\n";
+
+        // Conexión con el hijo izquierdo
         if (nodo->izquierdo != nullptr) {
             dotContent += "  \"" + nodo->dato.codigo_funcion + "\" -> \"" + nodo->izquierdo->dato.codigo_funcion + "\";\n";
-            generarCuerpoDot(nodo->izquierdo, dotContent);
+            generarCuerpoDot(nodo->izquierdo, dotContent, cartelera);
         }
+
+        // Conexión con el hijo derecho
         if (nodo->derecho != nullptr) {
             dotContent += "  \"" + nodo->dato.codigo_funcion + "\" -> \"" + nodo->derecho->dato.codigo_funcion + "\";\n";
-            generarCuerpoDot(nodo->derecho, dotContent);
+            generarCuerpoDot(nodo->derecho, dotContent, cartelera);
         }
     }
 }
 
-void ArbolFunciones::generarReporteGraphviz() {
+void ArbolFunciones::generarReporteGraphviz(ArbolPeliculas* cartelera) {
     std::ofstream archivo("reporte_avl.dot");
+
     if (archivo.is_open()) {
         std::string dotContent = "digraph AVLFunciones {\n";
-        dotContent += "  node [shape=circle, fontname=\"Arial\"];\n"; // Nodos circulares
+        dotContent += "  rankdir=TB;\n";
+        dotContent += "  node [shape=circle, style=filled, fontname=\"Arial\"];\n";
 
         if (raiz != nullptr) {
-            generarCuerpoDot(raiz, dotContent);
+            generarCuerpoDot(raiz, dotContent, cartelera);
+            archivo << dotContent;
         } else {
-            dotContent += "  \"Vacio\";\n";
+            archivo << "  \"Vacio\" [label=\"Sin Funciones\", shape=box, fillcolor=white];\n";
         }
 
-        dotContent += "}\n";
-        archivo << dotContent;
+        archivo << "}\n";
         archivo.close();
 
-        // Ejecutar el comando del sistema para generar la imagen
         system("dot -Tpng reporte_avl.dot -o reporte_avl.png");
     }
 }

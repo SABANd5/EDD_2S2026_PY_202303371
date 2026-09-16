@@ -25,7 +25,7 @@ struct NodoAVL {
     // Constructor del nodo
     NodoAVL(Funcion f) : dato(f), izquierdo(nullptr), derecho(nullptr), altura(1) {}
 };
-
+class ArbolPeliculas;
 // Clase principal del Árbol AVL
 class ArbolFunciones {
 public:
@@ -43,8 +43,7 @@ public:
     std::vector<Funcion> obtenerFuncionesPostorden();
 
     // Generación del reporte
-    void generarReporteGraphviz();
-
+void generarReporteGraphviz(ArbolPeliculas* cartelera);
 
 private:
     NodoAVL* raiz;
@@ -69,7 +68,7 @@ private:
     void recorridoPostorden(NodoAVL* nodo, std::vector<Funcion>& lista);
 
     // Auxiliar de reporte
-    void generarCuerpoDot(NodoAVL* nodo, std::string& dotContent);
+    void generarCuerpoDot(NodoAVL* nodo, std::string& dotContent, ArbolPeliculas* cartelera);
     NodoAVL* obtenerMinimo(NodoAVL* nodo);
 };
 
