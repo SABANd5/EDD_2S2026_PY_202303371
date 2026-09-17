@@ -35,7 +35,7 @@
 </string>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="page1Login">
      <widget class="QTabWidget" name="tabWidget_3">
@@ -48,11 +48,11 @@
        </rect>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab_8">
        <attribute name="title">
-        <string>Tab 1</string>
+        <string>INICIAR SESION</string>
        </attribute>
        <widget class="QPushButton" name="btnIniciarSesion">
         <property name="geometry">
@@ -207,46 +207,102 @@ QLineEdit:focus {
       </widget>
       <widget class="QWidget" name="tab_9">
        <attribute name="title">
-        <string>Tab 2</string>
+        <string>REGISTRAR</string>
        </attribute>
        <widget class="QLineEdit" name="txtRegNombre">
         <property name="geometry">
          <rect>
-          <x>90</x>
-          <y>110</y>
+          <x>380</x>
+          <y>190</y>
           <width>113</width>
-          <height>24</height>
+          <height>31</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QLineEdit:focus {
+    border: 1px solid #4A6FA5;
+}</string>
         </property>
        </widget>
        <widget class="QLineEdit" name="txtRegCorreo">
         <property name="geometry">
          <rect>
-          <x>90</x>
-          <y>170</y>
+          <x>380</x>
+          <y>250</y>
           <width>113</width>
-          <height>24</height>
+          <height>31</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QLineEdit:focus {
+    border: 1px solid #4A6FA5;
+}</string>
         </property>
        </widget>
        <widget class="QLineEdit" name="txtRegTel">
         <property name="geometry">
          <rect>
-          <x>90</x>
-          <y>230</y>
+          <x>380</x>
+          <y>310</y>
           <width>113</width>
-          <height>24</height>
+          <height>31</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QLineEdit:focus {
+    border: 1px solid #4A6FA5;
+}</string>
         </property>
        </widget>
        <widget class="QLineEdit" name="txtRegPass">
         <property name="geometry">
          <rect>
-          <x>90</x>
-          <y>290</y>
+          <x>380</x>
+          <y>370</y>
           <width>113</width>
-          <height>24</height>
+          <height>31</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QLineEdit:focus {
+    border: 1px solid #4A6FA5;
+}</string>
         </property>
         <property name="echoMode">
          <enum>QLineEdit::EchoMode::Password</enum>
@@ -255,11 +311,31 @@ QLineEdit:focus {
        <widget class="QPushButton" name="btnRegistrarUsuario">
         <property name="geometry">
          <rect>
-          <x>90</x>
-          <y>340</y>
-          <width>141</width>
+          <x>380</x>
+          <y>420</y>
+          <width>121</width>
           <height>31</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+    background-color: transparent;
+    color: #2A9D8F;
+    border: 1px solid #2A9D8F;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-family: &quot;Montserrat&quot;;
+    font-weight: 600;
+}
+QPushButton:hover {
+    background-color: #2A9D8F;
+    color: #F1FAEE;
+}
+QPushButton:pressed {
+    background-color: #1F766C;
+    border: 1px solid #1F766C;
+    color: #F1FAEE;
+}</string>
         </property>
         <property name="text">
          <string>REGISTRAR </string>
@@ -268,11 +344,17 @@ QLineEdit:focus {
        <widget class="QLabel" name="label_37">
         <property name="geometry">
          <rect>
-          <x>90</x>
-          <y>70</y>
+          <x>380</x>
+          <y>170</y>
           <width>61</width>
           <height>16</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: &quot;Montserrat Medium&quot;;
+font-size: 12px;
+color: #A8B2C1;
+background: transparent;</string>
         </property>
         <property name="text">
          <string>NOMBRE</string>
@@ -281,11 +363,17 @@ QLineEdit:focus {
        <widget class="QLabel" name="label_42">
         <property name="geometry">
          <rect>
-          <x>90</x>
-          <y>150</y>
+          <x>380</x>
+          <y>230</y>
           <width>61</width>
           <height>16</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: &quot;Montserrat Medium&quot;;
+font-size: 12px;
+color: #A8B2C1;
+background: transparent;</string>
         </property>
         <property name="text">
          <string>CORREO</string>
@@ -294,11 +382,17 @@ QLineEdit:focus {
        <widget class="QLabel" name="label_44">
         <property name="geometry">
          <rect>
-          <x>90</x>
-          <y>210</y>
+          <x>380</x>
+          <y>290</y>
           <width>61</width>
           <height>16</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: &quot;Montserrat Medium&quot;;
+font-size: 12px;
+color: #A8B2C1;
+background: transparent;</string>
         </property>
         <property name="text">
          <string>TELEFONO</string>
@@ -307,14 +401,79 @@ QLineEdit:focus {
        <widget class="QLabel" name="label_45">
         <property name="geometry">
          <rect>
-          <x>90</x>
-          <y>270</y>
+          <x>380</x>
+          <y>350</y>
           <width>81</width>
           <height>16</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: &quot;Montserrat Medium&quot;;
+font-size: 12px;
+color: #A8B2C1;
+background: transparent;</string>
+        </property>
         <property name="text">
          <string>CONTRASEÑA</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_59">
+        <property name="geometry">
+         <rect>
+          <x>200</x>
+          <y>20</y>
+          <width>491</width>
+          <height>71</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <family>Bebas Neue</family>
+          <pointsize>-1</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">
+
+font-family: &quot;Bebas Neue&quot;;
+font-size: 52px;
+color: #F1FAEE;
+letter-spacing: 2px;
+background: transparent;</string>
+        </property>
+        <property name="text">
+         <string>C I N E M A U S A C</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_60">
+        <property name="geometry">
+         <rect>
+          <x>350</x>
+          <y>100</y>
+          <width>161</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <family>Bebas Neue</family>
+          <pointsize>-1</pointsize>
+         </font>
+        </property>
+        <property name="cursor">
+         <cursorShape>ArrowCursor</cursorShape>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">
+
+font-family: &quot;Bebas Neue&quot;;
+font-size: 30px;
+color: #F1FAEE;
+letter-spacing: 2px;
+background: transparent;</string>
+        </property>
+        <property name="text">
+         <string>REGISTRO</string>
         </property>
        </widget>
       </widget>
@@ -1154,7 +1313,7 @@ background: transparent;</string>
           <x>60</x>
           <y>110</y>
           <width>113</width>
-          <height>24</height>
+          <height>31</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -1197,7 +1356,7 @@ background: transparent;</string>
           <x>60</x>
           <y>290</y>
           <width>113</width>
-          <height>24</height>
+          <height>31</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -1224,7 +1383,7 @@ QLineEdit:focus {
           <x>60</x>
           <y>170</y>
           <width>113</width>
-          <height>24</height>
+          <height>31</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -1246,7 +1405,7 @@ QLineEdit:focus {
         <property name="geometry">
          <rect>
           <x>60</x>
-          <y>80</y>
+          <y>90</y>
           <width>61</width>
           <height>16</height>
          </rect>
@@ -1286,7 +1445,7 @@ background: transparent;</string>
           <x>60</x>
           <y>230</y>
           <width>113</width>
-          <height>24</height>
+          <height>31</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -1747,7 +1906,7 @@ QTabBar::tab:hover {
 }</string>
       </property>
       <property name="currentIndex">
-       <number>5</number>
+       <number>1</number>
       </property>
       <property name="tabBarAutoHide">
        <bool>false</bool>
@@ -2470,67 +2629,6 @@ QPushButton:pressed {
         <property name="text">
          <string>BUSCAR</string>
         </property>
-       </widget>
-       <widget class="QComboBox" name="cmbOrdenClientes">
-        <property name="geometry">
-         <rect>
-          <x>90</x>
-          <y>90</y>
-          <width>111</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QComboBox {
-    background-color: #25314A;
-    border: 1px solid #3A4A6B;
-    border-radius: 6px;
-    padding: 6px 10px;
-    color: #F1FAEE;
-    font-family: &quot;Montserrat&quot;;
-    font-size: 13px;
-}
-QComboBox:hover {
-    border: 1px solid #E63946;
-}
-QComboBox::drop-down {
-    subcontrol-origin: padding;
-    subcontrol-position: top right;
-    width: 24px;
-    border-left: 1px solid #3A4A6B;
-}
-QComboBox::down-arrow {
-    width: 0px;
-    height: 0px;
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-top: 5px solid #F1FAEE;
-    margin-right: 6px;
-}
-QComboBox QAbstractItemView {
-    background-color: #1D2D44;
-    border: 1px solid #3A4A6B;
-    color: #F1FAEE;
-    selection-background-color: #E63946;
-    selection-color: #F1FAEE;
-    outline: none;
-}</string>
-        </property>
-        <item>
-         <property name="text">
-          <string>Inorden</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Preorden</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Postorden</string>
-         </property>
-        </item>
        </widget>
        <widget class="QLineEdit" name="txtBuscarUsuarioID">
         <property name="geometry">
@@ -4684,6 +4782,67 @@ font: 900 </string>
         <property name="text">
          <string>BENEFICIOS</string>
         </property>
+       </widget>
+       <widget class="QComboBox" name="cmbOrdenClientes">
+        <property name="geometry">
+         <rect>
+          <x>600</x>
+          <y>200</y>
+          <width>111</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QComboBox {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QComboBox:hover {
+    border: 1px solid #E63946;
+}
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 24px;
+    border-left: 1px solid #3A4A6B;
+}
+QComboBox::down-arrow {
+    width: 0px;
+    height: 0px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #F1FAEE;
+    margin-right: 6px;
+}
+QComboBox QAbstractItemView {
+    background-color: #1D2D44;
+    border: 1px solid #3A4A6B;
+    color: #F1FAEE;
+    selection-background-color: #E63946;
+    selection-color: #F1FAEE;
+    outline: none;
+}</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Inorden</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Preorden</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Postorden</string>
+         </property>
+        </item>
        </widget>
       </widget>
      </widget>
