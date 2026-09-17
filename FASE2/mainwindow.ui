@@ -388,36 +388,12 @@ QTabBar::tab:hover {
 </string>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
         <string>RESERVACIONES</string>
        </attribute>
-       <widget class="QLineEdit" name="txtNombreCliente">
-        <property name="geometry">
-         <rect>
-          <x>250</x>
-          <y>100</y>
-          <width>113</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QLineEdit {
-    background-color: #25314A;
-    border: 1px solid #3A4A6B;
-    border-radius: 6px;
-    padding: 6px 10px;
-    color: #F1FAEE;
-    font-family: &quot;Montserrat&quot;;
-    font-size: 13px;
-}
-QLineEdit:focus {
-    border: 1px solid #4A6FA5;
-}</string>
-        </property>
-       </widget>
        <widget class="QSpinBox" name="spinColumna">
         <property name="geometry">
          <rect>
@@ -627,25 +603,6 @@ QPushButton:pressed {
         </property>
         <property name="text">
          <string>RESERVAR</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_17">
-        <property name="geometry">
-         <rect>
-          <x>250</x>
-          <y>80</y>
-          <width>111</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">font-family: &quot;Montserrat Medium&quot;;
-font-size: 12px;
-color: #A8B2C1;
-background: transparent;</string>
-        </property>
-        <property name="text">
-         <string>NOMBRE USUARIO</string>
         </property>
        </widget>
        <widget class="QPushButton" name="btnBuscarPelicula">
@@ -1030,11 +987,33 @@ font: 900 </string>
        <widget class="QPushButton" name="btnActualizarReservaUsuario">
         <property name="geometry">
          <rect>
-          <x>440</x>
+          <x>230</x>
           <y>350</y>
-          <width>80</width>
-          <height>24</height>
+          <width>131</width>
+          <height>31</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">/* APROBAR */
+QPushButton {
+    background-color: transparent;
+    color: #00B86B;
+    border: 1px solid #00B86B;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-family: &quot;Montserrat SemiBold&quot;;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+QPushButton:hover {
+    background-color: #00B86B;
+    color: #F1FAEE;
+}
+QPushButton:pressed {
+    background-color: #009957;
+    border: 1px solid #009957;
+    color: #F1FAEE;
+}</string>
         </property>
         <property name="text">
          <string>ACTUALIZAR</string>
@@ -1049,25 +1028,62 @@ font: 900 </string>
           <height>221</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">QTableWidget {
+    background-color: #1D2D44;
+    alternate-background-color: #25314A;
+    color: #F1FAEE;
+    gridline-color: #3A4A6B;
+    border-radius: 6px;
+    border: 1px solid #3A4A6B;
+}
+QHeaderView::section {
+    background-color: #0D1321;
+    color: #F1FAEE;
+    padding: 6px;
+    border: none;
+    font-weight: bold;
+}</string>
+        </property>
        </widget>
        <widget class="QLineEdit" name="txtIdCancelar">
         <property name="geometry">
          <rect>
-          <x>50</x>
-          <y>380</y>
-          <width>111</width>
-          <height>24</height>
+          <x>90</x>
+          <y>350</y>
+          <width>113</width>
+          <height>31</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QLineEdit:focus {
+    border: 1px solid #4A6FA5;
+}</string>
         </property>
        </widget>
        <widget class="QLabel" name="label_58">
         <property name="geometry">
          <rect>
-          <x>50</x>
-          <y>360</y>
+          <x>90</x>
+          <y>330</y>
           <width>81</width>
           <height>16</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: &quot;Montserrat Medium&quot;;
+font-size: 12px;
+color: #A8B2C1;
+background: transparent;</string>
         </property>
         <property name="text">
          <string>ID CLIENTE</string>
@@ -1076,7 +1092,7 @@ font: 900 </string>
        <widget class="QPushButton" name="btnCancelarReserva">
         <property name="geometry">
          <rect>
-          <x>240</x>
+          <x>370</x>
           <y>350</y>
           <width>181</width>
           <height>31</height>
@@ -1122,6 +1138,12 @@ QPushButton:pressed {
           <height>16</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: &quot;Montserrat Medium&quot;;
+font-size: 12px;
+color: #A8B2C1;
+background: transparent;</string>
+        </property>
         <property name="text">
          <string>CONTRASEÑA</string>
         </property>
@@ -1135,6 +1157,20 @@ QPushButton:pressed {
           <height>24</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QLineEdit:focus {
+    border: 1px solid #4A6FA5;
+}</string>
+        </property>
        </widget>
        <widget class="QLabel" name="label_51">
         <property name="geometry">
@@ -1144,6 +1180,12 @@ QPushButton:pressed {
           <width>61</width>
           <height>16</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: &quot;Montserrat Medium&quot;;
+font-size: 12px;
+color: #A8B2C1;
+background: transparent;</string>
         </property>
         <property name="text">
          <string>TELEFONO</string>
@@ -1158,6 +1200,20 @@ QPushButton:pressed {
           <height>24</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QLineEdit:focus {
+    border: 1px solid #4A6FA5;
+}</string>
+        </property>
         <property name="echoMode">
          <enum>QLineEdit::EchoMode::Password</enum>
         </property>
@@ -1171,6 +1227,20 @@ QPushButton:pressed {
           <height>24</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QLineEdit:focus {
+    border: 1px solid #4A6FA5;
+}</string>
+        </property>
        </widget>
        <widget class="QLabel" name="label_52">
         <property name="geometry">
@@ -1180,6 +1250,12 @@ QPushButton:pressed {
           <width>61</width>
           <height>16</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: &quot;Montserrat Medium&quot;;
+font-size: 12px;
+color: #A8B2C1;
+background: transparent;</string>
         </property>
         <property name="text">
          <string>NOMBRE</string>
@@ -1194,6 +1270,12 @@ QPushButton:pressed {
           <height>16</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: &quot;Montserrat Medium&quot;;
+font-size: 12px;
+color: #A8B2C1;
+background: transparent;</string>
+        </property>
         <property name="text">
          <string>CORREO</string>
         </property>
@@ -1207,6 +1289,20 @@ QPushButton:pressed {
           <height>24</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QLineEdit:focus {
+    border: 1px solid #4A6FA5;
+}</string>
+        </property>
        </widget>
        <widget class="QPushButton" name="btnGuardarPerfil">
         <property name="geometry">
@@ -1216,6 +1312,28 @@ QPushButton:pressed {
           <width>111</width>
           <height>31</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">/* APROBAR */
+QPushButton {
+    background-color: transparent;
+    color: #00B86B;
+    border: 1px solid #00B86B;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-family: &quot;Montserrat SemiBold&quot;;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+QPushButton:hover {
+    background-color: #00B86B;
+    color: #F1FAEE;
+}
+QPushButton:pressed {
+    background-color: #009957;
+    border: 1px solid #009957;
+    color: #F1FAEE;
+}</string>
         </property>
         <property name="text">
          <string>GUARDAR</string>
@@ -1674,8 +1792,8 @@ QPushButton:pressed {
        <widget class="QLineEdit" name="txtTitulo">
         <property name="geometry">
          <rect>
-          <x>130</x>
-          <y>120</y>
+          <x>160</x>
+          <y>110</y>
           <width>113</width>
           <height>30</height>
          </rect>
@@ -1698,8 +1816,8 @@ QLineEdit:focus {
        <widget class="QLineEdit" name="txtCodigo">
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>120</y>
+          <x>40</x>
+          <y>110</y>
           <width>113</width>
           <height>30</height>
          </rect>
@@ -1725,7 +1843,7 @@ QLineEdit:focus {
        <widget class="QLabel" name="label_2">
         <property name="geometry">
          <rect>
-          <x>170</x>
+          <x>160</x>
           <y>90</y>
           <width>49</width>
           <height>16</height>
@@ -1747,7 +1865,7 @@ background: transparent;</string>
           <x>40</x>
           <y>90</y>
           <width>61</width>
-          <height>21</height>
+          <height>20</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -1763,8 +1881,8 @@ background: transparent;</string>
        <widget class="QSpinBox" name="spinDuracion">
         <property name="geometry">
          <rect>
-          <x>270</x>
-          <y>119</y>
+          <x>300</x>
+          <y>109</y>
           <width>101</width>
           <height>31</height>
          </rect>
@@ -1832,7 +1950,7 @@ QSpinBox::down-arrow {
        <widget class="QLabel" name="label_11">
         <property name="geometry">
          <rect>
-          <x>280</x>
+          <x>300</x>
           <y>90</y>
           <width>61</width>
           <height>16</height>
@@ -1851,8 +1969,8 @@ background: transparent;</string>
        <widget class="QPushButton" name="btnAgregarPelicula">
         <property name="geometry">
          <rect>
-          <x>390</x>
-          <y>120</y>
+          <x>420</x>
+          <y>110</y>
           <width>161</width>
           <height>30</height>
          </rect>
@@ -1884,8 +2002,8 @@ QPushButton:pressed {
        <widget class="QLineEdit" name="txtFin">
         <property name="geometry">
          <rect>
-          <x>490</x>
-          <y>190</y>
+          <x>520</x>
+          <y>180</y>
           <width>113</width>
           <height>30</height>
          </rect>
@@ -1908,8 +2026,8 @@ QLineEdit:focus {
        <widget class="QLineEdit" name="txtEstreno">
         <property name="geometry">
          <rect>
-          <x>250</x>
-          <y>190</y>
+          <x>280</x>
+          <y>180</y>
           <width>113</width>
           <height>30</height>
          </rect>
@@ -1932,8 +2050,8 @@ QLineEdit:focus {
        <widget class="QLabel" name="label_4">
         <property name="geometry">
          <rect>
-          <x>280</x>
-          <y>170</y>
+          <x>310</x>
+          <y>160</y>
           <width>61</width>
           <height>16</height>
          </rect>
@@ -1951,8 +2069,8 @@ background: transparent;</string>
        <widget class="QLineEdit" name="txtIdioma">
         <property name="geometry">
          <rect>
-          <x>370</x>
-          <y>190</y>
+          <x>400</x>
+          <y>180</y>
           <width>113</width>
           <height>30</height>
          </rect>
@@ -1975,8 +2093,8 @@ QLineEdit:focus {
        <widget class="QLabel" name="label_3">
         <property name="geometry">
          <rect>
-          <x>140</x>
-          <y>170</y>
+          <x>170</x>
+          <y>160</y>
           <width>91</width>
           <height>16</height>
          </rect>
@@ -1994,8 +2112,8 @@ background: transparent;</string>
        <widget class="QLabel" name="label_6">
         <property name="geometry">
          <rect>
-          <x>510</x>
-          <y>170</y>
+          <x>540</x>
+          <y>160</y>
           <width>71</width>
           <height>16</height>
          </rect>
@@ -2013,8 +2131,8 @@ background: transparent;</string>
        <widget class="QLineEdit" name="txtGenero">
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>190</y>
+          <x>40</x>
+          <y>180</y>
           <width>113</width>
           <height>30</height>
          </rect>
@@ -2040,8 +2158,8 @@ QLineEdit:focus {
        <widget class="QLineEdit" name="txtClasificacion">
         <property name="geometry">
          <rect>
-          <x>130</x>
-          <y>190</y>
+          <x>160</x>
+          <y>180</y>
           <width>113</width>
           <height>30</height>
          </rect>
@@ -2064,8 +2182,8 @@ QLineEdit:focus {
        <widget class="QLabel" name="GENERO">
         <property name="geometry">
          <rect>
-          <x>40</x>
-          <y>170</y>
+          <x>70</x>
+          <y>160</y>
           <width>49</width>
           <height>16</height>
          </rect>
@@ -2083,8 +2201,8 @@ background: transparent;</string>
        <widget class="QLabel" name="label_5">
         <property name="geometry">
          <rect>
-          <x>400</x>
-          <y>170</y>
+          <x>430</x>
+          <y>160</y>
           <width>49</width>
           <height>16</height>
          </rect>
@@ -2102,10 +2220,10 @@ background: transparent;</string>
        <widget class="QTableWidget" name="tablaCarteleraAdmin">
         <property name="geometry">
          <rect>
-          <x>20</x>
-          <y>230</y>
-          <width>661</width>
-          <height>161</height>
+          <x>40</x>
+          <y>220</y>
+          <width>711</width>
+          <height>151</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -2130,7 +2248,7 @@ QHeaderView::section {
         <property name="geometry">
          <rect>
           <x>690</x>
-          <y>350</y>
+          <y>380</y>
           <width>111</width>
           <height>30</height>
          </rect>
@@ -2162,11 +2280,47 @@ QPushButton:pressed {
        <widget class="QComboBox" name="cmbOrdenPeliculas">
         <property name="geometry">
          <rect>
-          <x>610</x>
-          <y>190</y>
-          <width>141</width>
+          <x>640</x>
+          <y>180</y>
+          <width>120</width>
           <height>31</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QComboBox {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QComboBox:hover {
+    border: 1px solid #E63946;
+}
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 24px;
+    border-left: 1px solid #3A4A6B;
+}
+QComboBox::down-arrow {
+    width: 0px;
+    height: 0px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #F1FAEE;
+    margin-right: 6px;
+}
+QComboBox QAbstractItemView {
+    background-color: #1D2D44;
+    border: 1px solid #3A4A6B;
+    color: #F1FAEE;
+    selection-background-color: #E63946;
+    selection-color: #F1FAEE;
+    outline: none;
+}</string>
         </property>
         <item>
          <property name="text">
@@ -2192,11 +2346,31 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnCargaMasivaClientes">
         <property name="geometry">
          <rect>
-          <x>500</x>
-          <y>323</y>
-          <width>91</width>
-          <height>31</height>
+          <x>560</x>
+          <y>320</y>
+          <width>120</width>
+          <height>32</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+    background-color: transparent;
+    color: #9B5DE5;
+    border: 1px solid #9B5DE5;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-family: &quot;Montserrat&quot;;
+    font-weight: 600;
+}
+QPushButton:hover {
+    background-color: #9B5DE5;
+    color: #F1FAEE;
+}
+QPushButton:pressed {
+    background-color: #7E3FCC;
+    border: 1px solid #7E3FCC;
+    color: #F1FAEE;
+}</string>
         </property>
         <property name="text">
          <string>CARGAR</string>
@@ -2205,9 +2379,9 @@ QPushButton:pressed {
        <widget class="QTableWidget" name="tblAdminClientes">
         <property name="geometry">
          <rect>
-          <x>30</x>
+          <x>90</x>
           <y>170</y>
-          <width>461</width>
+          <width>441</width>
           <height>181</height>
          </rect>
         </property>
@@ -2232,11 +2406,33 @@ QHeaderView::section {
        <widget class="QPushButton" name="btnEliminarCliente">
         <property name="geometry">
          <rect>
-          <x>270</x>
-          <y>110</y>
-          <width>80</width>
-          <height>24</height>
+          <x>340</x>
+          <y>130</y>
+          <width>120</width>
+          <height>31</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">/* RECHAZAR */
+QPushButton {
+    background-color: transparent;
+    color: #FF3B4E;
+    border: 1px solid #FF3B4E;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-family: &quot;Montserrat SemiBold&quot;;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+QPushButton:hover {
+    background-color: #FF3B4E;
+    color: #F1FAEE;
+}
+QPushButton:pressed {
+    background-color: #D62638;
+    border: 1px solid #D62638;
+    color: #F1FAEE;
+}</string>
         </property>
         <property name="text">
          <string>ELIMINAR</string>
@@ -2245,11 +2441,31 @@ QHeaderView::section {
        <widget class="QPushButton" name="btnBuscarCliente">
         <property name="geometry">
          <rect>
-          <x>180</x>
-          <y>110</y>
-          <width>80</width>
-          <height>24</height>
+          <x>210</x>
+          <y>130</y>
+          <width>120</width>
+          <height>31</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+    background-color: transparent;
+    color: #F4A340;
+    border: 1px solid #F4A340;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-family: &quot;Montserrat&quot;;
+    font-weight: 600;
+}
+QPushButton:hover {
+    background-color: #F4A340;
+    color: #0D1321;
+}
+QPushButton:pressed {
+    background-color: #D4872A;
+    border: 1px solid #D4872A;
+    color: #0D1321;
+}</string>
         </property>
         <property name="text">
          <string>BUSCAR</string>
@@ -2258,11 +2474,47 @@ QHeaderView::section {
        <widget class="QComboBox" name="cmbOrdenClientes">
         <property name="geometry">
          <rect>
-          <x>60</x>
-          <y>70</y>
-          <width>101</width>
+          <x>90</x>
+          <y>90</y>
+          <width>111</width>
           <height>31</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QComboBox {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QComboBox:hover {
+    border: 1px solid #E63946;
+}
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 24px;
+    border-left: 1px solid #3A4A6B;
+}
+QComboBox::down-arrow {
+    width: 0px;
+    height: 0px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #F1FAEE;
+    margin-right: 6px;
+}
+QComboBox QAbstractItemView {
+    background-color: #1D2D44;
+    border: 1px solid #3A4A6B;
+    color: #F1FAEE;
+    selection-background-color: #E63946;
+    selection-color: #F1FAEE;
+    outline: none;
+}</string>
         </property>
         <item>
          <property name="text">
@@ -2283,11 +2535,25 @@ QHeaderView::section {
        <widget class="QLineEdit" name="txtBuscarUsuarioID">
         <property name="geometry">
          <rect>
-          <x>60</x>
-          <y>110</y>
+          <x>90</x>
+          <y>130</y>
           <width>113</width>
-          <height>24</height>
+          <height>32</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QLineEdit:focus {
+    border: 1px solid #4A6FA5;
+}</string>
         </property>
        </widget>
       </widget>
@@ -2298,11 +2564,31 @@ QHeaderView::section {
        <widget class="QPushButton" name="btnConsulEstado">
         <property name="geometry">
          <rect>
-          <x>180</x>
-          <y>50</y>
-          <width>80</width>
-          <height>24</height>
+          <x>470</x>
+          <y>310</y>
+          <width>111</width>
+          <height>31</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+    background-color: transparent;
+    color: #F4A340;
+    border: 1px solid #F4A340;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-family: &quot;Montserrat&quot;;
+    font-weight: 600;
+}
+QPushButton:hover {
+    background-color: #F4A340;
+    color: #0D1321;
+}
+QPushButton:pressed {
+    background-color: #D4872A;
+    border: 1px solid #D4872A;
+    color: #0D1321;
+}</string>
         </property>
         <property name="text">
          <string>CONSULTAR</string>
@@ -2311,34 +2597,71 @@ QHeaderView::section {
        <widget class="QLineEdit" name="txtBuscarClienteID">
         <property name="geometry">
          <rect>
-          <x>50</x>
-          <y>50</y>
+          <x>240</x>
+          <y>80</y>
           <width>113</width>
-          <height>24</height>
+          <height>32</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QLineEdit:focus {
+    border: 1px solid #4A6FA5;
+}</string>
         </property>
        </widget>
        <widget class="QTableWidget" name="tablaReservasAdmin">
         <property name="geometry">
          <rect>
-          <x>40</x>
-          <y>100</y>
+          <x>240</x>
+          <y>120</y>
           <width>341</width>
           <height>181</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QTableWidget {
+    background-color: #1D2D44;
+    alternate-background-color: #25314A;
+    color: #F1FAEE;
+    gridline-color: #3A4A6B;
+    border-radius: 6px;
+    border: 1px solid #3A4A6B;
+}
+QHeaderView::section {
+    background-color: #0D1321;
+    color: #F1FAEE;
+    padding: 6px;
+    border: none;
+    font-weight: bold;
+}</string>
         </property>
        </widget>
        <widget class="QLabel" name="label_54">
         <property name="geometry">
          <rect>
-          <x>50</x>
-          <y>30</y>
-          <width>49</width>
+          <x>240</x>
+          <y>60</y>
+          <width>61</width>
           <height>16</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: &quot;Montserrat &quot;;
+font-size: 12px;
+color: #A8B2C1;
+background: transparent;</string>
+        </property>
         <property name="text">
-         <string>ID</string>
+         <string>ID CLIENTE</string>
         </property>
        </widget>
       </widget>
@@ -2525,7 +2848,7 @@ background: transparent;</string>
        <widget class="QLineEdit" name="txtSala">
         <property name="geometry">
          <rect>
-          <x>220</x>
+          <x>360</x>
           <y>220</y>
           <width>113</width>
           <height>31</height>
@@ -2549,7 +2872,7 @@ QLineEdit:focus {
        <widget class="QLabel" name="label_30">
         <property name="geometry">
          <rect>
-          <x>90</x>
+          <x>220</x>
           <y>200</y>
           <width>61</width>
           <height>16</height>
@@ -2568,7 +2891,7 @@ background: transparent;</string>
        <widget class="QLabel" name="label_31">
         <property name="geometry">
          <rect>
-          <x>220</x>
+          <x>360</x>
           <y>200</y>
           <width>61</width>
           <height>16</height>
@@ -2587,9 +2910,9 @@ background: transparent;</string>
        <widget class="QPushButton" name="btnCrearFuncion">
         <property name="geometry">
          <rect>
-          <x>380</x>
+          <x>420</x>
           <y>320</y>
-          <width>181</width>
+          <width>141</width>
           <height>31</height>
          </rect>
         </property>
@@ -2621,7 +2944,7 @@ QPushButton:pressed {
        <widget class="QLineEdit" name="txtHorario">
         <property name="geometry">
          <rect>
-          <x>350</x>
+          <x>490</x>
           <y>220</y>
           <width>113</width>
           <height>31</height>
@@ -2645,7 +2968,7 @@ QLineEdit:focus {
        <widget class="QLabel" name="label_35">
         <property name="geometry">
          <rect>
-          <x>350</x>
+          <x>490</x>
           <y>200</y>
           <width>51</width>
           <height>16</height>
@@ -2684,7 +3007,7 @@ font: 900 </string>
        <widget class="QComboBox" name="cmbPeliculaAdmin">
         <property name="geometry">
          <rect>
-          <x>80</x>
+          <x>220</x>
           <y>220</y>
           <width>121</width>
           <height>31</height>
@@ -2730,21 +3053,41 @@ QComboBox QAbstractItemView {
        <widget class="QLineEdit" name="txtCodigoFuncionAdmin">
         <property name="geometry">
          <rect>
-          <x>80</x>
-          <y>290</y>
+          <x>90</x>
+          <y>220</y>
           <width>113</width>
-          <height>24</height>
+          <height>31</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QLineEdit:focus {
+    border: 1px solid #4A6FA5;
+}</string>
         </property>
        </widget>
        <widget class="QLabel" name="label_55">
         <property name="geometry">
          <rect>
-          <x>80</x>
-          <y>260</y>
+          <x>90</x>
+          <y>200</y>
           <width>101</width>
           <height>16</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: &quot;Montserrat &quot;;
+font-size: 12px;
+color: #A8B2C1;
+background: transparent;</string>
         </property>
         <property name="text">
          <string>CODIGO FUNCION</string>
@@ -2759,20 +3102,48 @@ QComboBox QAbstractItemView {
         <property name="geometry">
          <rect>
           <x>50</x>
-          <y>60</y>
+          <y>50</y>
           <width>113</width>
-          <height>24</height>
+          <height>32</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QLineEdit:focus {
+    border: 1px solid #4A6FA5;
+}</string>
         </property>
        </widget>
        <widget class="QLineEdit" name="txtEditSala">
         <property name="geometry">
          <rect>
-          <x>370</x>
+          <x>340</x>
           <y>120</y>
           <width>113</width>
-          <height>24</height>
+          <height>31</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QLineEdit:focus {
+    border: 1px solid #4A6FA5;
+}</string>
         </property>
        </widget>
        <widget class="QLineEdit" name="txtEditPelicula">
@@ -2781,48 +3152,211 @@ QComboBox QAbstractItemView {
           <x>210</x>
           <y>120</y>
           <width>113</width>
-          <height>24</height>
+          <height>31</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QLineEdit:focus {
+    border: 1px solid #4A6FA5;
+}</string>
         </property>
        </widget>
        <widget class="QLineEdit" name="txtEditHorario">
         <property name="geometry">
          <rect>
-          <x>510</x>
+          <x>470</x>
           <y>120</y>
           <width>113</width>
-          <height>24</height>
+          <height>31</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QLineEdit:focus {
+    border: 1px solid #4A6FA5;
+}</string>
         </property>
        </widget>
        <widget class="QSpinBox" name="spinEditCol">
         <property name="geometry">
          <rect>
-          <x>580</x>
-          <y>180</y>
-          <width>42</width>
-          <height>25</height>
+          <x>650</x>
+          <y>170</y>
+          <width>70</width>
+          <height>32</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QSpinBox {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 4px;
+    color: #F1FAEE;
+}
+
+QSpinBox:hover {
+    border: 1px solid #4A6FA5;
+}
+
+QSpinBox:focus {
+    border: 1px solid #4A6FA5;
+}
+
+QSpinBox::up-button {
+    subcontrol-origin: border;
+    subcontrol-position: top right;
+    width: 16px;
+    background-color: #3A4A6B;
+    border-top-right-radius: 6px;
+    border: none;
+}
+
+QSpinBox::down-button {
+    subcontrol-origin: border;
+    subcontrol-position: bottom right;
+    width: 16px;
+    background-color: #3A4A6B;
+    border-bottom-right-radius: 6px;
+    border: none;
+}
+
+QSpinBox::up-button:hover {
+    background-color: #2A9D6F;
+}
+
+QSpinBox::down-button:hover {
+    background-color: #E63946;
+}
+
+QSpinBox::up-arrow {
+    width: 0px;
+    height: 0px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 5px solid #F1FAEE;
+}
+
+QSpinBox::down-arrow {
+    width: 0px;
+    height: 0px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #F1FAEE;
+}</string>
         </property>
        </widget>
        <widget class="QSpinBox" name="spinEditFila">
         <property name="geometry">
          <rect>
-          <x>630</x>
-          <y>180</y>
-          <width>42</width>
-          <height>25</height>
+          <x>730</x>
+          <y>170</y>
+          <width>70</width>
+          <height>32</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QSpinBox {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 4px;
+    color: #F1FAEE;
+}
+
+QSpinBox:hover {
+    border: 1px solid #4A6FA5;
+}
+
+QSpinBox:focus {
+    border: 1px solid #4A6FA5;
+}
+
+QSpinBox::up-button {
+    subcontrol-origin: border;
+    subcontrol-position: top right;
+    width: 16px;
+    background-color: #3A4A6B;
+    border-top-right-radius: 6px;
+    border: none;
+}
+
+QSpinBox::down-button {
+    subcontrol-origin: border;
+    subcontrol-position: bottom right;
+    width: 16px;
+    background-color: #3A4A6B;
+    border-bottom-right-radius: 6px;
+    border: none;
+}
+
+QSpinBox::up-button:hover {
+    background-color: #2A9D6F;
+}
+
+QSpinBox::down-button:hover {
+    background-color: #E63946;
+}
+
+QSpinBox::up-arrow {
+    width: 0px;
+    height: 0px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 5px solid #F1FAEE;
+}
+
+QSpinBox::down-arrow {
+    width: 0px;
+    height: 0px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #F1FAEE;
+}</string>
         </property>
        </widget>
        <widget class="QTableWidget" name="tblFuncionesRegistradas">
         <property name="geometry">
          <rect>
-          <x>80</x>
+          <x>170</x>
           <y>230</y>
-          <width>651</width>
+          <width>461</width>
           <height>171</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QTableWidget {
+    background-color: #1D2D44;
+    alternate-background-color: #25314A;
+    color: #F1FAEE;
+    gridline-color: #3A4A6B;
+    border-radius: 6px;
+    border: 1px solid #3A4A6B;
+}
+QHeaderView::section {
+    background-color: #0D1321;
+    color: #F1FAEE;
+    padding: 6px;
+    border: none;
+    font-weight: bold;
+}</string>
         </property>
        </widget>
        <widget class="QLabel" name="label_46">
@@ -2830,9 +3364,15 @@ QComboBox QAbstractItemView {
          <rect>
           <x>50</x>
           <y>30</y>
-          <width>91</width>
+          <width>71</width>
           <height>20</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: &quot;Montserrat &quot;;
+font-size: 12px;
+color: #A8B2C1;
+background: transparent;</string>
         </property>
         <property name="text">
          <string>FUNCION ID</string>
@@ -2842,10 +3382,16 @@ QComboBox QAbstractItemView {
         <property name="geometry">
          <rect>
           <x>210</x>
-          <y>90</y>
+          <y>100</y>
           <width>61</width>
           <height>16</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: &quot;Montserrat &quot;;
+font-size: 12px;
+color: #A8B2C1;
+background: transparent;</string>
         </property>
         <property name="text">
          <string>PELICULA</string>
@@ -2854,11 +3400,17 @@ QComboBox QAbstractItemView {
        <widget class="QLabel" name="label_48">
         <property name="geometry">
          <rect>
-          <x>370</x>
-          <y>90</y>
+          <x>340</x>
+          <y>100</y>
           <width>51</width>
           <height>16</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: &quot;Montserrat &quot;;
+font-size: 12px;
+color: #A8B2C1;
+background: transparent;</string>
         </property>
         <property name="text">
          <string>SALA</string>
@@ -2867,11 +3419,17 @@ QComboBox QAbstractItemView {
        <widget class="QLabel" name="label_49">
         <property name="geometry">
          <rect>
-          <x>510</x>
-          <y>90</y>
+          <x>470</x>
+          <y>100</y>
           <width>61</width>
           <height>16</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: &quot;Montserrat &quot;;
+font-size: 12px;
+color: #A8B2C1;
+background: transparent;</string>
         </property>
         <property name="text">
          <string>HORARIO</string>
@@ -2880,11 +3438,32 @@ QComboBox QAbstractItemView {
        <widget class="QPushButton" name="btnEditFuncion">
         <property name="geometry">
          <rect>
-          <x>220</x>
+          <x>200</x>
           <y>180</y>
-          <width>80</width>
-          <height>24</height>
+          <width>121</width>
+          <height>31</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">/* AÑADIR BENEFICIO */
+QPushButton {
+    background-color: transparent;
+    color: #9B5DE5;
+    border: 1px solid #9B5DE5;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-family: &quot;Montserrat SemiBold&quot;;
+    font-weight: 600;
+}
+QPushButton:hover {
+    background-color: #9B5DE5;
+    color: #F1FAEE;
+}
+QPushButton:pressed {
+    background-color: #7E3FCC;
+    border: 1px solid #7E3FCC;
+    color: #F1FAEE;
+}</string>
         </property>
         <property name="text">
          <string>EDITAR</string>
@@ -2930,9 +3509,30 @@ QPushButton:pressed {
          <rect>
           <x>460</x>
           <y>180</y>
-          <width>80</width>
-          <height>24</height>
+          <width>121</width>
+          <height>31</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">/* APROBAR */
+QPushButton {
+    background-color: transparent;
+    color: #00B86B;
+    border: 1px solid #00B86B;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-family: &quot;Montserrat SemiBold&quot;;
+    font-weight: 600;
+}
+QPushButton:hover {
+    background-color: #00B86B;
+    color: #F1FAEE;
+}
+QPushButton:pressed {
+    background-color: #009957;
+    border: 1px solid #009957;
+    color: #F1FAEE;
+}</string>
         </property>
         <property name="text">
          <string>ACTUALIZAR </string>
@@ -2942,10 +3542,30 @@ QPushButton:pressed {
         <property name="geometry">
          <rect>
           <x>50</x>
-          <y>100</y>
-          <width>80</width>
-          <height>24</height>
+          <y>90</y>
+          <width>111</width>
+          <height>31</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+    background-color: transparent;
+    color: #F4A340;
+    border: 1px solid #F4A340;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-family: &quot;Montserrat&quot;;
+    font-weight: 600;
+}
+QPushButton:hover {
+    background-color: #F4A340;
+    color: #0D1321;
+}
+QPushButton:pressed {
+    background-color: #D4872A;
+    border: 1px solid #D4872A;
+    color: #0D1321;
+}</string>
         </property>
         <property name="text">
          <string>BUSCAR</string>
@@ -2957,14 +3577,28 @@ QPushButton:pressed {
         </property>
         <property name="geometry">
          <rect>
-          <x>640</x>
+          <x>600</x>
           <y>120</y>
           <width>113</width>
-          <height>24</height>
+          <height>31</height>
          </rect>
         </property>
         <property name="cursor">
          <cursorShape>SizeAllCursor</cursorShape>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QLineEdit:focus {
+    border: 1px solid #4A6FA5;
+}</string>
         </property>
         <property name="readOnly">
          <bool>true</bool>
@@ -2973,15 +3607,101 @@ QPushButton:pressed {
        <widget class="QLabel" name="label_56">
         <property name="geometry">
          <rect>
-          <x>640</x>
-          <y>90</y>
+          <x>600</x>
+          <y>100</y>
           <width>101</width>
           <height>16</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: &quot;Montserrat &quot;;
+font-size: 12px;
+color: #A8B2C1;
+background: transparent;</string>
+        </property>
         <property name="text">
          <string>CODIGO FUNCION</string>
         </property>
+       </widget>
+       <widget class="QLabel" name="label_17">
+        <property name="geometry">
+         <rect>
+          <x>650</x>
+          <y>280</y>
+          <width>49</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: &quot;Montserrat &quot;;
+font-size: 12px;
+color: #A8B2C1;
+background: transparent;</string>
+        </property>
+        <property name="text">
+         <string>ORDEN </string>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="cmbGestionFuncion">
+        <property name="geometry">
+         <rect>
+          <x>650</x>
+          <y>300</y>
+          <width>120</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QComboBox {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QComboBox:hover {
+    border: 1px solid #E63946;
+}
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 24px;
+    border-left: 1px solid #3A4A6B;
+}
+QComboBox::down-arrow {
+    width: 0px;
+    height: 0px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #F1FAEE;
+    margin-right: 6px;
+}
+QComboBox QAbstractItemView {
+    background-color: #1D2D44;
+    border: 1px solid #3A4A6B;
+    color: #F1FAEE;
+    selection-background-color: #E63946;
+    selection-color: #F1FAEE;
+    outline: none;
+}</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Inorden</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Preorden</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Postorden</string>
+         </property>
+        </item>
        </widget>
       </widget>
       <widget class="QWidget" name="tab_7">
@@ -2994,7 +3714,7 @@ QPushButton:pressed {
           <x>20</x>
           <y>50</y>
           <width>791</width>
-          <height>281</height>
+          <height>311</height>
          </rect>
         </property>
         <property name="frameShape">
@@ -3032,8 +3752,8 @@ font: 900 </string>
          <rect>
           <x>290</x>
           <y>370</y>
-          <width>111</width>
-          <height>31</height>
+          <width>120</width>
+          <height>32</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -3063,10 +3783,10 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnReporteArbolB">
         <property name="geometry">
          <rect>
-          <x>400</x>
+          <x>420</x>
           <y>370</y>
-          <width>101</width>
-          <height>31</height>
+          <width>120</width>
+          <height>32</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -3096,10 +3816,10 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnVerRepCartelera">
         <property name="geometry">
          <rect>
-          <x>170</x>
+          <x>160</x>
           <y>370</y>
-          <width>111</width>
-          <height>31</height>
+          <width>120</width>
+          <height>32</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -3129,10 +3849,10 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnReporteMatrizDispersa">
         <property name="geometry">
          <rect>
-          <x>510</x>
+          <x>550</x>
           <y>370</y>
-          <width>101</width>
-          <height>31</height>
+          <width>120</width>
+          <height>32</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -3173,6 +3893,23 @@ QPushButton:pressed {
           <height>311</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">QTableWidget {
+    background-color: #1D2D44;
+    alternate-background-color: #25314A;
+    color: #F1FAEE;
+    gridline-color: #3A4A6B;
+    border-radius: 6px;
+    border: 1px solid #3A4A6B;
+}
+QHeaderView::section {
+    background-color: #0D1321;
+    color: #F1FAEE;
+    padding: 6px;
+    border: none;
+    font-weight: bold;
+}</string>
+        </property>
         <property name="widgetResizable">
          <bool>true</bool>
         </property>
@@ -3194,8 +3931,25 @@ QPushButton:pressed {
             <height>291</height>
            </rect>
           </property>
+          <property name="styleSheet">
+           <string notr="true">QTableWidget {
+    background-color: #1D2D44;
+    alternate-background-color: #25314A;
+    color: #F1FAEE;
+    gridline-color: #3A4A6B;
+    border-radius: 6px;
+    border: 1px solid #3A4A6B;
+}
+QHeaderView::section {
+    background-color: #0D1321;
+    color: #F1FAEE;
+    padding: 6px;
+    border: none;
+    font-weight: bold;
+}</string>
+          </property>
           <property name="text">
-           <string>TextLabel</string>
+           <string/>
           </property>
          </widget>
         </widget>

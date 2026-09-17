@@ -13,7 +13,7 @@
 #include <QTableWidgetItem>
 #include <fstream>
 #include <map>
-
+#include <QRegularExpression>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -785,43 +785,73 @@ void MainWindow::cargarMasivaPeliculas(const QString& rutaArchivo) {
     QJsonArray arrayPeliculas = doc.object().value("peliculas").toArray();
     int peliculasCargadas = 0, funcionesCargadas = 0;
 
+    // Acumulador para guardar las razones de rechazo y mostrarlas al final
+    QString errores = "";
+
     for (const QJsonValue& valPelicula : arrayPeliculas) {
         QJsonObject objPel = valPelicula.toObject();
+        QString codigoPel = objPel["codigo"].toString().trimmed();
 
+        // --- INICIO DE VALIDACIONES ESTRICTAS ---
 
-        // --- INICIO DE VALIDACIONES CON DEBUG ---
-        if (objPel["codigo"].toString().isEmpty()) {
-            qDebug() << "Falla: El código está vacío o no es texto.";
-            continue;
-        }
-        if (objPel["titulo"].toString().isEmpty()) {
-            qDebug() << "Falla: El título de" << objPel["codigo"].toString() << "está vacío.";
-            continue;
-        }
-        if (objPel["duracion"].toInt() <= 0) {
-            qDebug() << "Falla: La duración de" << objPel["titulo"].toString() << "no es un número válido mayor a 0.";
-            continue;
+        // 1. Validación de Código (Debe ser 'P' seguido de exactamente 3 dígitos)
+        QRegularExpression regexCodigo("^P\\d{3}$");
+        if (!regexCodigo.match(codigoPel).hasMatch()) {
+            qDebug() << "Falla: El código" << codigoPel << "no cumple el formato 'PXXX'.";
+            errores += "- [" + codigoPel + "] Rechazada: Código con formato inválido.\n";
+            continue; // Rechaza la película entera
         }
 
+        // 2. Validación del Título
+        if (objPel["titulo"].toString().trimmed().isEmpty()) {
+            qDebug() << "Falla: El título de" << codigoPel << "está vacío.";
+            errores += "- [" + codigoPel + "] Rechazada: Título vacío.\n";
+            continue;
+        }
+
+        // 3. Validación Estricta de Duración (Debe ser tipo numérico nativo JSON)
+        if (!objPel["duracion"].isDouble() || objPel["duracion"].toInt() <= 0) {
+            qDebug() << "Falla: La duración de" << codigoPel << "no es un número válido mayor a 0.";
+            errores += "- [" + codigoPel + "] Rechazada: 'duracion' inválida (debe ser numérico, no texto).\n";
+            continue;
+        }
+
+        // 4. Validación de Fechas reales (Existencia y formato)
         QString fechaEstreno = objPel["fecha_estreno"].toString();
-        if (!QDate::fromString(fechaEstreno, "yyyy-MM-dd").isValid()) {
-            qDebug() << "Falla: Fecha de estreno inválida en" << objPel["titulo"].toString() << ". Leído:" << fechaEstreno;
+        QString fechaFin = objPel["fecha_fin"].toString();
+
+        QDate dEstreno = QDate::fromString(fechaEstreno, "yyyy-MM-dd");
+        QDate dFin = QDate::fromString(fechaFin, "yyyy-MM-dd");
+
+        if (!dEstreno.isValid() || !dFin.isValid()) {
+            qDebug() << "Falla: Fecha inválida en" << codigoPel << ". Estreno:" << fechaEstreno << "Fin:" << fechaFin;
+            errores += "- [" + codigoPel + "] Rechazada: Las fechas no existen o tienen mal formato (YYYY-MM-DD).\n";
             continue;
         }
 
+        // 5. Validación lógica de tiempo
+        if (dFin < dEstreno) {
+            qDebug() << "Falla: Fecha fin es anterior al estreno en" << codigoPel;
+            errores += "- [" + codigoPel + "] Rechazada: Fecha de fin es anterior a la de estreno.\n";
+            continue;
+        }
+        // --- FIN DE VALIDACIONES ESTRICTAS ---
+
+        // Si pasa todas las validaciones, procedemos a instanciar y guardar
         Pelicula nuevaPel;
-        nuevaPel.codigo = objPel["codigo"].toString().toStdString();
+        nuevaPel.codigo = codigoPel.toStdString();
         nuevaPel.titulo = objPel["titulo"].toString().toStdString();
         nuevaPel.genero = objPel["genero"].toString().toStdString();
         nuevaPel.duracion = objPel["duracion"].toInt();
         nuevaPel.clasificacion = objPel["clasificacion"].toString().toStdString();
         nuevaPel.idioma = objPel["idioma"].toString().toStdString();
         nuevaPel.fechaEstreno = fechaEstreno.toStdString();
-        nuevaPel.fechaFin = objPel["fecha_fin"].toString().toStdString();
+        nuevaPel.fechaFin = fechaFin.toStdString();
 
         cartelera.insertar(nuevaPel);
         peliculasCargadas++;
 
+        // Carga de las funciones anidadas
         QJsonArray arrayFunciones = objPel["funciones"].toArray();
         for (const QJsonValue& valFuncion : arrayFunciones) {
             QJsonObject objFun = valFuncion.toObject();
@@ -844,7 +874,15 @@ void MainWindow::cargarMasivaPeliculas(const QString& rutaArchivo) {
             funcionesCargadas++;
         }
     }
-    QMessageBox::information(this, "Éxito", QString("Carga masiva finalizada.\nPelículas: %1\nFunciones: %2").arg(peliculasCargadas).arg(funcionesCargadas));
+
+    // Manejo final de los mensajes para el administrador
+    if (errores.isEmpty()) {
+        QMessageBox::information(this, "Éxito", QString("Carga masiva finalizada sin errores.\nPelículas: %1\nFunciones: %2").arg(peliculasCargadas).arg(funcionesCargadas));
+    } else {
+        QMessageBox::warning(this, "Carga Parcial con Errores",
+                             QString("Se cargaron %1 películas y %2 funciones.\n\nSe omitieron los siguientes registros:\n%3")
+                                 .arg(peliculasCargadas).arg(funcionesCargadas).arg(errores));
+    }
 }
 
 void MainWindow::cargarMasivaClientes(const QString& rutaArchivo) {
@@ -1177,17 +1215,30 @@ void MainWindow::on_cmbOrdenPeliculas_currentTextChanged(const QString &ordenSel
 // 1. CARGAR Y ACTUALIZAR TABLA
 // ==========================================
 void MainWindow::actualizarTablaFunciones() {
-    std::vector<Funcion> lista = avlFunciones.obtenerFuncionesInorden();
+    // 1. Leemos la opción actual del ComboBox
+    QString orden = ui->cmbGestionFuncion->currentText();
+    std::vector<Funcion> lista;
 
+    // 2. Ejecutamos el recorrido correspondiente
+    if (orden == "Preorden") {
+        lista = avlFunciones.obtenerFuncionesPreorden();
+    } else if (orden == "Postorden") {
+        lista = avlFunciones.obtenerFuncionesPostorden();
+    } else {
+        lista = avlFunciones.obtenerFuncionesInorden(); // Inorden por defecto
+    }
+
+    // 3. Preparamos la estructura visual de la tabla
     ui->tblFuncionesRegistradas->setRowCount(0);
     ui->tblFuncionesRegistradas->setColumnCount(6);
     ui->tblFuncionesRegistradas->setHorizontalHeaderLabels({"Código", "Película", "Sala", "Horario", "Filas", "Columnas"});
 
+    // 4. Llenamos la tabla con los datos ordenados
     for (int i = 0; i < (int)lista.size(); i++) {
         ui->tblFuncionesRegistradas->insertRow(i);
         ui->tblFuncionesRegistradas->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(lista[i].codigo_funcion)));
 
-        // Cruzamos datos con el Árbol Binario para mostrar el Título en lugar del código
+        // Cruzamos datos con el Árbol Binario para mostrar el Título de la película
         Pelicula* p = cartelera.buscarPelicula(lista[i].codigo_pelicula);
         QString titulo = p ? QString::fromStdString(p->titulo) : QString::fromStdString(lista[i].codigo_pelicula);
 
@@ -1199,7 +1250,9 @@ void MainWindow::actualizarTablaFunciones() {
     }
     ui->tblFuncionesRegistradas->resizeColumnsToContents();
 }
-
+void MainWindow::on_cmbGestionFuncion_currentTextChanged(const QString &ordenSeleccionado) {
+    actualizarTablaFunciones();
+}
 void MainWindow::on_btnActualizarTablaFuncion_clicked() {
     actualizarTablaFunciones();
 }

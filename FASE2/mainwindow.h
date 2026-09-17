@@ -82,7 +82,7 @@ private slots:
     void on_btnReportesReservas_clicked();
     void on_btnVerRepCartelera_clicked();
     void on_btnReporteMatrizDispersa_clicked();
-
+    void on_cmbGestionFuncion_currentTextChanged(const QString &ordenSeleccionado);
 private:
     Ui::MainWindow *ui;
 
