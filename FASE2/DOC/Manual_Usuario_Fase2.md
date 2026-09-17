@@ -1,13 +1,17 @@
 # Manual de Usuario — CinemaUSAC (EDD Fase 2)
 
 **Universidad de San Carlos de Guatemala**
+
 **Facultad de Ingeniería — Escuela de Ciencias y Sistemas**
+
 **Curso:** Estructuras de Datos
+
 **Proyecto:** EDD CinemaUSAC — Fase 2
+
 **Carné:** 202303371
+
 **Tecnología de interfaz:** Qt Widgets (C++), aplicación de escritorio
 
-> **Nota:** las capturas de este manual se indican con el marcador `[CAPTURA]`. Sustituye cada marcador por la captura real de pantalla tomada durante la ejecución de tu aplicación, tal como lo exige el enunciado.
 
 ---
 
