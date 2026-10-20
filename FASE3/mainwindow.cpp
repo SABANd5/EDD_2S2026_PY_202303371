@@ -511,6 +511,10 @@ void MainWindow::on_btnCrearFuncion_clicked()
     // 1. Leer los campos (Asegúrate de agregar txtCodigoFuncionAdmin en Qt Designer)
     std::string codigoFuncion = ui->txtCodigoFuncionAdmin->text().trimmed().toStdString();
     std::string peliculaTitulo = ui->cmbPeliculaAdmin->currentText().toStdString();
+    // <-- INICIO CÓDIGO NUEVO
+    std::string sedeCodigo = ui->cmbSedeAdmin->currentData().toString().toStdString();
+    std::string fecha = ui->txtFechaAdmin->text().trimmed().toStdString();
+    // FIN CÓDIGO NUEVO -->
     std::string salaNum = ui->txtSala->text().trimmed().toStdString();
     std::string horario = ui->txtHorario->text().trimmed().toStdString();
     int filas = ui->spinFilasSala->value();
@@ -546,6 +550,8 @@ void MainWindow::on_btnCrearFuncion_clicked()
     Funcion nuevaFun;
     nuevaFun.codigo_funcion = codigoFuncion;
     nuevaFun.codigo_pelicula = codigoPelicula;
+    nuevaFun.sede = sedeCodigo;       // <-- NUEVO
+    nuevaFun.fecha = fecha;           // <-- NUEVO
     nuevaFun.horario = horario;
     nuevaFun.sala = salaNum;
     nuevaFun.filas = filas;
@@ -581,6 +587,8 @@ void MainWindow::on_btnCrearFuncion_clicked()
     ui->txtHorario->clear();
     ui->spinFilasSala->setValue(0);
     ui->spinColumnasSala->setValue(0);
+    ui->cmbSedeAdmin->setCurrentIndex(0);
+    ui->txtFechaAdmin->clear();
 
     // Opcional: actualizarTablaFunciones(); si tienes una tabla visual para las funciones
 }
@@ -782,6 +790,30 @@ void MainWindow::cargarMasivaPeliculas(const QString& rutaArchivo) {
         return;
     }
 
+    // <-- INICIO CÓDIGO NUEVO: CARGA DE SEDES (FASE 3)
+    QJsonArray arraySedes = doc.object().value("sedes").toArray();
+    int sedesCargadas = 0;
+    for (const QJsonValue& valSede : arraySedes) {
+        QJsonObject objSede = valSede.toObject();
+        Sede nuevaSede;
+        nuevaSede.codigo = objSede["codigo"].toString().trimmed().toStdString();
+        nuevaSede.nombre = objSede["nombre"].toString().trimmed().toStdString();
+        nuevaSede.direccion = objSede["direccion"].toString().trimmed().toStdString();
+        nuevaSede.cantidad_salas = objSede["cantidad_salas"].toInt();
+        nuevaSede.telefono = objSede["telefono"].toString().trimmed().toStdString();
+
+        // Validar si ya existe
+        bool existe = false;
+        for(const Sede& s : listaSedes) { if(s.codigo == nuevaSede.codigo) { existe = true; break; } }
+
+        if (!existe && !nuevaSede.codigo.empty()) {
+            listaSedes.push_back(nuevaSede);
+            sedesCargadas++;
+        }
+    }
+    actualizarComboSedesAdmin();
+    // FIN CÓDIGO NUEVO -->
+
     QJsonArray arrayPeliculas = doc.object().value("peliculas").toArray();
     int peliculasCargadas = 0, funcionesCargadas = 0;
 
@@ -860,6 +892,23 @@ void MainWindow::cargarMasivaPeliculas(const QString& rutaArchivo) {
                 continue;
             }
 
+            // <-- INICIO CÓDIGO NUEVO: VALIDACIÓN DE SEDE
+            QString funcSede = objFun["sede"].toString().trimmed();
+            QString funcFecha = objFun["fecha"].toString().trimmed();
+
+            bool sedeExiste = false;
+            for (const Sede& s : listaSedes) {
+                if (s.codigo == funcSede.toStdString()) {
+                    sedeExiste = true;
+                    break;
+                }
+            }
+            if (!sedeExiste) {
+                errores += "- [" + objFun["codigo_funcion"].toString() + "] Rechazada: Sede '" + funcSede + "' no existe.\n";
+                continue; // Se rechaza la función
+            }
+            // FIN CÓDIGO NUEVO -->
+
             Funcion nuevaFun;
             nuevaFun.codigo_funcion = objFun["codigo_funcion"].toString().toStdString();
             nuevaFun.codigo_pelicula = nuevaPel.codigo;
@@ -876,12 +925,13 @@ void MainWindow::cargarMasivaPeliculas(const QString& rutaArchivo) {
     }
 
     // Manejo final de los mensajes para el administrador
+    // Manejo final de los mensajes para el administrador
     if (errores.isEmpty()) {
-        QMessageBox::information(this, "Éxito", QString("Carga masiva finalizada sin errores.\nPelículas: %1\nFunciones: %2").arg(peliculasCargadas).arg(funcionesCargadas));
+        QMessageBox::information(this, "Éxito", QString("Carga masiva finalizada sin errores.\nSedes: %1\nPelículas: %2\nFunciones: %3").arg(sedesCargadas).arg(peliculasCargadas).arg(funcionesCargadas));
     } else {
         QMessageBox::warning(this, "Carga Parcial con Errores",
-                             QString("Se cargaron %1 películas y %2 funciones.\n\nSe omitieron los siguientes registros:\n%3")
-                                 .arg(peliculasCargadas).arg(funcionesCargadas).arg(errores));
+                             QString("Se cargaron %1 sedes, %2 películas y %3 funciones.\n\nSe omitieron los siguientes registros:\n%4")
+                                 .arg(sedesCargadas).arg(peliculasCargadas).arg(funcionesCargadas).arg(errores));
     }
 }
 
@@ -1230,9 +1280,8 @@ void MainWindow::actualizarTablaFunciones() {
 
     // 3. Preparamos la estructura visual de la tabla
     ui->tblFuncionesRegistradas->setRowCount(0);
-    ui->tblFuncionesRegistradas->setColumnCount(6);
-    ui->tblFuncionesRegistradas->setHorizontalHeaderLabels({"Código", "Película", "Sala", "Horario", "Filas", "Columnas"});
-
+    ui->tblFuncionesRegistradas->setColumnCount(8); // <-- Modificado a 8
+    ui->tblFuncionesRegistradas->setHorizontalHeaderLabels({"Código", "Película", "Sede", "Fecha", "Sala", "Horario", "Filas", "Columnas"});
     // 4. Llenamos la tabla con los datos ordenados
     for (int i = 0; i < (int)lista.size(); i++) {
         ui->tblFuncionesRegistradas->insertRow(i);
@@ -1243,10 +1292,12 @@ void MainWindow::actualizarTablaFunciones() {
         QString titulo = p ? QString::fromStdString(p->titulo) : QString::fromStdString(lista[i].codigo_pelicula);
 
         ui->tblFuncionesRegistradas->setItem(i, 1, new QTableWidgetItem(titulo));
-        ui->tblFuncionesRegistradas->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(lista[i].sala)));
-        ui->tblFuncionesRegistradas->setItem(i, 3, new QTableWidgetItem(QString::fromStdString(lista[i].horario)));
-        ui->tblFuncionesRegistradas->setItem(i, 4, new QTableWidgetItem(QString::number(lista[i].filas)));
-        ui->tblFuncionesRegistradas->setItem(i, 5, new QTableWidgetItem(QString::number(lista[i].columnas)));
+        ui->tblFuncionesRegistradas->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(lista[i].sede)));   // <-- NUEVO
+        ui->tblFuncionesRegistradas->setItem(i, 3, new QTableWidgetItem(QString::fromStdString(lista[i].fecha)));  // <-- NUEVO
+        ui->tblFuncionesRegistradas->setItem(i, 4, new QTableWidgetItem(QString::fromStdString(lista[i].sala)));
+        ui->tblFuncionesRegistradas->setItem(i, 5, new QTableWidgetItem(QString::fromStdString(lista[i].horario)));
+        ui->tblFuncionesRegistradas->setItem(i, 6, new QTableWidgetItem(QString::number(lista[i].filas)));
+        ui->tblFuncionesRegistradas->setItem(i, 7, new QTableWidgetItem(QString::number(lista[i].columnas)));
     }
     ui->tblFuncionesRegistradas->resizeColumnsToContents();
 }
@@ -1271,6 +1322,11 @@ void MainWindow::on_tblFuncionesRegistradas_cellClicked(int row, int column) {
         QString titulo = p ? QString::fromStdString(p->titulo) : QString::fromStdString(f->codigo_pelicula);
 
         ui->txtEditPelicula->setText(titulo);
+        // Buscar el índice del combobox que corresponde a la sede
+        int idxSede = ui->cmbEditSede->findData(QString::fromStdString(f->sede));
+        if (idxSede != -1) ui->cmbEditSede->setCurrentIndex(idxSede);
+
+        ui->txtEditFecha->setText(QString::fromStdString(f->fecha));
         ui->txtEditSala->setText(QString::fromStdString(f->sala));
         ui->txtEditHorario->setText(QString::fromStdString(f->horario));
         ui->spinEditFila->setValue(f->filas);
@@ -1297,6 +1353,11 @@ void MainWindow::on_btnBuscarFuncion_clicked() {
         QString titulo = p ? QString::fromStdString(p->titulo) : QString::fromStdString(f->codigo_pelicula);
 
         ui->txtEditPelicula->setText(titulo);
+        // Buscar el índice del combobox que corresponde a la sede
+        int idxSede = ui->cmbEditSede->findData(QString::fromStdString(f->sede));
+        if (idxSede != -1) ui->cmbEditSede->setCurrentIndex(idxSede);
+
+        ui->txtEditFecha->setText(QString::fromStdString(f->fecha));
         ui->txtEditSala->setText(QString::fromStdString(f->sala));
         ui->txtEditHorario->setText(QString::fromStdString(f->horario));
         ui->spinEditFila->setValue(f->filas);
@@ -1325,6 +1386,10 @@ void MainWindow::on_btnEditFuncion_clicked() {
     QString nuevaSala = ui->txtEditSala->text().trimmed();
     QString nuevoHorario = ui->txtEditHorario->text().trimmed();
     QString tituloInput = ui->txtEditPelicula->text().trimmed();
+    // <-- INICIO CÓDIGO NUEVO
+    QString nuevaSede = ui->cmbEditSede->currentData().toString();
+    QString nuevaFecha = ui->txtEditFecha->text().trimmed();
+    // FIN CÓDIGO NUEVO -->
     int nuevasFilas = ui->spinEditFila->value();
     int nuevasCols = ui->spinEditCol->value();
 
@@ -1358,7 +1423,8 @@ void MainWindow::on_btnEditFuncion_clicked() {
     fModificada.horario = nuevoHorario.toStdString();
     fModificada.filas = nuevasFilas;
     fModificada.columnas = nuevasCols;
-
+    fModificada.sede = nuevaSede.toStdString();
+    fModificada.fecha = nuevaFecha.toStdString();
     avlFunciones.editar(codigo.toStdString(), fModificada);
     actualizarTablaFunciones();
 
@@ -1833,5 +1899,19 @@ void MainWindow::on_btnReporteMatrizDispersa_clicked() {
         ui->lblVisorReportes->setAlignment(Qt::AlignCenter);
     } else {
         QMessageBox::warning(this, "Error", "No se pudo cargar la imagen de la matriz.");
+    }
+}
+
+void MainWindow::actualizarComboSedesAdmin() {
+    ui->cmbSedeAdmin->clear();
+    ui->cmbEditSede->clear();
+
+    ui->cmbSedeAdmin->addItem("Seleccione una sede...", QVariant(""));
+    ui->cmbEditSede->addItem("Sin cambios...", QVariant(""));
+
+    for (const Sede& s : listaSedes) {
+        QString texto = QString::fromStdString(s.codigo + " - " + s.nombre);
+        ui->cmbSedeAdmin->addItem(texto, QVariant(QString::fromStdString(s.codigo)));
+        ui->cmbEditSede->addItem(texto, QVariant(QString::fromStdString(s.codigo)));
     }
 }

@@ -14,6 +14,16 @@
 #include "ArbolBClientes.h"
 #include "TablaHashReservas.h"
 
+// <-- INICIO CÓDIGO NUEVO
+struct Sede {
+    std::string codigo;
+    std::string nombre;
+    std::string direccion;
+    int cantidad_salas;
+    std::string telefono;
+};
+// FIN CÓDIGO NUEVO -->
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -107,6 +117,10 @@ private:
     void actualizarComboPeliculasAdmin();
     void actualizarComboPeliculasUsuario();
     void cargarDatosPerfilUsuario();
+    // <-- INICIO CÓDIGO NUEVO
+    std::vector<Sede> listaSedes;
+    void actualizarComboSedesAdmin();
+    // FIN CÓDIGO NUEVO -->
 };
 
 #endif // MAINWINDOW_H

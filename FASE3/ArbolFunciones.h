@@ -4,15 +4,18 @@
 #include <vector>
 
 // Estructura para almacenar los datos de la función
+// Estructura para almacenar los datos de la función
 struct Funcion {
     std::string codigo_funcion;    // Clave de indexación del AVL
     std::string codigo_pelicula;   // Para vincular con el BST de cartelera
+    std::string sede;              // <-- NUEVO: Para vincular con el Grafo de Sedes
+    std::string fecha;             // <-- NUEVO: Fecha de la función
     std::string horario;
     std::string sala;
     int filas;
     int columnas;
-    std::string archivo_asientos;  // Se generará automáticamente, ej: "F001_funcion.json"[cite: 1]
-    bool ya_realizada;             // Ayudará a pintar el nodo verde o rojo en Graphviz[cite: 1]
+    std::string archivo_asientos;  // Se generará automáticamente, ej: "F001_funcion.json"
+    bool ya_realizada;             // Ayudará a pintar el nodo verde o rojo en Graphviz
 };
 
 // Nodo del Árbol AVL
