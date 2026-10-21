@@ -35,7 +35,7 @@
 </string>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="page1Login">
      <widget class="QTabWidget" name="tabWidget_3">
@@ -48,7 +48,7 @@
        </rect>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_8">
        <attribute name="title">
@@ -903,7 +903,7 @@ QPushButton:pressed {
        <widget class="QLabel" name="label_7">
         <property name="geometry">
          <rect>
-          <x>370</x>
+          <x>290</x>
           <y>80</y>
           <width>111</width>
           <height>16</height>
@@ -942,7 +942,7 @@ font: 900 </string>
        <widget class="QComboBox" name="cmbPeliculaReserva">
         <property name="geometry">
          <rect>
-          <x>370</x>
+          <x>290</x>
           <y>100</y>
           <width>121</width>
           <height>31</height>
@@ -988,7 +988,7 @@ QComboBox QAbstractItemView {
        <widget class="QComboBox" name="cbmFuncionPeli">
         <property name="geometry">
          <rect>
-          <x>500</x>
+          <x>420</x>
           <y>100</y>
           <width>241</width>
           <height>31</height>
@@ -1034,7 +1034,7 @@ QComboBox QAbstractItemView {
        <widget class="QLabel" name="label_57">
         <property name="geometry">
          <rect>
-          <x>500</x>
+          <x>420</x>
           <y>80</y>
           <width>71</width>
           <height>16</height>
@@ -1067,9 +1067,9 @@ QComboBox QAbstractItemView {
        <widget class="QComboBox" name="cmbSedesCliente">
         <property name="geometry">
          <rect>
-          <x>550</x>
-          <y>170</y>
-          <width>111</width>
+          <x>670</x>
+          <y>100</y>
+          <width>161</width>
           <height>31</height>
          </rect>
         </property>
@@ -1078,13 +1078,26 @@ QComboBox QAbstractItemView {
         <property name="geometry">
          <rect>
           <x>680</x>
-          <y>170</y>
-          <width>101</width>
-          <height>31</height>
+          <y>140</y>
+          <width>141</width>
+          <height>41</height>
          </rect>
         </property>
         <property name="text">
          <string/>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_64">
+        <property name="geometry">
+         <rect>
+          <x>680</x>
+          <y>80</y>
+          <width>49</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>SEDES</string>
         </property>
        </widget>
       </widget>
@@ -1329,13 +1342,13 @@ QPushButton:pressed {
       </widget>
       <widget class="QWidget" name="tab_16">
        <attribute name="title">
-        <string>Page</string>
+        <string>HISTORIAL Y COMPROBANTES</string>
        </attribute>
        <widget class="QLineEdit" name="txtCodigoTransaccionCliente">
         <property name="geometry">
          <rect>
-          <x>40</x>
-          <y>50</y>
+          <x>270</x>
+          <y>100</y>
           <width>281</width>
           <height>31</height>
          </rect>
@@ -1347,8 +1360,8 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnVerComprobante">
         <property name="geometry">
          <rect>
-          <x>40</x>
-          <y>90</y>
+          <x>270</x>
+          <y>140</y>
           <width>261</width>
           <height>21</height>
          </rect>
@@ -1980,7 +1993,7 @@ QTabBar::tab:hover {
 }</string>
       </property>
       <property name="currentIndex">
-       <number>5</number>
+       <number>3</number>
       </property>
       <property name="tabBarAutoHide">
        <bool>false</bool>
@@ -4228,6 +4241,210 @@ QPushButton:pressed {
         </property>
        </widget>
       </widget>
+      <widget class="QWidget" name="tab_17">
+       <attribute name="title">
+        <string>GESTION SEDES</string>
+       </attribute>
+       <widget class="QLineEdit" name="txtSedeCodigo">
+        <property name="geometry">
+         <rect>
+          <x>30</x>
+          <y>60</y>
+          <width>113</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="placeholderText">
+         <string>Código de Sede</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="txtSedeNombre">
+        <property name="geometry">
+         <rect>
+          <x>160</x>
+          <y>60</y>
+          <width>113</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="placeholderText">
+         <string>Nombre</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="txtSedeDir">
+        <property name="geometry">
+         <rect>
+          <x>310</x>
+          <y>60</y>
+          <width>113</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="placeholderText">
+         <string>Dirección</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="txtSedeTel">
+        <property name="geometry">
+         <rect>
+          <x>450</x>
+          <y>60</y>
+          <width>113</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="placeholderText">
+         <string>Teléfono</string>
+        </property>
+       </widget>
+       <widget class="QSpinBox" name="spinSedeSalas">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>140</y>
+          <width>91</width>
+          <height>31</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnSedeCrear">
+        <property name="geometry">
+         <rect>
+          <x>220</x>
+          <y>140</y>
+          <width>80</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Crear Sede</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnSedeEditar">
+        <property name="geometry">
+         <rect>
+          <x>320</x>
+          <y>140</y>
+          <width>80</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Editar Sede</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnSedeEliminar">
+        <property name="geometry">
+         <rect>
+          <x>420</x>
+          <y>140</y>
+          <width>80</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Eliminar Sede</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnSedePeliculas">
+        <property name="geometry">
+         <rect>
+          <x>520</x>
+          <y>140</y>
+          <width>141</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Ver Películas por Sede</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_65">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>120</y>
+          <width>121</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>CANTIDAD DE SALAS</string>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="cmbSedeOrigen">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>290</y>
+          <width>111</width>
+          <height>41</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="cmbSedeDestino">
+        <property name="geometry">
+         <rect>
+          <x>170</x>
+          <y>290</y>
+          <width>111</width>
+          <height>41</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_66">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>270</y>
+          <width>49</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Origen</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_67">
+        <property name="geometry">
+         <rect>
+          <x>170</x>
+          <y>270</y>
+          <width>49</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Destino</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnSedeCamino">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>340</y>
+          <width>161</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Buscar Camino Corto (BFS)</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnSedeRanking">
+        <property name="geometry">
+         <rect>
+          <x>320</x>
+          <y>300</y>
+          <width>161</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Ver Ranking de Relaciones</string>
+        </property>
+       </widget>
+      </widget>
       <widget class="QWidget" name="tab_15">
        <attribute name="title">
         <string>R. RESERVAS</string>
@@ -5105,7 +5322,7 @@ QComboBox QAbstractItemView {
      <x>0</x>
      <y>0</y>
      <width>899</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

@@ -4,6 +4,10 @@
 #include <string>
 #include <vector>
 #include "ArbolFunciones.h"
+// <-- INICIO CÓDIGO NUEVO
+#include <queue>
+#include <map>
+// FIN CÓDIGO NUEVO -->
 
 // Estructura de la Arista
 struct Arista {
@@ -35,6 +39,13 @@ public:
     void insertarSede(std::string cod, std::string nom, std::string dir, int salas, std::string tel);
     void recalcularGrafo(ArbolFunciones* avlFunciones);
     VerticeSede* buscarVertice(std::string codigo);
+    // <-- INICIO CÓDIGO NUEVO (FASE 3 - RUBRICA)
+    bool editarSede(std::string codigo, std::string nom, std::string dir, int salas, std::string tel);
+    bool eliminarSede(std::string codigo);
+    std::string buscarCaminoMinimoBFS(std::string origen, std::string destino);
+    std::string obtenerRankingRelaciones();
+    std::vector<std::string> obtenerPeliculasDeSede(std::string codigoSede, ArbolFunciones* avlFunciones);
+    // FIN CÓDIGO NUEVO -->
 
     // Métodos para Graphviz requeridos por Fase 3
     void generarReporteGrafo();
@@ -46,7 +57,6 @@ public:
 private:
     VerticeSede* cabeza; // Inicio de la lista de vértices
 
-    std::vector<std::string> obtenerPeliculasDeSede(std::string codigoSede, ArbolFunciones* avlFunciones);
     void agregarOActualizarArista(VerticeSede* origen, std::string destino, int peso);
     void eliminarArista(VerticeSede* origen, std::string destino);
 };

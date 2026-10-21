@@ -110,6 +110,14 @@ private slots:
     void on_btnVerComprobante_clicked();
     void on_btnReporteVentas_clicked();
     // FIN CÓDIGO NUEVO -->
+    // <-- INICIO CÓDIGO NUEVO (FASE 3 - RUBRICA)
+    void on_btnSedeCrear_clicked();
+    void on_btnSedeEditar_clicked();
+    void on_btnSedeEliminar_clicked();
+    void on_btnSedePeliculas_clicked();
+    void on_btnSedeCamino_clicked();
+    void on_btnSedeRanking_clicked();
+    // FIN CÓDIGO NUEVO -->
 private:
     Ui::MainWindow *ui;
 

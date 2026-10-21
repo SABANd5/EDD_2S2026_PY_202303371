@@ -204,3 +204,134 @@ std::vector<std::pair<std::string, int>> GrafoSedes::obtenerSedesSimilares(std::
     return similares;
 }
 // FIN CÓDIGO NUEVO -->
+
+// ==========================================
+// MÉTODOS ADMINISTRATIVOS FASE 3 (RÚBRICA)
+// ==========================================
+
+bool GrafoSedes::editarSede(std::string codigo, std::string nom, std::string dir, int salas, std::string tel) {
+    VerticeSede* v = buscarVertice(codigo);
+    if (v == nullptr) return false;
+
+    v->nombre = nom;
+    v->direccion = dir;
+    v->cantidad_salas = salas;
+    v->telefono = tel;
+    return true;
+}
+
+bool GrafoSedes::eliminarSede(std::string codigo) {
+    VerticeSede* aBorrar = buscarVertice(codigo);
+    if (aBorrar == nullptr) return false;
+
+    // 1. Eliminar aristas hacia este vértice en las listas de adyacencia de los demás
+    VerticeSede* v = cabeza;
+    while (v != nullptr) {
+        if (v->codigo != codigo) {
+            eliminarArista(v, codigo);
+        }
+        v = v->siguiente;
+    }
+
+    // 2. Liberar la propia lista de adyacencia del vértice a borrar
+    Arista* aristaActual = aBorrar->listaAdyacencia;
+    while (aristaActual != nullptr) {
+        Arista* temp = aristaActual;
+        aristaActual = aristaActual->siguiente;
+        delete temp;
+    }
+
+    // 3. Desenlazar el vértice de la lista principal
+    if (cabeza == aBorrar) {
+        cabeza = cabeza->siguiente;
+    } else {
+        VerticeSede* actual = cabeza;
+        while (actual->siguiente != nullptr && actual->siguiente != aBorrar) {
+            actual = actual->siguiente;
+        }
+        if (actual->siguiente == aBorrar) {
+            actual->siguiente = aBorrar->siguiente;
+        }
+    }
+
+    delete aBorrar;
+    return true;
+}
+
+// Algoritmo Breadth-First Search (BFS) para ruta más corta sin ponderar
+std::string GrafoSedes::buscarCaminoMinimoBFS(std::string origen, std::string destino) {
+    if (origen == destino) return "El origen y destino son la misma sede: " + origen;
+    if (buscarVertice(origen) == nullptr || buscarVertice(destino) == nullptr) {
+        return "Una o ambas sedes no existen en el sistema.";
+    }
+
+    std::queue<std::vector<std::string>> cola;
+    std::map<std::string, bool> visitados;
+
+    cola.push({origen});
+    visitados[origen] = true;
+
+    while (!cola.empty()) {
+        std::vector<std::string> caminoActual = cola.front();
+        cola.pop();
+
+        std::string nodoActual = caminoActual.back();
+
+        // Si llegamos al destino, reconstruimos el string
+        if (nodoActual == destino) {
+            std::string resultado = "Ruta óptima encontrada (" + std::to_string(caminoActual.size() - 1) + " saltos):\n\n";
+            for (size_t i = 0; i < caminoActual.size(); i++) {
+                resultado += caminoActual[i] + (i < caminoActual.size() - 1 ? "  ->  " : "");
+            }
+            return resultado;
+        }
+
+        // Expandir los vecinos
+        VerticeSede* v = buscarVertice(nodoActual);
+        if (v != nullptr) {
+            Arista* a = v->listaAdyacencia;
+            while (a != nullptr) {
+                if (!visitados[a->destino]) {
+                    visitados[a->destino] = true;
+                    std::vector<std::string> nuevoCamino = caminoActual;
+                    nuevoCamino.push_back(a->destino);
+                    cola.push(nuevoCamino);
+                }
+                a = a->siguiente;
+            }
+        }
+    }
+    return "No existe un camino posible entre " + origen + " y " + destino + ".";
+}
+
+std::string GrafoSedes::obtenerRankingRelaciones() {
+    std::vector<std::pair<std::string, int>> relaciones;
+    VerticeSede* v = cabeza;
+
+    // Recorremos todo el grafo extrayendo las aristas
+    while (v != nullptr) {
+        Arista* a = v->listaAdyacencia;
+        while (a != nullptr) {
+            // Condición (v->codigo < a->destino) para no guardar duplicados (ej: A->B y B->A)
+            if (v->codigo < a->destino) {
+                relaciones.push_back({v->codigo + "  <--->  " + a->destino, a->peso});
+            }
+            a = a->siguiente;
+        }
+        v = v->siguiente;
+    }
+
+    // Ordenar de mayor a menor según el peso (cantidad de películas en común)
+    std::sort(relaciones.begin(), relaciones.end(), [](const std::pair<std::string, int>& a, const std::pair<std::string, int>& b) {
+        return a.second > b.second;
+    });
+
+    if (relaciones.empty()) return "Aún no hay conexiones entre las sedes (No comparten cartelera).";
+
+    std::string resultado = "=== RANKING DE RELACIONES (Películas compartidas) ===\n\n";
+    for (size_t i = 0; i < relaciones.size(); i++) {
+        resultado += std::to_string(i + 1) + ". " + relaciones[i].first +
+                     " (Comparte " + std::to_string(relaciones[i].second) + " películas)\n";
+    }
+    return resultado;
+}

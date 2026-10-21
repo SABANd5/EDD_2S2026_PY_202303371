@@ -1869,14 +1869,22 @@ void MainWindow::on_btnReporteMatrizDispersa_clicked() {
 void MainWindow::actualizarComboSedesAdmin() {
     ui->cmbSedeAdmin->clear();
     ui->cmbEditSede->clear();
+    ui->cmbSedeOrigen->clear();  // <-- NUEVO
+    ui->cmbSedeDestino->clear(); // <-- NUEVO
 
     ui->cmbSedeAdmin->addItem("Seleccione una sede...", QVariant(""));
     ui->cmbEditSede->addItem("Sin cambios...", QVariant(""));
+    ui->cmbSedeOrigen->addItem("Sede Origen...", QVariant(""));   // <-- NUEVO
+    ui->cmbSedeDestino->addItem("Sede Destino...", QVariant("")); // <-- NUEVO
 
     for (const Sede& s : listaSedes) {
         QString texto = QString::fromStdString(s.codigo + " - " + s.nombre);
-        ui->cmbSedeAdmin->addItem(texto, QVariant(QString::fromStdString(s.codigo)));
-        ui->cmbEditSede->addItem(texto, QVariant(QString::fromStdString(s.codigo)));
+        QVariant dataCod = QVariant(QString::fromStdString(s.codigo));
+
+        ui->cmbSedeAdmin->addItem(texto, dataCod);
+        ui->cmbEditSede->addItem(texto, dataCod);
+        ui->cmbSedeOrigen->addItem(texto, dataCod);  // <-- NUEVO
+        ui->cmbSedeDestino->addItem(texto, dataCod); // <-- NUEVO
     }
 }
 
@@ -2155,3 +2163,133 @@ void MainWindow::on_btnReporteVentas_clicked() {
     std::string reporte = blockchain.generarReporteVentas();
     QMessageBox::information(this, "Reporte Administrativo", QString::fromStdString(reporte));
 }
+
+// ==========================================
+// GESTIÓN DE SEDES Y GRAFOS FASE 3 (RÚBRICA)
+// ==========================================
+
+void MainWindow::on_btnSedeCrear_clicked() {
+    std::string cod = ui->txtSedeCodigo->text().trimmed().toStdString();
+    std::string nom = ui->txtSedeNombre->text().trimmed().toStdString();
+    std::string dir = ui->txtSedeDir->text().trimmed().toStdString();
+    int salas = ui->spinSedeSalas->value();
+    std::string tel = ui->txtSedeTel->text().trimmed().toStdString();
+
+    if (cod.empty() || nom.empty()) {
+        QMessageBox::warning(this, "Error", "El código y el nombre son obligatorios.");
+        return;
+    }
+
+    if (grafoSedes.buscarVertice(cod) != nullptr) {
+        QMessageBox::warning(this, "Error", "El código de sede ya existe.");
+        return;
+    }
+
+    Sede nuevaSede = {cod, nom, dir, salas, tel};
+    listaSedes.push_back(nuevaSede);
+    grafoSedes.insertarSede(cod, nom, dir, salas, tel);
+
+    // Al ser una sede nueva, recalculamos relaciones (quedará en 0 por ahora)
+    grafoSedes.recalcularGrafo(&avlFunciones);
+    actualizarComboSedesAdmin();
+
+    QMessageBox::information(this, "Éxito", "Sede creada correctamente.");
+    ui->txtSedeCodigo->clear(); ui->txtSedeNombre->clear();
+    ui->txtSedeDir->clear(); ui->txtSedeTel->clear();
+    ui->spinSedeSalas->setValue(0);
+}
+
+void MainWindow::on_btnSedeEditar_clicked() {
+    std::string cod = ui->txtSedeCodigo->text().trimmed().toStdString();
+    std::string nom = ui->txtSedeNombre->text().trimmed().toStdString();
+    std::string dir = ui->txtSedeDir->text().trimmed().toStdString();
+    int salas = ui->spinSedeSalas->value();
+    std::string tel = ui->txtSedeTel->text().trimmed().toStdString();
+
+    if (cod.empty() || nom.empty()) {
+        QMessageBox::warning(this, "Error", "Ingresa el código existente y el nuevo nombre.");
+        return;
+    }
+
+    if (grafoSedes.editarSede(cod, nom, dir, salas, tel)) {
+        // Actualizamos nuestra lista en memoria para persistencia y UI
+        for (Sede& s : listaSedes) {
+            if (s.codigo == cod) {
+                s.nombre = nom; s.direccion = dir;
+                s.cantidad_salas = salas; s.telefono = tel;
+                break;
+            }
+        }
+        actualizarComboSedesAdmin();
+        QMessageBox::information(this, "Éxito", "Sede actualizada correctamente.");
+    } else {
+        QMessageBox::warning(this, "Error", "No se encontró la sede.");
+    }
+}
+
+void MainWindow::on_btnSedeEliminar_clicked() {
+    std::string cod = ui->txtSedeCodigo->text().trimmed().toStdString();
+    if (cod.empty()) {
+        QMessageBox::warning(this, "Error", "Ingresa el código de la sede a eliminar.");
+        return;
+    }
+
+    QMessageBox::StandardButton res = QMessageBox::question(this, "Confirmar",
+                                                            "¿Eliminar esta sede y TODAS sus relaciones en el grafo?", QMessageBox::Yes | QMessageBox::No);
+
+    if (res == QMessageBox::Yes) {
+        if (grafoSedes.eliminarSede(cod)) {
+            // Eliminar de vector en memoria
+            listaSedes.erase(std::remove_if(listaSedes.begin(), listaSedes.end(),
+                                            [&](const Sede& s) { return s.codigo == cod; }), listaSedes.end());
+
+            actualizarComboSedesAdmin();
+            QMessageBox::information(this, "Éxito", "Sede eliminada del sistema.");
+            ui->txtSedeCodigo->clear();
+        } else {
+            QMessageBox::warning(this, "Error", "La sede no existe.");
+        }
+    }
+}
+
+void MainWindow::on_btnSedePeliculas_clicked() {
+    std::string cod = ui->txtSedeCodigo->text().trimmed().toStdString();
+    if (cod.empty()) {
+        QMessageBox::warning(this, "Error", "Ingresa un código de sede válido.");
+        return;
+    }
+
+    std::vector<std::string> codigosPelis = grafoSedes.obtenerPeliculasDeSede(cod, &avlFunciones);
+    if (codigosPelis.empty()) {
+        QMessageBox::information(this, "Consulta", "La sede no tiene películas programadas.");
+        return;
+    }
+
+    QString listaStr = "Películas programadas en " + QString::fromStdString(cod) + ":\n\n";
+    for (const std::string& codPel : codigosPelis) {
+        Pelicula* p = cartelera.buscarPelicula(codPel);
+        std::string titulo = (p != nullptr) ? p->titulo : "Desconocido";
+        listaStr += QString::fromStdString("- " + codPel + " | " + titulo + "\n");
+    }
+
+    QMessageBox::information(this, "Películas por Sede", listaStr);
+}
+
+void MainWindow::on_btnSedeCamino_clicked() {
+    std::string origen = ui->cmbSedeOrigen->currentData().toString().toStdString();
+    std::string destino = ui->cmbSedeDestino->currentData().toString().toStdString();
+
+    if (origen.empty() || destino.empty()) {
+        QMessageBox::warning(this, "Error", "Selecciona ambas sedes para calcular la ruta.");
+        return;
+    }
+
+    std::string rutaBFS = grafoSedes.buscarCaminoMinimoBFS(origen, destino);
+    QMessageBox::information(this, "Camino Más Corto (BFS)", QString::fromStdString(rutaBFS));
+}
+
+void MainWindow::on_btnSedeRanking_clicked() {
+    std::string ranking = grafoSedes.obtenerRankingRelaciones();
+    QMessageBox::information(this, "Ranking de Relaciones", QString::fromStdString(ranking));
+}
+
