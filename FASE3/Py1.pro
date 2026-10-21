@@ -27,6 +27,7 @@ HEADERS += \
     ArbolMerkle.h \
     ArbolPeliculas.h \
     Blockchain.h \
+    GrafoSedes.h \
     LZW.h \
     ListaSolicitudes.h \
     TablaHashReservas.h \

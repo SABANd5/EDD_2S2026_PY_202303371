@@ -105,6 +105,11 @@ private slots:
     void on_btnReporteBlockchain_clicked();
     void on_btnReporteMerkle_clicked();
     // FIN CÓDIGO NUEVO -->
+    // <-- INICIO CÓDIGO NUEVO
+    void on_cmbSedesCliente_currentTextChanged(const QString &nombreSede);
+    void on_btnVerComprobante_clicked();
+    void on_btnReporteVentas_clicked();
+    // FIN CÓDIGO NUEVO -->
 private:
     Ui::MainWindow *ui;
 

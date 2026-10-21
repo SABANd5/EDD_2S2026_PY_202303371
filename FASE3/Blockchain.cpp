@@ -234,3 +234,57 @@ bool Blockchain::generarReporteMerkleBloque(int index) {
     }
     return false; // No se encontró ningún bloque con ese índice
 }
+
+// <-- INICIO CÓDIGO NUEVO
+bool Blockchain::buscarTransaccion(std::string codTx, Transaccion& outTx, int& outIndex, std::string& outHash) {
+    Bloque* aux = cabeza;
+    while (aux != nullptr) {
+        if (aux->esValido) { // Solo busca en bloques que no han sido hackeados
+            for (const Transaccion& t : aux->data) {
+                if (t.codigo_transaccion == codTx) {
+                    outTx = t;
+                    outIndex = aux->index;
+                    outHash = aux->hash;
+                    return true;
+                }
+            }
+        }
+        aux = aux->siguiente;
+    }
+    return false;
+}
+
+std::vector<Transaccion> Blockchain::obtenerHistorialCliente(std::string id_cliente) {
+    std::vector<Transaccion> historial;
+    Bloque* aux = cabeza;
+    while (aux != nullptr) {
+        if (aux->esValido) {
+            for (const Transaccion& t : aux->data) {
+                if (t.id_cliente == id_cliente) {
+                    historial.push_back(t);
+                }
+            }
+        }
+        aux = aux->siguiente;
+    }
+    return historial;
+}
+
+std::string Blockchain::generarReporteVentas() {
+    int totalBoletos = 0;
+    double totalMonto = 0.0;
+
+    Bloque* aux = cabeza;
+    while(aux != nullptr) {
+        if (aux->esValido) {
+            for (const Transaccion& t : aux->data) {
+                totalBoletos++;
+                totalMonto += t.monto;
+            }
+        }
+        aux = aux->siguiente;
+    }
+    return "=== VENTAS TOTALES BLOCKCHAIN ===\n\nTotal Boletos Vendidos: " + std::to_string(totalBoletos) +
+           "\nIngresos Totales Registrados: Q" + std::to_string(totalMonto);
+}
+// FIN CÓDIGO NUEVO -->

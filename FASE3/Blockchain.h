@@ -27,6 +27,11 @@ public:
     void generarReporteBlockchain();
     bool generarReporteMerkleBloque(int index);
     int pendientesSize();
+    // <-- INICIO CÓDIGO NUEVO
+    bool buscarTransaccion(std::string codTx, Transaccion& outTx, int& outIndex, std::string& outHash);
+    std::string generarReporteVentas();
+    std::vector<Transaccion> obtenerHistorialCliente(std::string id_cliente);
+    // FIN CÓDIGO NUEVO -->
 
 private:
     Bloque* cabeza;

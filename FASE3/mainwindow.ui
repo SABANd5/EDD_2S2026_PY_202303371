@@ -517,9 +517,9 @@ QPushButton:pressed {
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>60</y>
+        <y>70</y>
         <width>851</width>
-        <height>481</height>
+        <height>471</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -547,7 +547,7 @@ QTabBar::tab:hover {
 </string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
@@ -1048,7 +1048,7 @@ QComboBox QAbstractItemView {
         <property name="geometry">
          <rect>
           <x>400</x>
-          <y>180</y>
+          <y>160</y>
           <width>101</width>
           <height>41</height>
          </rect>
@@ -1063,6 +1063,29 @@ QComboBox QAbstractItemView {
           <string>Efectivo</string>
          </property>
         </item>
+       </widget>
+       <widget class="QComboBox" name="cmbSedesCliente">
+        <property name="geometry">
+         <rect>
+          <x>550</x>
+          <y>170</y>
+          <width>111</width>
+          <height>31</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lblSedesSimilares">
+        <property name="geometry">
+         <rect>
+          <x>680</x>
+          <y>170</y>
+          <width>101</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
        </widget>
       </widget>
       <widget class="QWidget" name="tab_6">
@@ -1301,6 +1324,37 @@ QPushButton:pressed {
         </property>
         <property name="text">
          <string>CANCELAR RESERVA</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="tab_16">
+       <attribute name="title">
+        <string>Page</string>
+       </attribute>
+       <widget class="QLineEdit" name="txtCodigoTransaccionCliente">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>50</y>
+          <width>281</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="placeholderText">
+         <string>Ingrese Código de Transacción (Ej: T001)&quot;</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnVerComprobante">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>90</y>
+          <width>261</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Ver Comprobante Blockchain</string>
         </property>
        </widget>
       </widget>
@@ -4111,7 +4165,7 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnGenerarBloque">
         <property name="geometry">
          <rect>
-          <x>450</x>
+          <x>430</x>
           <y>360</y>
           <width>121</width>
           <height>24</height>
@@ -4124,7 +4178,7 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnReporteBlockchain">
         <property name="geometry">
          <rect>
-          <x>450</x>
+          <x>430</x>
           <y>390</y>
           <width>111</width>
           <height>24</height>
@@ -4137,8 +4191,8 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnReporteMerkle">
         <property name="geometry">
          <rect>
-          <x>680</x>
-          <y>390</y>
+          <x>560</x>
+          <y>380</y>
           <width>121</width>
           <height>24</height>
          </rect>
@@ -4150,14 +4204,27 @@ QPushButton:pressed {
        <widget class="QLineEdit" name="txtIndiceMerkle">
         <property name="geometry">
          <rect>
-          <x>690</x>
-          <y>360</y>
+          <x>570</x>
+          <y>350</y>
           <width>113</width>
           <height>24</height>
          </rect>
         </property>
         <property name="placeholderText">
          <string>Índice de Bloque</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnReporteVentas">
+        <property name="geometry">
+         <rect>
+          <x>710</x>
+          <y>360</y>
+          <width>111</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Total Ventas</string>
         </property>
        </widget>
       </widget>
@@ -5038,7 +5105,7 @@ QComboBox QAbstractItemView {
      <x>0</x>
      <y>0</y>
      <width>899</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>

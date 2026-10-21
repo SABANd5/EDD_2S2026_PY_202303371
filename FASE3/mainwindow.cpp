@@ -1532,15 +1532,12 @@ void MainWindow::actualizarComboPeliculasAdmin() {
 }
 
 void MainWindow::on_cmbPeliculaReserva_currentTextChanged(const QString &tituloPelicula) {
-    // 1. Limpiar el ComboBox de funciones
+    ui->cmbSedesCliente->clear();
     ui->cbmFuncionPeli->clear();
+    ui->lblSedesSimilares->clear();
 
-    // Ignorar si es la opción por defecto o está vacío
-    if (tituloPelicula.isEmpty() || tituloPelicula == "Seleccione una película...") {
-        return;
-    }
+    if (tituloPelicula.isEmpty() || tituloPelicula == "Seleccione una película...") return;
 
-    // 2. Buscar el código de la película seleccionada comparando el título
     std::string codigoPelicula = "";
     std::vector<Pelicula> listaPelis = cartelera.obtenerCarteleraInorden();
     for (const Pelicula& p : listaPelis) {
@@ -1549,30 +1546,33 @@ void MainWindow::on_cmbPeliculaReserva_currentTextChanged(const QString &tituloP
             break;
         }
     }
-
-    // Si no se encontró el código (por algún error), salir
     if (codigoPelicula.empty()) return;
 
-    // 3. Filtrar el Árbol AVL buscando las funciones que coincidan con ese código
+    // Filtrar qué sedes proyectan esta película
     std::vector<Funcion> funciones = avlFunciones.obtenerFuncionesInorden();
-    ui->cbmFuncionPeli->addItem("Seleccione una función...", QVariant("")); // Opción por defecto
+    ui->cmbSedesCliente->addItem("Seleccione una sede...", QVariant(""));
 
-    bool hayFunciones = false;
+    std::vector<std::string> sedesAgregadas;
+
     for (const Funcion& f : funciones) {
         if (f.codigo_pelicula == codigoPelicula) {
-            // Texto que verá el usuario
-            QString textoVisible = QString::fromStdString("Sala: " + f.sala + " | Horario: " + f.horario);
+            // Evitar duplicados de sede en el combobox
+            if (std::find(sedesAgregadas.begin(), sedesAgregadas.end(), f.sede) == sedesAgregadas.end()) {
+                sedesAgregadas.push_back(f.sede);
 
-            // addItem permite guardar datos ocultos (UserData) usando QVariant
-            // Guardamos el f.codigo_funcion para usarlo más adelante en la reserva
-            ui->cbmFuncionPeli->addItem(textoVisible, QVariant(QString::fromStdString(f.codigo_funcion)));
-            hayFunciones = true;
+                // Buscar el nombre visual de la Sede
+                std::string nombreSede = f.sede;
+                for (const Sede& s : listaSedes) {
+                    if (s.codigo == f.sede) { nombreSede = s.nombre; break; }
+                }
+
+                ui->cmbSedesCliente->addItem(QString::fromStdString(nombreSede), QVariant(QString::fromStdString(f.sede)));
+            }
         }
     }
 
-    // 4. Mensaje visual si la película no tiene funciones programadas
-    if (!hayFunciones) {
-        ui->cbmFuncionPeli->setItemText(0, "No hay funciones disponibles");
+    if (sedesAgregadas.empty()) {
+        ui->cmbSedesCliente->setItemText(0, "No hay sedes disponibles");
     }
 }
 
@@ -1586,117 +1586,39 @@ void MainWindow::actualizarComboPeliculasUsuario() {
     }
 }
 
-void MainWindow::on_btnActualizarReservaUsuario_clicked()
-{
+void MainWindow::on_btnActualizarReservaUsuario_clicked() {
     if (clienteLogueadoID.empty()) {
         QMessageBox::warning(this, "Sesión", "No hay un cliente logueado.");
         return;
     }
 
-    Cliente* c = arbolClientes.buscar(clienteLogueadoID);
-
-    if (c == nullptr) {
-        return;
-    }
-
     ui->tblHistorialReservas->setRowCount(0);
-    ui->tblHistorialReservas->setColumnCount(6);
+    ui->tblHistorialReservas->setColumnCount(7); // Ampliado a 7 para mostrar Transacción
+    ui->tblHistorialReservas->setHorizontalHeaderLabels({"Transacción", "Reserva", "Función", "Fecha", "Fila", "Columna", "Estado"});
 
-    ui->tblHistorialReservas->setHorizontalHeaderLabels({
-        "Código",
-        "Función",
-        "Fecha",
-        "Fila",
-        "Columna",
-        "Estado"
-    });
+    // REEMPLAZO: Leemos historial directamente desde el DATA de la Blockchain
+    std::vector<Transaccion> historial = blockchain.obtenerHistorialCliente(clienteLogueadoID);
 
-    int filaVisual = 0;
     QDate fechaActual = QDate::currentDate();
+    int filaVisual = 0;
 
-    // Recorremos las reservas asociadas al cliente
-    for (const std::string& codReserva : c->codigos_reservas) {
+    for (const Transaccion& tx : historial) {
+        ui->tblHistorialReservas->insertRow(filaVisual);
+        ui->tblHistorialReservas->setItem(filaVisual, 0, new QTableWidgetItem(QString::fromStdString(tx.codigo_transaccion)));
+        ui->tblHistorialReservas->setItem(filaVisual, 1, new QTableWidgetItem(QString::fromStdString(tx.codigo_reserva)));
+        ui->tblHistorialReservas->setItem(filaVisual, 2, new QTableWidgetItem(QString::fromStdString(tx.codigo_funcion)));
+        ui->tblHistorialReservas->setItem(filaVisual, 3, new QTableWidgetItem(QString::fromStdString(tx.fecha_pago)));
+        ui->tblHistorialReservas->setItem(filaVisual, 4, new QTableWidgetItem(QString::number(tx.fila)));
+        ui->tblHistorialReservas->setItem(filaVisual, 5, new QTableWidgetItem(QString::number(tx.columna)));
 
-        Reserva* res = tablaReservas.buscar(codReserva);
+        QDate fechaReserva = QDate::fromString(QString::fromStdString(tx.fecha_pago), "yyyy-MM-dd");
+        QString estado = (fechaReserva < fechaActual) ? "VENCIDA" : "VÁLIDA";
+        QTableWidgetItem* itemEstado = new QTableWidgetItem(estado);
+        itemEstado->setForeground(estado == "VENCIDA" ? QBrush(Qt::red) : QBrush(Qt::darkGreen));
+        ui->tblHistorialReservas->setItem(filaVisual, 6, itemEstado);
 
-        if (res != nullptr) {
-
-            ui->tblHistorialReservas->insertRow(filaVisual);
-
-            ui->tblHistorialReservas->setItem(
-                filaVisual,
-                0,
-                new QTableWidgetItem(
-                    QString::fromStdString(res->codigo_reserva)
-                    )
-                );
-
-            ui->tblHistorialReservas->setItem(
-                filaVisual,
-                1,
-                new QTableWidgetItem(
-                    QString::fromStdString(res->codigo_funcion)
-                    )
-                );
-
-            ui->tblHistorialReservas->setItem(
-                filaVisual,
-                2,
-                new QTableWidgetItem(
-                    QString::fromStdString(res->fecha_reserva)
-                    )
-                );
-
-            ui->tblHistorialReservas->setItem(
-                filaVisual,
-                3,
-                new QTableWidgetItem(
-                    QString::number(res->fila)
-                    )
-                );
-
-            ui->tblHistorialReservas->setItem(
-                filaVisual,
-                4,
-                new QTableWidgetItem(
-                    QString::number(res->columna)
-                    )
-                );
-
-            // Convertir la fecha
-            QDate fechaReserva = QDate::fromString(
-                QString::fromStdString(res->fecha_reserva),
-                "yyyy-MM-dd"
-                );
-
-            QString estado;
-
-            if (fechaReserva < fechaActual) {
-                estado = "VENCIDA";
-            } else {
-                estado = "VÁLIDA";
-            }
-
-            // Crear el item ANTES de modificarlo
-            QTableWidgetItem* itemEstado =
-                new QTableWidgetItem(estado);
-
-            if (estado == "VENCIDA") {
-                itemEstado->setForeground(QBrush(Qt::red));
-            } else {
-                itemEstado->setForeground(QBrush(Qt::darkGreen));
-            }
-
-            ui->tblHistorialReservas->setItem(
-                filaVisual,
-                5,
-                itemEstado
-                );
-
-            filaVisual++;
-        }
+        filaVisual++;
     }
-
     ui->tblHistorialReservas->resizeColumnsToContents();
 }
 
@@ -2147,4 +2069,89 @@ void MainWindow::closeEvent(QCloseEvent *event) {
     // Disparamos la compresión justo antes de que el programa muera
     guardarDatosLZW();
     event->accept(); // Aprobamos el cierre
+}
+
+void MainWindow::on_cmbSedesCliente_currentTextChanged(const QString &nombreSede) {
+    ui->cbmFuncionPeli->clear();
+    ui->lblSedesSimilares->clear();
+
+    if (nombreSede.isEmpty() || nombreSede == "Seleccione una sede..." || nombreSede == "No hay sedes disponibles") return;
+
+    std::string codigoSede = ui->cmbSedesCliente->currentData().toString().toStdString();
+    std::string tituloPelicula = ui->cmbPeliculaReserva->currentText().toStdString();
+
+    std::string codigoPelicula = "";
+    std::vector<Pelicula> listaPelis = cartelera.obtenerCarteleraInorden();
+    for (const Pelicula& p : listaPelis) {
+        if (p.titulo == tituloPelicula) { codigoPelicula = p.codigo; break; }
+    }
+
+    std::vector<Funcion> funciones = avlFunciones.obtenerFuncionesInorden();
+    ui->cbmFuncionPeli->addItem("Seleccione una función...", QVariant(""));
+
+    // Filtrar funciones que coincidan con la Película Y la Sede
+    for (const Funcion& f : funciones) {
+        if (f.codigo_pelicula == codigoPelicula && f.sede == codigoSede) {
+            QString textoVisible = QString::fromStdString("Sala: " + f.sala + " | Horario: " + f.horario);
+            ui->cbmFuncionPeli->addItem(textoVisible, QVariant(QString::fromStdString(f.codigo_funcion)));
+        }
+    }
+
+    // Generar recomendaciones de sedes similares usando el Grafo Ponderado
+    std::vector<std::pair<std::string, int>> similares = grafoSedes.obtenerSedesSimilares(codigoSede);
+    if (!similares.empty()) {
+        QString rec = "Te podría interesar (Sedes similares):\n";
+        for (size_t i = 0; i < similares.size() && i < 3; i++) { // Sugerir el top 3
+            std::string nombreS = similares[i].first;
+            for (const Sede& s : listaSedes) {
+                if (s.codigo == similares[i].first) { nombreS = s.nombre; break; }
+            }
+            rec += QString::fromStdString("- " + nombreS + " (" + std::to_string(similares[i].second) + " pelis en común)\n");
+        }
+        ui->lblSedesSimilares->setText(rec);
+    } else {
+        ui->lblSedesSimilares->setText("No hay recomendaciones similares.");
+    }
+}
+
+void MainWindow::on_btnVerComprobante_clicked() {
+    QString codTx = ui->txtCodigoTransaccionCliente->text().trimmed();
+    if (codTx.isEmpty()) {
+        QMessageBox::warning(this, "Aviso", "Ingresa el código de transacción.");
+        return;
+    }
+
+    Transaccion tx;
+    int indexBloque;
+    std::string hashBloque;
+
+    if (blockchain.buscarTransaccion(codTx.toStdString(), tx, indexBloque, hashBloque)) {
+        QString comprobante = QString("=== COMPROBANTE DE COMPRA ===\n\n"
+                                      "Transacción: %1\n"
+                                      "Reserva: %2\n"
+                                      "Función: %3\n"
+                                      "Asiento: Fila %4, Columna %5\n"
+                                      "Monto: Q%6\n"
+                                      "Método de Pago: %7\n"
+                                      "Fecha: %8\n\n"
+                                      "--- AUDITORÍA BLOCKCHAIN ---\n"
+                                      "Bloque INDEX: %9\n"
+                                      "Bloque HASH: %10")
+                                  .arg(QString::fromStdString(tx.codigo_transaccion))
+                                  .arg(QString::fromStdString(tx.codigo_reserva))
+                                  .arg(QString::fromStdString(tx.codigo_funcion))
+                                  .arg(tx.fila).arg(tx.columna).arg(tx.monto)
+                                  .arg(QString::fromStdString(tx.metodo_pago))
+                                  .arg(QString::fromStdString(tx.fecha_pago))
+                                  .arg(indexBloque)
+                                  .arg(QString::fromStdString(hashBloque));
+        QMessageBox::information(this, "Comprobante Encontrado", comprobante);
+    } else {
+        QMessageBox::warning(this, "Error", "Transacción no encontrada o el bloque está corrupto.");
+    }
+}
+
+void MainWindow::on_btnReporteVentas_clicked() {
+    std::string reporte = blockchain.generarReporteVentas();
+    QMessageBox::information(this, "Reporte Administrativo", QString::fromStdString(reporte));
 }

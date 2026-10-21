@@ -182,3 +182,25 @@ void GrafoSedes::generarReporteListaAdyacencia() {
         system("dot -Tpng reporte_adyacencia.dot -o reporte_adyacencia.png");
     }
 }
+
+// <-- INICIO CÓDIGO NUEVO
+bool compararPesos(const std::pair<std::string, int>& a, const std::pair<std::string, int>& b) {
+    return a.second > b.second; // Orden descendente por cantidad de películas en común
+}
+
+std::vector<std::pair<std::string, int>> GrafoSedes::obtenerSedesSimilares(std::string codigoSede) {
+    std::vector<std::pair<std::string, int>> similares;
+    VerticeSede* v = buscarVertice(codigoSede);
+
+    if (v != nullptr) {
+        Arista* a = v->listaAdyacencia;
+        while(a != nullptr) {
+            similares.push_back({a->destino, a->peso});
+            a = a->siguiente;
+        }
+    }
+    // Ordenamos para que las de mayor peso (más similares) queden al principio
+    std::sort(similares.begin(), similares.end(), compararPesos);
+    return similares;
+}
+// FIN CÓDIGO NUEVO -->

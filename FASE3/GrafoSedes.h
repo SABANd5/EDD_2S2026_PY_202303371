@@ -39,6 +39,9 @@ public:
     // Métodos para Graphviz requeridos por Fase 3
     void generarReporteGrafo();
     void generarReporteListaAdyacencia();
+    // <-- INICIO CÓDIGO NUEVO
+    std::vector<std::pair<std::string, int>> obtenerSedesSimilares(std::string codigoSede);
+    // FIN CÓDIGO NUEVO -->
 
 private:
     VerticeSede* cabeza; // Inicio de la lista de vértices
