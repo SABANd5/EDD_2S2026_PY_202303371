@@ -89,17 +89,26 @@ void ArbolMerkle::generarDotRecursivo(NodoMerkle* nodo, std::string& dot, int& i
 }
 
 void ArbolMerkle::generarReporte(std::string filename) {
-    if (raiz == nullptr) return;
-
     std::ofstream archivo(filename + ".dot");
     if (archivo.is_open()) {
         std::string dot = "digraph ArbolMerkle {\n  rankdir=TB;\n  node [shape=box, style=filled, fillcolor=\"#E1BEE7\", fontname=\"Arial\"];\n";
-        int idCounter = 0;
-        generarDotRecursivo(raiz, dot, idCounter);
+
+        // Protección: Si el JSON fue alterado y quedó vacío
+        if (raiz == nullptr) {
+            dot += "  \"Vacio\" [label=\"Arbol Vacio / JSON Corrupto\"];\n";
+        } else {
+            int idCounter = 0;
+            generarDotRecursivo(raiz, dot, idCounter);
+        }
+
         dot += "}\n";
+
+        // ¡ESTA ERA LA LÍNEA FALTANTE! Guardamos el string en el archivo físico
+        archivo << dot;
         archivo.close();
 
-        std::string comando = "dot -Tpng " + filename + ".dot -o " + filename + ".png";
+        // Envolvemos los nombres en comillas por seguridad en las rutas del sistema
+        std::string comando = "dot -Tpng \"" + filename + ".dot\" -o \"" + filename + ".png\"";
         system(comando.c_str());
     }
 }

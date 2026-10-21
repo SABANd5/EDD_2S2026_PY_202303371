@@ -25,7 +25,7 @@ public:
     void agregarTransaccion(Transaccion t);
     void minarBloque();
     void generarReporteBlockchain();
-    void generarReporteMerkleBloque(int index);
+    bool generarReporteMerkleBloque(int index);
     int pendientesSize();
 
 private:

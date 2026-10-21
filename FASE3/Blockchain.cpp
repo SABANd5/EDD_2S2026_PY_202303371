@@ -221,15 +221,16 @@ void Blockchain::generarReporteBlockchain() {
     }
 }
 
-void Blockchain::generarReporteMerkleBloque(int index) {
+bool Blockchain::generarReporteMerkleBloque(int index) {
     Bloque* aux = cabeza;
     while (aux != nullptr) {
         if (aux->index == index) {
             ArbolMerkle arbol;
             arbol.construirArbol(aux->data);
             arbol.generarReporte("reporte_merkle_b" + std::to_string(index));
-            return;
+            return true; // Se encontró el bloque y se generó el reporte
         }
         aux = aux->siguiente;
     }
+    return false; // No se encontró ningún bloque con ese índice
 }

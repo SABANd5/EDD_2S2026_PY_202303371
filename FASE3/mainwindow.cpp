@@ -1988,8 +1988,25 @@ void MainWindow::on_btnReporteMerkle_clicked() {
     }
 
     int index = indiceTxt.toInt();
-    blockchain.generarReporteMerkleBloque(index);
 
+    // 1. Validamos si el bloque realmente existe
+    if (!blockchain.generarReporteMerkleBloque(index)) {
+        QMessageBox::warning(this, "Error", "No se encontró ningún bloque con el índice ingresado.");
+        return;
+    }
+
+    // 2. Cargamos la imagen generada manualmente para asegurar el escalado
     QString fileName = QString("reporte_merkle_b%1.png").arg(index);
-    cargarImagenEnVisor(ui->lblVisorReportes, fileName);
+    QPixmap pixmap(fileName);
+
+    if (!pixmap.isNull()) {
+        int ancho = ui->lblVisorReportes->width();
+        int alto = ui->lblVisorReportes->height();
+
+        // Ajustamos la imagen al tamaño del label sin deformarla
+        ui->lblVisorReportes->setPixmap(pixmap.scaled(ancho, alto, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        ui->lblVisorReportes->setAlignment(Qt::AlignCenter);
+    } else {
+        QMessageBox::critical(this, "Error", "Graphviz no pudo generar la imagen del Árbol de Merkle.");
+    }
 }
