@@ -14,6 +14,7 @@
 #include "ArbolBClientes.h"
 #include "TablaHashReservas.h"
 #include "GrafoSedes.h"  // <-- AGREGAR
+#include "Blockchain.h" // <-- NUEVO
 
 // <-- INICIO CÓDIGO NUEVO
 struct Sede {
@@ -98,6 +99,11 @@ private slots:
     void on_btnReporteGrafo_clicked();
     void on_btnReporteAdyacencia_clicked();
     // FIN CÓDIGO NUEVO -->
+    // <-- INICIO CÓDIGO NUEVO
+    void on_btnGenerarBloque_clicked();
+    void on_btnReporteBlockchain_clicked();
+    void on_btnReporteMerkle_clicked();
+    // FIN CÓDIGO NUEVO -->
 private:
     Ui::MainWindow *ui;
 
@@ -112,6 +118,7 @@ private:
     ArbolBClientes arbolClientes;
     TablaHashReservas tablaReservas;
     GrafoSedes grafoSedes; // <-- AGREGAR
+    Blockchain blockchain; // <-- NUEVO
     // 5. Declaración de los métodos de parseo JSON
     void cargarMasivaPeliculas(const QString& rutaArchivo);
     void cargarMasivaClientes(const QString& rutaArchivo);
@@ -126,6 +133,7 @@ private:
     std::vector<Sede> listaSedes;
     void actualizarComboSedesAdmin();
     // FIN CÓDIGO NUEVO -->
+
 };
 
 #endif // MAINWINDOW_H

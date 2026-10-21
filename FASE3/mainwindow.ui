@@ -1044,6 +1044,26 @@ QComboBox QAbstractItemView {
          <string>FUNCIONES</string>
         </property>
        </widget>
+       <widget class="QComboBox" name="cmbMetodoPago">
+        <property name="geometry">
+         <rect>
+          <x>400</x>
+          <y>180</y>
+          <width>101</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <item>
+         <property name="text">
+          <string>Tarjeta</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Efectivo</string>
+         </property>
+        </item>
+       </widget>
       </widget>
       <widget class="QWidget" name="tab_6">
        <attribute name="title">
@@ -3895,9 +3915,9 @@ background: transparent;</string>
         <property name="geometry">
          <rect>
           <x>20</x>
-          <y>50</y>
+          <y>30</y>
           <width>791</width>
-          <height>311</height>
+          <height>291</height>
          </rect>
         </property>
         <property name="frameShape">
@@ -3914,7 +3934,7 @@ background: transparent;</string>
         <property name="geometry">
          <rect>
           <x>20</x>
-          <y>30</y>
+          <y>10</y>
           <width>131</width>
           <height>16</height>
          </rect>
@@ -3933,8 +3953,8 @@ font: 900 </string>
        <widget class="QPushButton" name="btnReporteAVL">
         <property name="geometry">
          <rect>
-          <x>170</x>
-          <y>370</y>
+          <x>30</x>
+          <y>390</y>
           <width>120</width>
           <height>32</height>
          </rect>
@@ -3966,8 +3986,8 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnReporteArbolB">
         <property name="geometry">
          <rect>
-          <x>300</x>
-          <y>370</y>
+          <x>160</x>
+          <y>350</y>
           <width>120</width>
           <height>32</height>
          </rect>
@@ -3999,8 +4019,8 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnVerRepCartelera">
         <property name="geometry">
          <rect>
-          <x>40</x>
-          <y>370</y>
+          <x>30</x>
+          <y>350</y>
           <width>120</width>
           <height>32</height>
          </rect>
@@ -4032,8 +4052,8 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnReporteMatrizDispersa">
         <property name="geometry">
          <rect>
-          <x>430</x>
-          <y>370</y>
+          <x>170</x>
+          <y>390</y>
           <width>120</width>
           <height>32</height>
          </rect>
@@ -4065,8 +4085,8 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnReporteGrafo">
         <property name="geometry">
          <rect>
-          <x>570</x>
-          <y>380</y>
+          <x>300</x>
+          <y>360</y>
           <width>111</width>
           <height>24</height>
          </rect>
@@ -4078,14 +4098,66 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnReporteAdyacencia">
         <property name="geometry">
          <rect>
-          <x>690</x>
-          <y>380</y>
+          <x>300</x>
+          <y>390</y>
           <width>121</width>
           <height>24</height>
          </rect>
         </property>
         <property name="text">
          <string>Lista de Adyacencia</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnGenerarBloque">
+        <property name="geometry">
+         <rect>
+          <x>450</x>
+          <y>360</y>
+          <width>121</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Generar Bloque Manual</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnReporteBlockchain">
+        <property name="geometry">
+         <rect>
+          <x>450</x>
+          <y>390</y>
+          <width>111</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Reporte Blockchain</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnReporteMerkle">
+        <property name="geometry">
+         <rect>
+          <x>680</x>
+          <y>390</y>
+          <width>121</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Reporte Merkle Bloque</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="txtIndiceMerkle">
+        <property name="geometry">
+         <rect>
+          <x>690</x>
+          <y>360</y>
+          <width>113</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="placeholderText">
+         <string>Índice de Bloque</string>
         </property>
        </widget>
       </widget>

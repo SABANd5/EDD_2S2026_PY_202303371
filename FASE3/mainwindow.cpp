@@ -20,6 +20,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->B->setCurrentWidget(ui->page1Login);
+    // <-- INICIO CÓDIGO NUEVO
+    blockchain.inicializar(&tablaReservas);
+    // FIN CÓDIGO NUEVO -->
 }
 
 MainWindow::~MainWindow()
@@ -140,6 +143,26 @@ void MainWindow::on_btnReservar_clicked() {
     nuevaReserva.fecha_reserva = fechaActual.toStdString();
 
     tablaReservas.insertar(nuevaReserva);
+    // <-- INICIO CÓDIGO NUEVO: CREAR TRANSACCIÓN Y ENVIAR A BLOCKCHAIN
+    Transaccion nuevaTx;
+    nuevaTx.codigo_transaccion = ""; // Se asigna solo en el backend
+    nuevaTx.codigo_reserva = nuevaReserva.codigo_reserva;
+    nuevaTx.id_cliente = nuevaReserva.id_cliente;
+    nuevaTx.codigo_funcion = nuevaReserva.codigo_funcion;
+    nuevaTx.fila = nuevaReserva.fila;
+    nuevaTx.columna = nuevaReserva.columna;
+    nuevaTx.monto = 45.0; // Precio fijo sugerido
+    nuevaTx.metodo_pago = ui->cmbMetodoPago->currentText().toStdString();
+    nuevaTx.fecha_pago = nuevaReserva.fecha_reserva;
+
+    blockchain.agregarTransaccion(nuevaTx);
+
+    // Si hay 4 transacciones pendientes, se mina automáticamente (Regla del PDF)
+    if (blockchain.pendientesSize() >= 4) {
+        blockchain.minarBloque();
+        QMessageBox::information(this, "Blockchain", "Se ha minado un nuevo bloque automáticamente.");
+    }
+    // FIN CÓDIGO NUEVO -->
 
     // 9. Vincular la reserva con el cliente en el ÁRBOL B
     clienteActual->codigos_reservas.push_back(nuevaReserva.codigo_reserva);
@@ -1938,4 +1961,35 @@ void MainWindow::on_btnReporteGrafo_clicked() {
 void MainWindow::on_btnReporteAdyacencia_clicked() {
     grafoSedes.generarReporteListaAdyacencia();
     cargarImagenEnVisor(ui->lblVisorReportes, "reporte_adyacencia.png");
+}
+
+// ==========================================
+// BLOCKCHAIN Y REPORTES FASE 3
+// ==========================================
+void MainWindow::on_btnGenerarBloque_clicked() {
+    if (blockchain.pendientesSize() == 0) {
+        QMessageBox::warning(this, "Aviso", "No hay transacciones pendientes para minar un bloque.");
+        return;
+    }
+    blockchain.minarBloque();
+    QMessageBox::information(this, "Éxito", "Bloque minado y guardado en disco con éxito.");
+}
+
+void MainWindow::on_btnReporteBlockchain_clicked() {
+    blockchain.generarReporteBlockchain();
+    cargarImagenEnVisor(ui->lblVisorReportes, "reporte_blockchain.png");
+}
+
+void MainWindow::on_btnReporteMerkle_clicked() {
+    QString indiceTxt = ui->txtIndiceMerkle->text().trimmed();
+    if (indiceTxt.isEmpty()) {
+        QMessageBox::warning(this, "Aviso", "Por favor, ingrese el índice del bloque.");
+        return;
+    }
+
+    int index = indiceTxt.toInt();
+    blockchain.generarReporteMerkleBloque(index);
+
+    QString fileName = QString("reporte_merkle_b%1.png").arg(index);
+    cargarImagenEnVisor(ui->lblVisorReportes, fileName);
 }

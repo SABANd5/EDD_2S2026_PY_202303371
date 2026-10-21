@@ -9,6 +9,8 @@ CONFIG += c++17
 SOURCES += \
     ArbolBClientes.cpp \
     ArbolFunciones.cpp \
+    ArbolMerkle.cpp \
+    Blockchain.cpp \
     GrafoSedes.cpp \
     TablaHashReservas.cpp \
     arbolpeliculas.cpp \
@@ -21,7 +23,9 @@ SOURCES += \
 HEADERS += \
     ArbolBClientes.h \
     ArbolFunciones.h \
+    ArbolMerkle.h \
     ArbolPeliculas.h \
+    Blockchain.h \
     ListaSolicitudes.h \
     TablaHashReservas.h \
     mainwindow.h \
