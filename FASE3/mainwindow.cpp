@@ -912,6 +912,8 @@ void MainWindow::cargarMasivaPeliculas(const QString& rutaArchivo) {
             Funcion nuevaFun;
             nuevaFun.codigo_funcion = objFun["codigo_funcion"].toString().toStdString();
             nuevaFun.codigo_pelicula = nuevaPel.codigo;
+            nuevaFun.sede = funcSede.toStdString();         // <-- CORRECCIÓN: Asignar Sede
+            nuevaFun.fecha = funcFecha.toStdString();       // <-- CORRECCIÓN: Asignar Fecha
             nuevaFun.horario = objFun["horario"].toString().toStdString();
             nuevaFun.sala = objFun["sala"].toString().toStdString();
             nuevaFun.filas = objFun["filas"].toInt();
@@ -919,7 +921,7 @@ void MainWindow::cargarMasivaPeliculas(const QString& rutaArchivo) {
             nuevaFun.archivo_asientos = "";
             nuevaFun.ya_realizada = false;
 
-            avlFunciones.insertar(nuevaFun); // Usa la variable global de MainWindow
+            avlFunciones.insertar(nuevaFun);
             funcionesCargadas++;
         }
     }
