@@ -110,15 +110,21 @@ void ArbolFunciones::insertar(Funcion f) {
 
     raiz = insertarRecursivo(raiz, f);
 
-    // Crear el archivo JSON físico inicial con los asientos ocupados vacíos
-    std::ofstream archivo(f.archivo_asientos);
-    if (archivo.is_open()) {
-        archivo << "{\n";
-        archivo << "  \"codigo_funcion\": \"" << f.codigo_funcion << "\",\n";
-        archivo << "  \"asientos_ocupados\": []\n";
-        archivo << "}\n";
-        archivo.close();
+    // <-- INICIO CORRECCIÓN: Evitar sobreescribir si el archivo ya existe
+    std::ifstream checkFile(f.archivo_asientos);
+    if (!checkFile.is_open()) {
+        std::ofstream archivo(f.archivo_asientos);
+        if (archivo.is_open()) {
+            archivo << "{\n";
+            archivo << "  \"codigo_funcion\": \"" << f.codigo_funcion << "\",\n";
+            archivo << "  \"asientos_ocupados\": []\n";
+            archivo << "}\n";
+            archivo.close();
+        }
+    } else {
+        checkFile.close();
     }
+    // FIN CORRECCIÓN -->
 }
 
 // ==========================================

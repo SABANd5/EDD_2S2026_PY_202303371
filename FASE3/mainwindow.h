@@ -15,7 +15,7 @@
 #include "TablaHashReservas.h"
 #include "GrafoSedes.h"  // <-- AGREGAR
 #include "Blockchain.h" // <-- NUEVO
-
+#include <QCloseEvent>  // <-- NUEVO
 // <-- INICIO CÓDIGO NUEVO
 struct Sede {
     std::string codigo;
@@ -37,7 +37,8 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
+protected:
+    void closeEvent(QCloseEvent *event) override; // <-- NUEVO
 private slots:
     // Slots de botones heredados de la Fase 1
     void on_btnAgregarPelicula_clicked();
@@ -132,6 +133,10 @@ private:
     // <-- INICIO CÓDIGO NUEVO
     std::vector<Sede> listaSedes;
     void actualizarComboSedesAdmin();
+    // FIN CÓDIGO NUEVO -->
+    // <-- INICIO CÓDIGO NUEVO
+    void guardarDatosLZW();
+    void cargarDatosLZW();
     // FIN CÓDIGO NUEVO -->
 
 };

@@ -12,6 +12,7 @@ SOURCES += \
     ArbolMerkle.cpp \
     Blockchain.cpp \
     GrafoSedes.cpp \
+    LZW.cpp \
     TablaHashReservas.cpp \
     arbolpeliculas.cpp \
     listasolicitudes.cpp \
@@ -26,6 +27,7 @@ HEADERS += \
     ArbolMerkle.h \
     ArbolPeliculas.h \
     Blockchain.h \
+    LZW.h \
     ListaSolicitudes.h \
     TablaHashReservas.h \
     mainwindow.h \

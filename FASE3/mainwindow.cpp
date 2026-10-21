@@ -14,12 +14,17 @@
 #include <fstream>
 #include <map>
 #include <QRegularExpression>
+#include "LZW.h" // <-- NUEVO
+#include <QCloseEvent> // <-- NUEVO
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     ui->B->setCurrentWidget(ui->page1Login);
+    // <-- INICIO CÓDIGO NUEVO
+    cargarDatosLZW();
+    // FIN CÓDIGO NUEVO -->
     // <-- INICIO CÓDIGO NUEVO
     blockchain.inicializar(&tablaReservas);
     // FIN CÓDIGO NUEVO -->
@@ -2009,4 +2014,137 @@ void MainWindow::on_btnReporteMerkle_clicked() {
     } else {
         QMessageBox::critical(this, "Error", "Graphviz no pudo generar la imagen del Árbol de Merkle.");
     }
+}
+
+// ==========================================
+// PERSISTENCIA Y COMPRESIÓN LZW (FASE 3)
+// ==========================================
+
+void MainWindow::guardarDatosLZW() {
+    // 1. Serializar Sedes a String JSON compacto en memoria
+    QJsonArray sedesArray;
+    for (const Sede& s : listaSedes) {
+        QJsonObject obj;
+        obj["codigo"] = QString::fromStdString(s.codigo);
+        obj["nombre"] = QString::fromStdString(s.nombre);
+        obj["direccion"] = QString::fromStdString(s.direccion);
+        obj["cantidad_salas"] = s.cantidad_salas;
+        obj["telefono"] = QString::fromStdString(s.telefono);
+        sedesArray.append(obj);
+    }
+    std::string jsonSedes = QJsonDocument(sedesArray).toJson(QJsonDocument::Compact).toStdString();
+    CompresorLZW::comprimirYGuardar(jsonSedes, "sedes.edd");
+
+    // 2. Serializar Películas
+    QJsonArray pelisArray;
+    std::vector<Pelicula> listaPelis = cartelera.obtenerCarteleraInorden();
+    for (const Pelicula& p : listaPelis) {
+        QJsonObject obj;
+        obj["codigo"] = QString::fromStdString(p.codigo);
+        obj["titulo"] = QString::fromStdString(p.titulo);
+        obj["genero"] = QString::fromStdString(p.genero);
+        obj["duracion"] = p.duracion;
+        obj["clasificacion"] = QString::fromStdString(p.clasificacion);
+        obj["idioma"] = QString::fromStdString(p.idioma);
+        obj["fecha_estreno"] = QString::fromStdString(p.fechaEstreno);
+        obj["fecha_fin"] = QString::fromStdString(p.fechaFin);
+        pelisArray.append(obj);
+    }
+    std::string jsonPelis = QJsonDocument(pelisArray).toJson(QJsonDocument::Compact).toStdString();
+    CompresorLZW::comprimirYGuardar(jsonPelis, "peliculas.edd");
+
+    // 3. Serializar Funciones
+    QJsonArray funcArray;
+    std::vector<Funcion> listaFunc = avlFunciones.obtenerFuncionesInorden();
+    for (const Funcion& f : listaFunc) {
+        QJsonObject obj;
+        obj["codigo_funcion"] = QString::fromStdString(f.codigo_funcion);
+        obj["codigo_pelicula"] = QString::fromStdString(f.codigo_pelicula);
+        obj["sede"] = QString::fromStdString(f.sede);
+        obj["fecha"] = QString::fromStdString(f.fecha);
+        obj["horario"] = QString::fromStdString(f.horario);
+        obj["sala"] = QString::fromStdString(f.sala);
+        obj["filas"] = f.filas;
+        obj["columnas"] = f.columnas;
+        obj["archivo_asientos"] = QString::fromStdString(f.archivo_asientos);
+        funcArray.append(obj);
+    }
+    std::string jsonFunc = QJsonDocument(funcArray).toJson(QJsonDocument::Compact).toStdString();
+    CompresorLZW::comprimirYGuardar(jsonFunc, "funciones.edd");
+}
+
+void MainWindow::cargarDatosLZW() {
+    // 1. Descomprimir e Instanciar Sedes
+    std::string sedesData = CompresorLZW::leerYDescomprimir("sedes.edd");
+    if (!sedesData.empty()) {
+        QJsonArray arr = QJsonDocument::fromJson(QString::fromStdString(sedesData).toUtf8()).array();
+        for (const QJsonValue& val : arr) {
+            QJsonObject obj = val.toObject();
+            Sede s;
+            s.codigo = obj["codigo"].toString().toStdString();
+            s.nombre = obj["nombre"].toString().toStdString();
+            s.direccion = obj["direccion"].toString().toStdString();
+            s.cantidad_salas = obj["cantidad_salas"].toInt();
+            s.telefono = obj["telefono"].toString().toStdString();
+            listaSedes.push_back(s);
+            grafoSedes.insertarSede(s.codigo, s.nombre, s.direccion, s.cantidad_salas, s.telefono);
+        }
+    }
+
+    // 2. Descomprimir e Instanciar Películas
+    std::string pelisData = CompresorLZW::leerYDescomprimir("peliculas.edd");
+    if (!pelisData.empty()) {
+        QJsonArray arr = QJsonDocument::fromJson(QString::fromStdString(pelisData).toUtf8()).array();
+        for (const QJsonValue& val : arr) {
+            QJsonObject obj = val.toObject();
+            Pelicula p;
+            p.codigo = obj["codigo"].toString().toStdString();
+            p.titulo = obj["titulo"].toString().toStdString();
+            p.genero = obj["genero"].toString().toStdString();
+            p.duracion = obj["duracion"].toInt();
+            p.clasificacion = obj["clasificacion"].toString().toStdString();
+            p.idioma = obj["idioma"].toString().toStdString();
+            p.fechaEstreno = obj["fecha_estreno"].toString().toStdString();
+            p.fechaFin = obj["fecha_fin"].toString().toStdString();
+            cartelera.insertar(p);
+        }
+    }
+
+    // 3. Descomprimir e Instanciar Funciones
+    std::string funcData = CompresorLZW::leerYDescomprimir("funciones.edd");
+    if (!funcData.empty()) {
+        QJsonArray arr = QJsonDocument::fromJson(QString::fromStdString(funcData).toUtf8()).array();
+        for (const QJsonValue& val : arr) {
+            QJsonObject obj = val.toObject();
+            Funcion f;
+            f.codigo_funcion = obj["codigo_funcion"].toString().toStdString();
+            f.codigo_pelicula = obj["codigo_pelicula"].toString().toStdString();
+            f.sede = obj["sede"].toString().toStdString();
+            f.fecha = obj["fecha"].toString().toStdString();
+            f.horario = obj["horario"].toString().toStdString();
+            f.sala = obj["sala"].toString().toStdString();
+            f.filas = obj["filas"].toInt();
+            f.columnas = obj["columnas"].toInt();
+            f.archivo_asientos = obj["archivo_asientos"].toString().toStdString();
+            f.ya_realizada = false;
+            avlFunciones.insertar(f);
+        }
+    }
+
+    // Si hubo datos recuperados, enlazamos las interfaces visuales
+    if (!sedesData.empty() || !pelisData.empty() || !funcData.empty()) {
+        grafoSedes.recalcularGrafo(&avlFunciones);
+        actualizarComboSedesAdmin();
+        actualizarComboPeliculasAdmin();
+        actualizarComboPeliculasUsuario();
+        actualizarTablaPeliculas();
+        actualizarTablaFunciones();
+    }
+}
+
+// Evento que se dispara al presionar la "X" para cerrar el programa
+void MainWindow::closeEvent(QCloseEvent *event) {
+    // Disparamos la compresión justo antes de que el programa muera
+    guardarDatosLZW();
+    event->accept(); // Aprobamos el cierre
 }
