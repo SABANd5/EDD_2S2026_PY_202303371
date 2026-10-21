@@ -560,7 +560,9 @@ void MainWindow::on_btnCrearFuncion_clicked()
     nuevaFun.ya_realizada = false;
 
     avlFunciones.insertar(nuevaFun); // Esto balancea el árbol automáticamente
-
+    // <-- INICIO CÓDIGO NUEVO
+    grafoSedes.recalcularGrafo(&avlFunciones);
+    // FIN CÓDIGO NUEVO -->
     // 5. Crear físicamente el archivo JSON vacío para los asientos
     QJsonObject raizJSON;
     raizJSON["codigo_pelicula"] = QString::fromStdString(codigoPelicula);
@@ -808,6 +810,9 @@ void MainWindow::cargarMasivaPeliculas(const QString& rutaArchivo) {
 
         if (!existe && !nuevaSede.codigo.empty()) {
             listaSedes.push_back(nuevaSede);
+            // <-- INICIO CÓDIGO NUEVO
+            grafoSedes.insertarSede(nuevaSede.codigo, nuevaSede.nombre, nuevaSede.direccion, nuevaSede.cantidad_salas, nuevaSede.telefono);
+            // FIN CÓDIGO NUEVO -->
             sedesCargadas++;
         }
     }
@@ -925,7 +930,9 @@ void MainWindow::cargarMasivaPeliculas(const QString& rutaArchivo) {
             funcionesCargadas++;
         }
     }
-
+    // <-- INICIO CÓDIGO NUEVO
+    grafoSedes.recalcularGrafo(&avlFunciones);
+    // FIN CÓDIGO NUEVO -->
     // Manejo final de los mensajes para el administrador
     // Manejo final de los mensajes para el administrador
     if (errores.isEmpty()) {
@@ -1428,6 +1435,9 @@ void MainWindow::on_btnEditFuncion_clicked() {
     fModificada.sede = nuevaSede.toStdString();
     fModificada.fecha = nuevaFecha.toStdString();
     avlFunciones.editar(codigo.toStdString(), fModificada);
+    // <-- INICIO CÓDIGO NUEVO
+    grafoSedes.recalcularGrafo(&avlFunciones);
+    // FIN CÓDIGO NUEVO -->
     actualizarTablaFunciones();
 
     QMessageBox::information(this, "Éxito", "Función actualizada correctamente.");
@@ -1460,7 +1470,9 @@ void MainWindow::on_btnEliminarFun_clicked() {
 
         // 2. Borrar del Árbol AVL
         avlFunciones.eliminar(codigo.toStdString());
-
+        // <-- INICIO CÓDIGO NUEVO
+        grafoSedes.recalcularGrafo(&avlFunciones);
+        // FIN CÓDIGO NUEVO -->
         // 3. Limpiar vista
         ui->txtEditCodigoFuncion->clear();
         ui->txtEditPelicula->clear();
@@ -1916,4 +1928,14 @@ void MainWindow::actualizarComboSedesAdmin() {
         ui->cmbSedeAdmin->addItem(texto, QVariant(QString::fromStdString(s.codigo)));
         ui->cmbEditSede->addItem(texto, QVariant(QString::fromStdString(s.codigo)));
     }
+}
+
+void MainWindow::on_btnReporteGrafo_clicked() {
+    grafoSedes.generarReporteGrafo();
+    cargarImagenEnVisor(ui->lblVisorReportes, "reporte_grafo.png");
+}
+
+void MainWindow::on_btnReporteAdyacencia_clicked() {
+    grafoSedes.generarReporteListaAdyacencia();
+    cargarImagenEnVisor(ui->lblVisorReportes, "reporte_adyacencia.png");
 }

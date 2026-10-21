@@ -13,6 +13,7 @@
 #include "ArbolFunciones.h"
 #include "ArbolBClientes.h"
 #include "TablaHashReservas.h"
+#include "GrafoSedes.h"  // <-- AGREGAR
 
 // <-- INICIO CÓDIGO NUEVO
 struct Sede {
@@ -93,6 +94,10 @@ private slots:
     void on_btnVerRepCartelera_clicked();
     void on_btnReporteMatrizDispersa_clicked();
     void on_cmbGestionFuncion_currentTextChanged(const QString &ordenSeleccionado);
+    // <-- INICIO CÓDIGO NUEVO
+    void on_btnReporteGrafo_clicked();
+    void on_btnReporteAdyacencia_clicked();
+    // FIN CÓDIGO NUEVO -->
 private:
     Ui::MainWindow *ui;
 
@@ -106,7 +111,7 @@ private:
     ArbolFunciones avlFunciones;
     ArbolBClientes arbolClientes;
     TablaHashReservas tablaReservas;
-
+    GrafoSedes grafoSedes; // <-- AGREGAR
     // 5. Declaración de los métodos de parseo JSON
     void cargarMasivaPeliculas(const QString& rutaArchivo);
     void cargarMasivaClientes(const QString& rutaArchivo);

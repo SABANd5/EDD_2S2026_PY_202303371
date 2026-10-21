@@ -9,6 +9,7 @@ CONFIG += c++17
 SOURCES += \
     ArbolBClientes.cpp \
     ArbolFunciones.cpp \
+    GrafoSedes.cpp \
     TablaHashReservas.cpp \
     arbolpeliculas.cpp \
     listasolicitudes.cpp \

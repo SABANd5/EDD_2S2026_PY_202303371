@@ -1906,7 +1906,7 @@ QTabBar::tab:hover {
 }</string>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>5</number>
       </property>
       <property name="tabBarAutoHide">
        <bool>false</bool>
@@ -3933,7 +3933,7 @@ font: 900 </string>
        <widget class="QPushButton" name="btnReporteAVL">
         <property name="geometry">
          <rect>
-          <x>290</x>
+          <x>170</x>
           <y>370</y>
           <width>120</width>
           <height>32</height>
@@ -3966,7 +3966,7 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnReporteArbolB">
         <property name="geometry">
          <rect>
-          <x>420</x>
+          <x>300</x>
           <y>370</y>
           <width>120</width>
           <height>32</height>
@@ -3999,7 +3999,7 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnVerRepCartelera">
         <property name="geometry">
          <rect>
-          <x>160</x>
+          <x>40</x>
           <y>370</y>
           <width>120</width>
           <height>32</height>
@@ -4032,7 +4032,7 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnReporteMatrizDispersa">
         <property name="geometry">
          <rect>
-          <x>550</x>
+          <x>430</x>
           <y>370</y>
           <width>120</width>
           <height>32</height>
@@ -4060,6 +4060,32 @@ QPushButton:pressed {
         </property>
         <property name="text">
          <string>REPORTE 5</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnReporteGrafo">
+        <property name="geometry">
+         <rect>
+          <x>570</x>
+          <y>380</y>
+          <width>111</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Reporte Grafo Sedes</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnReporteAdyacencia">
+        <property name="geometry">
+         <rect>
+          <x>690</x>
+          <y>380</y>
+          <width>121</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Lista de Adyacencia</string>
         </property>
        </widget>
       </widget>
