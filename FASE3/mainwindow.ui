@@ -35,7 +35,7 @@
 </string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="page1Login">
      <widget class="QTabWidget" name="tabWidget_3">
@@ -547,7 +547,7 @@ QTabBar::tab:hover {
 </string>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
@@ -1993,7 +1993,7 @@ QTabBar::tab:hover {
 }</string>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>1</number>
       </property>
       <property name="tabBarAutoHide">
        <bool>false</bool>
@@ -2216,7 +2216,7 @@ background: transparent;</string>
         <property name="geometry">
          <rect>
           <x>420</x>
-          <y>110</y>
+          <y>100</y>
           <width>161</width>
           <height>30</height>
          </rect>
@@ -2583,6 +2583,75 @@ QComboBox QAbstractItemView {
           <string>Postorden</string>
          </property>
         </item>
+       </widget>
+       <widget class="QPushButton" name="btnEliminarPelicula">
+        <property name="geometry">
+         <rect>
+          <x>600</x>
+          <y>60</y>
+          <width>120</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">/* RECHAZAR */
+QPushButton {
+    background-color: transparent;
+    color: #FF3B4E;
+    border: 1px solid #FF3B4E;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-family: &quot;Montserrat SemiBold&quot;;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+QPushButton:hover {
+    background-color: #FF3B4E;
+    color: #F1FAEE;
+}
+QPushButton:pressed {
+    background-color: #D62638;
+    border: 1px solid #D62638;
+    color: #F1FAEE;
+}</string>
+        </property>
+        <property name="text">
+         <string>ELIMINAR</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnEditarPelicula">
+        <property name="geometry">
+         <rect>
+          <x>600</x>
+          <y>100</y>
+          <width>121</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">/* AÑADIR BENEFICIO */
+QPushButton {
+    background-color: transparent;
+    color: #9B5DE5;
+    border: 1px solid #9B5DE5;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-family: &quot;Montserrat SemiBold&quot;;
+    font-weight: 600;
+}
+QPushButton:hover {
+    background-color: #9B5DE5;
+    color: #F1FAEE;
+}
+QPushButton:pressed {
+    background-color: #7E3FCC;
+    border: 1px solid #7E3FCC;
+    color: #F1FAEE;
+}</string>
+        </property>
+        <property name="text">
+         <string>EDITAR</string>
+        </property>
        </widget>
       </widget>
       <widget class="QWidget" name="tab_10">

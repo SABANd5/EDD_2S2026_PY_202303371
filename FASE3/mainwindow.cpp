@@ -38,6 +38,9 @@ MainWindow::~MainWindow()
 // Evento generado al hacer clic en el botón
 void MainWindow::on_btnAgregarPelicula_clicked()
 {
+    // <-- INICIO CORRECCIÓN
+    ui->txtCodigo->setEnabled(true);
+    // FIN CORRECCIÓN -->
     // 1. Extraer los datos de la interfaz gráfica y convertirlos a std::string
     std::string codigo = ui->txtCodigo->text().toStdString();
     std::string titulo = ui->txtTitulo->text().toStdString();
@@ -58,6 +61,12 @@ void MainWindow::on_btnAgregarPelicula_clicked()
     Pelicula nuevaPelicula = {codigo, titulo, genero, duracion, clasificacion, idioma, fechaEstreno, fechaFin};
 
     cartelera.insertar(nuevaPelicula);
+
+    // <-- INICIO CORRECCIÓN: Actualizar la UI automáticamente
+    actualizarComboPeliculasAdmin();
+    actualizarComboPeliculasUsuario();
+    actualizarTablaPeliculas();
+    // FIN CORRECCIÓN -->
 
     // 4. Mostrar feedback al usuario y limpiar los campos
     QMessageBox::information(this, "Éxito", "Película agregada a la cartelera.");
@@ -2293,3 +2302,104 @@ void MainWindow::on_btnSedeRanking_clicked() {
     QMessageBox::information(this, "Ranking de Relaciones", QString::fromStdString(ranking));
 }
 
+// ==========================================
+// GESTIÓN DE CARTELERA (SELECCIONAR, EDITAR, ELIMINAR)
+// ==========================================
+
+// 1. Cargar datos al hacer clic en la tabla
+void MainWindow::on_tablaCarteleraAdmin_cellClicked(int row, int column) {
+    // Extraemos el código de la película desde la columna 0 de la fila seleccionada
+    QString codigo = ui->tablaCarteleraAdmin->item(row, 0)->text();
+    Pelicula* p = cartelera.buscarPelicula(codigo.toStdString());
+
+    if (p != nullptr) {
+        // Llenamos los inputs existentes con los datos de la película
+        ui->txtCodigo->setText(QString::fromStdString(p->codigo));
+        ui->txtTitulo->setText(QString::fromStdString(p->titulo));
+        ui->txtGenero->setText(QString::fromStdString(p->genero));
+        ui->spinDuracion->setValue(p->duracion);
+        ui->txtClasificacion->setText(QString::fromStdString(p->clasificacion));
+        ui->txtIdioma->setText(QString::fromStdString(p->idioma));
+        ui->txtEstreno->setText(QString::fromStdString(p->fechaEstreno));
+        ui->txtFin->setText(QString::fromStdString(p->fechaFin));
+
+        // Bloqueamos la edición del código para no romper la llave de indexación del BST
+        ui->txtCodigo->setEnabled(false);
+    }
+}
+
+// 2. Guardar los cambios editados
+void MainWindow::on_btnEditarPelicula_clicked() {
+    QString codigo = ui->txtCodigo->text().trimmed();
+
+    if (codigo.isEmpty()) {
+        QMessageBox::warning(this, "Aviso", "Selecciona una película de la tabla haciendo clic sobre ella primero.");
+        return;
+    }
+
+    Pelicula* p = cartelera.buscarPelicula(codigo.toStdString());
+    if (p == nullptr) return;
+
+    QString titulo = ui->txtTitulo->text().trimmed();
+    QString genero = ui->txtGenero->text().trimmed();
+
+    if (titulo.isEmpty() || genero.isEmpty()) {
+        QMessageBox::warning(this, "Aviso", "El título y el género no pueden estar vacíos.");
+        return;
+    }
+
+    // Actualizar directamente en la memoria (el puntero modifica el nodo del Árbol BST)
+    p->titulo = titulo.toStdString();
+    p->genero = genero.toStdString();
+    p->duracion = ui->spinDuracion->value();
+    p->clasificacion = ui->txtClasificacion->text().trimmed().toStdString();
+    p->idioma = ui->txtIdioma->text().trimmed().toStdString();
+    p->fechaEstreno = ui->txtEstreno->text().trimmed().toStdString();
+    p->fechaFin = ui->txtFin->text().trimmed().toStdString();
+
+    // Refrescar todos los visualizadores
+    actualizarTablaPeliculas();
+    actualizarComboPeliculasAdmin();
+    actualizarComboPeliculasUsuario();
+
+    QMessageBox::information(this, "Éxito", "Película actualizada correctamente.");
+
+    // Rehabilitar el código para futuras inserciones y limpiar
+    ui->txtCodigo->setEnabled(true);
+    ui->txtCodigo->clear();
+    ui->txtTitulo->clear();
+}
+
+// 3. Eliminar la película
+void MainWindow::on_btnEliminarPelicula_clicked() {
+    QString codigo = ui->txtCodigo->text().trimmed();
+
+    if (codigo.isEmpty()) {
+        QMessageBox::warning(this, "Aviso", "Selecciona una película de la tabla haciendo clic sobre ella primero.");
+        return;
+    }
+
+    Pelicula* p = cartelera.buscarPelicula(codigo.toStdString());
+    if (p == nullptr) return;
+
+    QMessageBox::StandardButton respuesta = QMessageBox::question(this, "Confirmar Eliminación",
+                                                                  "¿Estás seguro de eliminar la película: " + QString::fromStdString(p->titulo) + "?",
+                                                                  QMessageBox::Yes | QMessageBox::No);
+
+    if (respuesta == QMessageBox::Yes) {
+        // Utilizamos el método existente del Árbol BST
+        cartelera.eliminar(codigo.toStdString());
+
+        // Refrescar visualizadores
+        actualizarTablaPeliculas();
+        actualizarComboPeliculasAdmin();
+        actualizarComboPeliculasUsuario();
+
+        QMessageBox::information(this, "Éxito", "Película eliminada correctamente.");
+
+        // Rehabilitar el código y limpiar
+        ui->txtCodigo->setEnabled(true);
+        ui->txtCodigo->clear();
+        ui->txtTitulo->clear();
+    }
+}

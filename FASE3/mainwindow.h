@@ -118,6 +118,11 @@ private slots:
     void on_btnSedeCamino_clicked();
     void on_btnSedeRanking_clicked();
     // FIN CÓDIGO NUEVO -->
+    // <-- INICIO CÓDIGO NUEVO
+    void on_tablaCarteleraAdmin_cellClicked(int row, int column);
+    void on_btnEditarPelicula_clicked();
+    void on_btnEliminarPelicula_clicked();
+    // FIN CÓDIGO NUEVO -->
 private:
     Ui::MainWindow *ui;
 
