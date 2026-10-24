@@ -845,7 +845,7 @@ background: transparent;</string>
          <rect>
           <x>40</x>
           <y>240</y>
-          <width>651</width>
+          <width>631</width>
           <height>171</height>
          </rect>
         </property>
@@ -903,7 +903,7 @@ QPushButton:pressed {
        <widget class="QLabel" name="label_7">
         <property name="geometry">
          <rect>
-          <x>290</x>
+          <x>260</x>
           <y>80</y>
           <width>111</width>
           <height>16</height>
@@ -942,9 +942,9 @@ font: 900 </string>
        <widget class="QComboBox" name="cmbPeliculaReserva">
         <property name="geometry">
          <rect>
-          <x>290</x>
+          <x>260</x>
           <y>100</y>
-          <width>121</width>
+          <width>151</width>
           <height>31</height>
          </rect>
         </property>
@@ -988,9 +988,9 @@ QComboBox QAbstractItemView {
        <widget class="QComboBox" name="cbmFuncionPeli">
         <property name="geometry">
          <rect>
-          <x>420</x>
+          <x>610</x>
           <y>100</y>
-          <width>241</width>
+          <width>221</width>
           <height>31</height>
          </rect>
         </property>
@@ -1034,11 +1034,17 @@ QComboBox QAbstractItemView {
        <widget class="QLabel" name="label_57">
         <property name="geometry">
          <rect>
-          <x>420</x>
+          <x>610</x>
           <y>80</y>
           <width>71</width>
           <height>16</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: &quot;Montserrat Medium&quot;;
+font-size: 12px;
+color: #A8B2C1;
+background: transparent;</string>
         </property>
         <property name="text">
          <string>FUNCIONES</string>
@@ -1048,10 +1054,46 @@ QComboBox QAbstractItemView {
         <property name="geometry">
          <rect>
           <x>400</x>
-          <y>160</y>
+          <y>180</y>
           <width>101</width>
-          <height>41</height>
+          <height>31</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QComboBox {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QComboBox:hover {
+    border: 1px solid #E63946;
+}
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 24px;
+    border-left: 1px solid #3A4A6B;
+}
+QComboBox::down-arrow {
+    width: 0px;
+    height: 0px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #F1FAEE;
+    margin-right: 6px;
+}
+QComboBox QAbstractItemView {
+    background-color: #1D2D44;
+    border: 1px solid #3A4A6B;
+    color: #F1FAEE;
+    selection-background-color: #E63946;
+    selection-color: #F1FAEE;
+    outline: none;
+}</string>
         </property>
         <item>
          <property name="text">
@@ -1067,21 +1109,63 @@ QComboBox QAbstractItemView {
        <widget class="QComboBox" name="cmbSedesCliente">
         <property name="geometry">
          <rect>
-          <x>670</x>
+          <x>430</x>
           <y>100</y>
           <width>161</width>
           <height>31</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">QComboBox {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QComboBox:hover {
+    border: 1px solid #E63946;
+}
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 24px;
+    border-left: 1px solid #3A4A6B;
+}
+QComboBox::down-arrow {
+    width: 0px;
+    height: 0px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #F1FAEE;
+    margin-right: 6px;
+}
+QComboBox QAbstractItemView {
+    background-color: #1D2D44;
+    border: 1px solid #3A4A6B;
+    color: #F1FAEE;
+    selection-background-color: #E63946;
+    selection-color: #F1FAEE;
+    outline: none;
+}</string>
+        </property>
        </widget>
        <widget class="QLabel" name="lblSedesSimilares">
         <property name="geometry">
          <rect>
-          <x>680</x>
+          <x>560</x>
           <y>140</y>
-          <width>141</width>
+          <width>281</width>
           <height>41</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: &quot;Montserrat Medium&quot;;
+font-size: 12px;
+color: #A8B2C1;
+background: transparent;</string>
         </property>
         <property name="text">
          <string/>
@@ -1090,11 +1174,17 @@ QComboBox QAbstractItemView {
        <widget class="QLabel" name="label_64">
         <property name="geometry">
          <rect>
-          <x>680</x>
+          <x>430</x>
           <y>80</y>
           <width>49</width>
           <height>16</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: &quot;Montserrat Medium&quot;;
+font-size: 12px;
+color: #A8B2C1;
+background: transparent;</string>
         </property>
         <property name="text">
          <string>SEDES</string>
@@ -1348,10 +1438,27 @@ QPushButton:pressed {
         <property name="geometry">
          <rect>
           <x>270</x>
-          <y>100</y>
+          <y>140</y>
           <width>281</width>
-          <height>31</height>
+          <height>42</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QLineEdit:focus {
+    border: 1px solid #4A6FA5;
+}font-family: &quot;Montserrat Medium&quot;;
+font-size: 12px;
+color: #A8B2C1;
+background: transparent;</string>
         </property>
         <property name="placeholderText">
          <string>Ingrese Código de Transacción (Ej: T001)&quot;</string>
@@ -1361,10 +1468,30 @@ QPushButton:pressed {
         <property name="geometry">
          <rect>
           <x>270</x>
-          <y>140</y>
-          <width>261</width>
-          <height>21</height>
+          <y>190</y>
+          <width>281</width>
+          <height>40</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+    background-color: transparent;
+    color: #FF2E92;
+    border: 1px solid #FF2E92;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-family: &quot;Montserrat&quot;;
+    font-weight: 600;
+}
+QPushButton:hover {
+    background-color: #FF2E92;
+    color: #0D1321;
+}
+QPushButton:pressed {
+    background-color: #D6237A;
+    border: 1px solid #D6237A;
+    color: #0D1321;
+}</string>
         </property>
         <property name="text">
          <string>Ver Comprobante Blockchain</string>
@@ -1963,9 +2090,9 @@ QPushButton:pressed {
      <widget class="QTabWidget" name="tabWidget">
       <property name="geometry">
        <rect>
-        <x>30</x>
+        <x>10</x>
         <y>90</y>
-        <width>831</width>
+        <width>871</width>
         <height>461</height>
        </rect>
       </property>
@@ -1993,7 +2120,7 @@ QTabBar::tab:hover {
 }</string>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <property name="tabBarAutoHide">
        <bool>false</bool>
@@ -2005,7 +2132,7 @@ QTabBar::tab:hover {
        <widget class="QPushButton" name="btnCargaMasiva">
         <property name="geometry">
          <rect>
-          <x>20</x>
+          <x>40</x>
           <y>30</y>
           <width>131</width>
           <height>30</height>
@@ -2014,21 +2141,21 @@ QTabBar::tab:hover {
         <property name="styleSheet">
          <string notr="true">QPushButton {
     background-color: transparent;
-    color: #9B5DE5;
-    border: 1px solid #9B5DE5;
+    color: #7FB2E5;
+    border: 1px solid #7FB2E5;
     border-radius: 6px;
     padding: 6px 14px;
     font-family: &quot;Montserrat&quot;;
     font-weight: 600;
 }
 QPushButton:hover {
-    background-color: #9B5DE5;
-    color: #F1FAEE;
+    background-color: #7FB2E5;
+    color: #0D1321;
 }
 QPushButton:pressed {
-    background-color: #7E3FCC;
-    border: 1px solid #7E3FCC;
-    color: #F1FAEE;
+    background-color: #5A94CC;
+    border: 1px solid #5A94CC;
+    color: #0D1321;
 }</string>
         </property>
         <property name="text">
@@ -2128,8 +2255,8 @@ background: transparent;</string>
         <property name="geometry">
          <rect>
           <x>300</x>
-          <y>109</y>
-          <width>101</width>
+          <y>110</y>
+          <width>81</width>
           <height>31</height>
          </rect>
         </property>
@@ -2222,22 +2349,24 @@ background: transparent;</string>
          </rect>
         </property>
         <property name="styleSheet">
-         <string notr="true">QPushButton {
+         <string notr="true">/* CREAR PROMOCION */
+QPushButton {
     background-color: transparent;
-    color: #FF557F;
-    border: 1px solid #FF557F;
+    color: #c86a2c;
+    border: 1px solid #c86a2c;
     border-radius: 6px;
-    padding: 6px 14px;
-    font-family: &quot;Montserrat&quot;;
+    padding: 8px 16px;
+    font-family: &quot;Montserrat SemiBold&quot;;
     font-weight: 600;
+    
 }
 QPushButton:hover {
-    background-color: #FF557F;
+    background-color: #D4AF37;
     color: #0D1321;
 }
 QPushButton:pressed {
-    background-color: #E03D66;
-    border: 1px solid #E03D66;
+    background-color: #B8952C;
+    border: 1px solid #B8952C;
     color: #0D1321;
 }</string>
         </property>
@@ -3102,9 +3231,9 @@ background: transparent;</string>
        <widget class="QLineEdit" name="txtSala">
         <property name="geometry">
          <rect>
-          <x>360</x>
+          <x>320</x>
           <y>220</y>
-          <width>113</width>
+          <width>101</width>
           <height>31</height>
          </rect>
         </property>
@@ -3126,7 +3255,7 @@ QLineEdit:focus {
        <widget class="QLabel" name="label_30">
         <property name="geometry">
          <rect>
-          <x>220</x>
+          <x>180</x>
           <y>200</y>
           <width>61</width>
           <height>16</height>
@@ -3145,7 +3274,7 @@ background: transparent;</string>
        <widget class="QLabel" name="label_31">
         <property name="geometry">
          <rect>
-          <x>360</x>
+          <x>320</x>
           <y>200</y>
           <width>61</width>
           <height>16</height>
@@ -3164,8 +3293,8 @@ background: transparent;</string>
        <widget class="QPushButton" name="btnCrearFuncion">
         <property name="geometry">
          <rect>
-          <x>420</x>
-          <y>320</y>
+          <x>350</x>
+          <y>340</y>
           <width>141</width>
           <height>31</height>
          </rect>
@@ -3198,9 +3327,9 @@ QPushButton:pressed {
        <widget class="QLineEdit" name="txtHorario">
         <property name="geometry">
          <rect>
-          <x>490</x>
+          <x>440</x>
           <y>220</y>
-          <width>113</width>
+          <width>101</width>
           <height>31</height>
          </rect>
         </property>
@@ -3222,7 +3351,7 @@ QLineEdit:focus {
        <widget class="QLabel" name="label_35">
         <property name="geometry">
          <rect>
-          <x>490</x>
+          <x>440</x>
           <y>200</y>
           <width>51</width>
           <height>16</height>
@@ -3261,7 +3390,7 @@ font: 900 </string>
        <widget class="QComboBox" name="cmbPeliculaAdmin">
         <property name="geometry">
          <rect>
-          <x>220</x>
+          <x>180</x>
           <y>220</y>
           <width>121</width>
           <height>31</height>
@@ -3307,7 +3436,7 @@ QComboBox QAbstractItemView {
        <widget class="QLineEdit" name="txtCodigoFuncionAdmin">
         <property name="geometry">
          <rect>
-          <x>90</x>
+          <x>50</x>
           <y>220</y>
           <width>113</width>
           <height>31</height>
@@ -3331,7 +3460,7 @@ QLineEdit:focus {
        <widget class="QLabel" name="label_55">
         <property name="geometry">
          <rect>
-          <x>90</x>
+          <x>50</x>
           <y>200</y>
           <width>101</width>
           <height>16</height>
@@ -3350,31 +3479,87 @@ background: transparent;</string>
        <widget class="QComboBox" name="cmbSedeAdmin">
         <property name="geometry">
          <rect>
-          <x>640</x>
-          <y>280</y>
-          <width>131</width>
-          <height>41</height>
+          <x>690</x>
+          <y>220</y>
+          <width>120</width>
+          <height>32</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QComboBox {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QComboBox:hover {
+    border: 1px solid #E63946;
+}
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 24px;
+    border-left: 1px solid #3A4A6B;
+}
+QComboBox::down-arrow {
+    width: 0px;
+    height: 0px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #F1FAEE;
+    margin-right: 6px;
+}
+QComboBox QAbstractItemView {
+    background-color: #1D2D44;
+    border: 1px solid #3A4A6B;
+    color: #F1FAEE;
+    selection-background-color: #E63946;
+    selection-color: #F1FAEE;
+    outline: none;
+}</string>
         </property>
        </widget>
        <widget class="QLineEdit" name="txtFechaAdmin">
         <property name="geometry">
          <rect>
-          <x>630</x>
+          <x>560</x>
           <y>220</y>
-          <width>131</width>
-          <height>24</height>
+          <width>111</width>
+          <height>31</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QLineEdit:focus {
+    border: 1px solid #4A6FA5;
+}</string>
         </property>
        </widget>
        <widget class="QLabel" name="label_61">
         <property name="geometry">
          <rect>
-          <x>630</x>
-          <y>190</y>
+          <x>560</x>
+          <y>200</y>
           <width>131</width>
           <height>16</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: &quot;Montserrat &quot;;
+font-size: 12px;
+color: #A8B2C1;
+background: transparent;</string>
         </property>
         <property name="text">
          <string>FECHA</string>
@@ -3383,14 +3568,20 @@ background: transparent;</string>
        <widget class="QLabel" name="label_63">
         <property name="geometry">
          <rect>
-          <x>640</x>
-          <y>260</y>
+          <x>690</x>
+          <y>200</y>
           <width>71</width>
           <height>16</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: &quot;Montserrat &quot;;
+font-size: 12px;
+color: #A8B2C1;
+background: transparent;</string>
+        </property>
         <property name="text">
-         <string>FECHA</string>
+         <string>SEDE</string>
         </property>
        </widget>
       </widget>
@@ -3401,8 +3592,8 @@ background: transparent;</string>
        <widget class="QLineEdit" name="txtBuscarFuncionID">
         <property name="geometry">
          <rect>
-          <x>50</x>
-          <y>50</y>
+          <x>30</x>
+          <y>90</y>
           <width>113</width>
           <height>32</height>
          </rect>
@@ -3425,8 +3616,8 @@ QLineEdit:focus {
        <widget class="QLineEdit" name="txtEditSala">
         <property name="geometry">
          <rect>
-          <x>340</x>
-          <y>120</y>
+          <x>300</x>
+          <y>90</y>
           <width>113</width>
           <height>31</height>
          </rect>
@@ -3449,8 +3640,8 @@ QLineEdit:focus {
        <widget class="QLineEdit" name="txtEditPelicula">
         <property name="geometry">
          <rect>
-          <x>210</x>
-          <y>120</y>
+          <x>170</x>
+          <y>90</y>
           <width>113</width>
           <height>31</height>
          </rect>
@@ -3473,8 +3664,8 @@ QLineEdit:focus {
        <widget class="QLineEdit" name="txtEditHorario">
         <property name="geometry">
          <rect>
-          <x>470</x>
-          <y>120</y>
+          <x>430</x>
+          <y>90</y>
           <width>113</width>
           <height>31</height>
          </rect>
@@ -3497,8 +3688,8 @@ QLineEdit:focus {
        <widget class="QSpinBox" name="spinEditCol">
         <property name="geometry">
          <rect>
-          <x>650</x>
-          <y>170</y>
+          <x>180</x>
+          <y>180</y>
           <width>70</width>
           <height>32</height>
          </rect>
@@ -3566,8 +3757,8 @@ QSpinBox::down-arrow {
        <widget class="QSpinBox" name="spinEditFila">
         <property name="geometry">
          <rect>
-          <x>730</x>
-          <y>170</y>
+          <x>260</x>
+          <y>180</y>
           <width>70</width>
           <height>32</height>
          </rect>
@@ -3635,10 +3826,10 @@ QSpinBox::down-arrow {
        <widget class="QTableWidget" name="tblFuncionesRegistradas">
         <property name="geometry">
          <rect>
-          <x>170</x>
+          <x>20</x>
           <y>230</y>
-          <width>461</width>
-          <height>171</height>
+          <width>581</width>
+          <height>181</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -3662,8 +3853,8 @@ QHeaderView::section {
        <widget class="QLabel" name="label_46">
         <property name="geometry">
          <rect>
-          <x>50</x>
-          <y>30</y>
+          <x>30</x>
+          <y>70</y>
           <width>71</width>
           <height>20</height>
          </rect>
@@ -3681,8 +3872,8 @@ background: transparent;</string>
        <widget class="QLabel" name="label_47">
         <property name="geometry">
          <rect>
-          <x>210</x>
-          <y>100</y>
+          <x>170</x>
+          <y>70</y>
           <width>61</width>
           <height>16</height>
          </rect>
@@ -3700,8 +3891,8 @@ background: transparent;</string>
        <widget class="QLabel" name="label_48">
         <property name="geometry">
          <rect>
-          <x>340</x>
-          <y>100</y>
+          <x>300</x>
+          <y>70</y>
           <width>51</width>
           <height>16</height>
          </rect>
@@ -3719,8 +3910,8 @@ background: transparent;</string>
        <widget class="QLabel" name="label_49">
         <property name="geometry">
          <rect>
-          <x>470</x>
-          <y>100</y>
+          <x>430</x>
+          <y>70</y>
           <width>61</width>
           <height>16</height>
          </rect>
@@ -3738,8 +3929,8 @@ background: transparent;</string>
        <widget class="QPushButton" name="btnEditFuncion">
         <property name="geometry">
          <rect>
-          <x>200</x>
-          <y>180</y>
+          <x>630</x>
+          <y>280</y>
           <width>121</width>
           <height>31</height>
          </rect>
@@ -3772,8 +3963,8 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnEliminarFun">
         <property name="geometry">
          <rect>
-          <x>330</x>
-          <y>180</y>
+          <x>630</x>
+          <y>320</y>
           <width>121</width>
           <height>31</height>
          </rect>
@@ -3807,8 +3998,8 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnActualizarTablaFuncion">
         <property name="geometry">
          <rect>
-          <x>460</x>
-          <y>180</y>
+          <x>630</x>
+          <y>360</y>
           <width>121</width>
           <height>31</height>
          </rect>
@@ -3841,8 +4032,8 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnBuscarFuncion">
         <property name="geometry">
          <rect>
-          <x>50</x>
-          <y>90</y>
+          <x>30</x>
+          <y>130</y>
           <width>111</width>
           <height>31</height>
          </rect>
@@ -3877,8 +4068,8 @@ QPushButton:pressed {
         </property>
         <property name="geometry">
          <rect>
-          <x>600</x>
-          <y>120</y>
+          <x>560</x>
+          <y>90</y>
           <width>113</width>
           <height>31</height>
          </rect>
@@ -3907,8 +4098,8 @@ QLineEdit:focus {
        <widget class="QLabel" name="label_56">
         <property name="geometry">
          <rect>
-          <x>600</x>
-          <y>100</y>
+          <x>560</x>
+          <y>70</y>
           <width>101</width>
           <height>16</height>
          </rect>
@@ -3926,8 +4117,8 @@ background: transparent;</string>
        <widget class="QLabel" name="label_17">
         <property name="geometry">
          <rect>
-          <x>650</x>
-          <y>280</y>
+          <x>340</x>
+          <y>160</y>
           <width>49</width>
           <height>16</height>
          </rect>
@@ -3945,8 +4136,8 @@ background: transparent;</string>
        <widget class="QComboBox" name="cmbGestionFuncion">
         <property name="geometry">
          <rect>
-          <x>650</x>
-          <y>300</y>
+          <x>340</x>
+          <y>180</y>
           <width>120</width>
           <height>31</height>
          </rect>
@@ -4006,28 +4197,78 @@ QComboBox QAbstractItemView {
        <widget class="QComboBox" name="cmbEditSede">
         <property name="geometry">
          <rect>
-          <x>40</x>
-          <y>210</y>
-          <width>101</width>
-          <height>41</height>
+          <x>690</x>
+          <y>150</y>
+          <width>113</width>
+          <height>32</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QComboBox {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QComboBox:hover {
+    border: 1px solid #E63946;
+}
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 24px;
+    border-left: 1px solid #3A4A6B;
+}
+QComboBox::down-arrow {
+    width: 0px;
+    height: 0px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #F1FAEE;
+    margin-right: 6px;
+}
+QComboBox QAbstractItemView {
+    background-color: #1D2D44;
+    border: 1px solid #3A4A6B;
+    color: #F1FAEE;
+    selection-background-color: #E63946;
+    selection-color: #F1FAEE;
+    outline: none;
+}</string>
         </property>
        </widget>
        <widget class="QLineEdit" name="txtEditFecha">
         <property name="geometry">
          <rect>
-          <x>40</x>
-          <y>180</y>
+          <x>690</x>
+          <y>90</y>
           <width>113</width>
-          <height>24</height>
+          <height>31</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QLineEdit:focus {
+    border: 1px solid #4A6FA5;
+}</string>
         </property>
        </widget>
        <widget class="QLabel" name="label_62">
         <property name="geometry">
          <rect>
-          <x>40</x>
-          <y>150</y>
+          <x>690</x>
+          <y>70</y>
           <width>111</width>
           <height>16</height>
          </rect>
@@ -4042,6 +4283,44 @@ background: transparent;</string>
          <string>FECHA</string>
         </property>
        </widget>
+       <widget class="QLabel" name="label_68">
+        <property name="geometry">
+         <rect>
+          <x>690</x>
+          <y>130</y>
+          <width>71</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: &quot;Montserrat &quot;;
+font-size: 12px;
+color: #A8B2C1;
+background: transparent;</string>
+        </property>
+        <property name="text">
+         <string>SEDE</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_69">
+        <property name="geometry">
+         <rect>
+          <x>180</x>
+          <y>160</y>
+          <width>141</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: &quot;Montserrat &quot;;
+font-size: 12px;
+color: #A8B2C1;
+background: transparent;</string>
+        </property>
+        <property name="text">
+         <string>COLUMNA Y FILA</string>
+        </property>
+       </widget>
       </widget>
       <widget class="QWidget" name="tab_7">
        <attribute name="title">
@@ -4052,8 +4331,8 @@ background: transparent;</string>
          <rect>
           <x>20</x>
           <y>30</y>
-          <width>791</width>
-          <height>291</height>
+          <width>831</width>
+          <height>261</height>
          </rect>
         </property>
         <property name="frameShape">
@@ -4089,9 +4368,9 @@ font: 900 </string>
        <widget class="QPushButton" name="btnReporteAVL">
         <property name="geometry">
          <rect>
-          <x>30</x>
-          <y>390</y>
-          <width>120</width>
+          <x>20</x>
+          <y>370</y>
+          <width>100</width>
           <height>32</height>
          </rect>
         </property>
@@ -4122,9 +4401,9 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnReporteArbolB">
         <property name="geometry">
          <rect>
-          <x>160</x>
-          <y>350</y>
-          <width>120</width>
+          <x>140</x>
+          <y>330</y>
+          <width>100</width>
           <height>32</height>
          </rect>
         </property>
@@ -4155,9 +4434,9 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnVerRepCartelera">
         <property name="geometry">
          <rect>
-          <x>30</x>
-          <y>350</y>
-          <width>120</width>
+          <x>20</x>
+          <y>330</y>
+          <width>101</width>
           <height>32</height>
          </rect>
         </property>
@@ -4188,9 +4467,9 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnReporteMatrizDispersa">
         <property name="geometry">
          <rect>
-          <x>170</x>
-          <y>390</y>
-          <width>120</width>
+          <x>140</x>
+          <y>370</y>
+          <width>100</width>
           <height>32</height>
          </rect>
         </property>
@@ -4221,11 +4500,33 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnReporteGrafo">
         <property name="geometry">
          <rect>
-          <x>300</x>
-          <y>360</y>
-          <width>111</width>
-          <height>24</height>
+          <x>250</x>
+          <y>300</y>
+          <width>181</width>
+          <height>32</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">/* CREAR PROMOCION */
+QPushButton {
+    background-color: transparent;
+    color: #c86a2c;
+    border: 1px solid #c86a2c;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-family: &quot;Montserrat SemiBold&quot;;
+    font-weight: 600;
+    
+}
+QPushButton:hover {
+    background-color: #D4AF37;
+    color: #0D1321;
+}
+QPushButton:pressed {
+    background-color: #B8952C;
+    border: 1px solid #B8952C;
+    color: #0D1321;
+}</string>
         </property>
         <property name="text">
          <string>Reporte Grafo Sedes</string>
@@ -4234,11 +4535,33 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnReporteAdyacencia">
         <property name="geometry">
          <rect>
-          <x>300</x>
-          <y>390</y>
-          <width>121</width>
-          <height>24</height>
+          <x>250</x>
+          <y>340</y>
+          <width>181</width>
+          <height>32</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">/* CREAR PROMOCION */
+QPushButton {
+    background-color: transparent;
+    color: #c86a2c;
+    border: 1px solid #c86a2c;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-family: &quot;Montserrat SemiBold&quot;;
+    font-weight: 600;
+    
+}
+QPushButton:hover {
+    background-color: #D4AF37;
+    color: #0D1321;
+}
+QPushButton:pressed {
+    background-color: #B8952C;
+    border: 1px solid #B8952C;
+    color: #0D1321;
+}</string>
         </property>
         <property name="text">
          <string>Lista de Adyacencia</string>
@@ -4247,11 +4570,33 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnGenerarBloque">
         <property name="geometry">
          <rect>
-          <x>430</x>
-          <y>360</y>
-          <width>121</width>
-          <height>24</height>
+          <x>450</x>
+          <y>300</y>
+          <width>181</width>
+          <height>32</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">/* CREAR PROMOCION */
+QPushButton {
+    background-color: transparent;
+    color: #c86a2c;
+    border: 1px solid #c86a2c;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-family: &quot;Montserrat SemiBold&quot;;
+    font-weight: 600;
+    
+}
+QPushButton:hover {
+    background-color: #D4AF37;
+    color: #0D1321;
+}
+QPushButton:pressed {
+    background-color: #B8952C;
+    border: 1px solid #B8952C;
+    color: #0D1321;
+}</string>
         </property>
         <property name="text">
          <string>Generar Bloque Manual</string>
@@ -4260,11 +4605,33 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnReporteBlockchain">
         <property name="geometry">
          <rect>
-          <x>430</x>
-          <y>390</y>
-          <width>111</width>
-          <height>24</height>
+          <x>450</x>
+          <y>340</y>
+          <width>181</width>
+          <height>32</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">/* CREAR PROMOCION */
+QPushButton {
+    background-color: transparent;
+    color: #c86a2c;
+    border: 1px solid #c86a2c;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-family: &quot;Montserrat SemiBold&quot;;
+    font-weight: 600;
+    
+}
+QPushButton:hover {
+    background-color: #D4AF37;
+    color: #0D1321;
+}
+QPushButton:pressed {
+    background-color: #B8952C;
+    border: 1px solid #B8952C;
+    color: #0D1321;
+}</string>
         </property>
         <property name="text">
          <string>Reporte Blockchain</string>
@@ -4273,11 +4640,33 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnReporteMerkle">
         <property name="geometry">
          <rect>
-          <x>560</x>
-          <y>380</y>
-          <width>121</width>
-          <height>24</height>
+          <x>660</x>
+          <y>360</y>
+          <width>181</width>
+          <height>32</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">/* CREAR PROMOCION */
+QPushButton {
+    background-color: transparent;
+    color: #c86a2c;
+    border: 1px solid #c86a2c;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-family: &quot;Montserrat SemiBold&quot;;
+    font-weight: 600;
+    
+}
+QPushButton:hover {
+    background-color: #D4AF37;
+    color: #0D1321;
+}
+QPushButton:pressed {
+    background-color: #B8952C;
+    border: 1px solid #B8952C;
+    color: #0D1321;
+}</string>
         </property>
         <property name="text">
          <string>Reporte Merkle Bloque</string>
@@ -4286,11 +4675,25 @@ QPushButton:pressed {
        <widget class="QLineEdit" name="txtIndiceMerkle">
         <property name="geometry">
          <rect>
-          <x>570</x>
-          <y>350</y>
-          <width>113</width>
-          <height>24</height>
+          <x>660</x>
+          <y>320</y>
+          <width>131</width>
+          <height>32</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QLineEdit:focus {
+    border: 1px solid #4A6FA5;
+}</string>
         </property>
         <property name="placeholderText">
          <string>Índice de Bloque</string>
@@ -4299,11 +4702,33 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnReporteVentas">
         <property name="geometry">
          <rect>
-          <x>710</x>
-          <y>360</y>
-          <width>111</width>
-          <height>21</height>
+          <x>380</x>
+          <y>380</y>
+          <width>131</width>
+          <height>32</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">/* CREAR PROMOCION */
+QPushButton {
+    background-color: transparent;
+    color: #c86a2c;
+    border: 1px solid #c86a2c;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-family: &quot;Montserrat SemiBold&quot;;
+    font-weight: 600;
+    
+}
+QPushButton:hover {
+    background-color: #D4AF37;
+    color: #0D1321;
+}
+QPushButton:pressed {
+    background-color: #B8952C;
+    border: 1px solid #B8952C;
+    color: #0D1321;
+}</string>
         </property>
         <property name="text">
          <string>Total Ventas</string>
@@ -4317,11 +4742,25 @@ QPushButton:pressed {
        <widget class="QLineEdit" name="txtSedeCodigo">
         <property name="geometry">
          <rect>
-          <x>30</x>
-          <y>60</y>
-          <width>113</width>
-          <height>24</height>
+          <x>180</x>
+          <y>80</y>
+          <width>121</width>
+          <height>32</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QLineEdit:focus {
+    border: 1px solid #4A6FA5;
+}</string>
         </property>
         <property name="placeholderText">
          <string>Código de Sede</string>
@@ -4330,11 +4769,25 @@ QPushButton:pressed {
        <widget class="QLineEdit" name="txtSedeNombre">
         <property name="geometry">
          <rect>
-          <x>160</x>
-          <y>60</y>
-          <width>113</width>
-          <height>24</height>
+          <x>320</x>
+          <y>80</y>
+          <width>120</width>
+          <height>32</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QLineEdit:focus {
+    border: 1px solid #4A6FA5;
+}</string>
         </property>
         <property name="placeholderText">
          <string>Nombre</string>
@@ -4343,11 +4796,25 @@ QPushButton:pressed {
        <widget class="QLineEdit" name="txtSedeDir">
         <property name="geometry">
          <rect>
-          <x>310</x>
-          <y>60</y>
-          <width>113</width>
-          <height>24</height>
+          <x>450</x>
+          <y>80</y>
+          <width>120</width>
+          <height>32</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QLineEdit:focus {
+    border: 1px solid #4A6FA5;
+}</string>
         </property>
         <property name="placeholderText">
          <string>Dirección</string>
@@ -4356,11 +4823,25 @@ QPushButton:pressed {
        <widget class="QLineEdit" name="txtSedeTel">
         <property name="geometry">
          <rect>
-          <x>450</x>
-          <y>60</y>
-          <width>113</width>
-          <height>24</height>
+          <x>600</x>
+          <y>80</y>
+          <width>120</width>
+          <height>32</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QLineEdit:focus {
+    border: 1px solid #4A6FA5;
+}</string>
         </property>
         <property name="placeholderText">
          <string>Teléfono</string>
@@ -4375,15 +4856,95 @@ QPushButton:pressed {
           <height>31</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">QSpinBox {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 4px;
+    color: #F1FAEE;
+}
+
+QSpinBox:hover {
+    border: 1px solid #4A6FA5;
+}
+
+QSpinBox:focus {
+    border: 1px solid #4A6FA5;
+}
+
+QSpinBox::up-button {
+    subcontrol-origin: border;
+    subcontrol-position: top right;
+    width: 16px;
+    background-color: #3A4A6B;
+    border-top-right-radius: 6px;
+    border: none;
+}
+
+QSpinBox::down-button {
+    subcontrol-origin: border;
+    subcontrol-position: bottom right;
+    width: 16px;
+    background-color: #3A4A6B;
+    border-bottom-right-radius: 6px;
+    border: none;
+}
+
+QSpinBox::up-button:hover {
+    background-color: #2A9D6F;
+}
+
+QSpinBox::down-button:hover {
+    background-color: #E63946;
+}
+
+QSpinBox::up-arrow {
+    width: 0px;
+    height: 0px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 5px solid #F1FAEE;
+}
+
+QSpinBox::down-arrow {
+    width: 0px;
+    height: 0px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #F1FAEE;
+}</string>
+        </property>
        </widget>
        <widget class="QPushButton" name="btnSedeCrear">
         <property name="geometry">
          <rect>
-          <x>220</x>
+          <x>190</x>
           <y>140</y>
-          <width>80</width>
-          <height>24</height>
+          <width>110</width>
+          <height>32</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">/* APROBAR */
+QPushButton {
+    background-color: transparent;
+    color: #00B86B;
+    border: 1px solid #00B86B;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-family: &quot;Montserrat SemiBold&quot;;
+    font-weight: 600;
+}
+QPushButton:hover {
+    background-color: #00B86B;
+    color: #F1FAEE;
+}
+QPushButton:pressed {
+    background-color: #009957;
+    border: 1px solid #009957;
+    color: #F1FAEE;
+}</string>
         </property>
         <property name="text">
          <string>Crear Sede</string>
@@ -4394,9 +4955,30 @@ QPushButton:pressed {
          <rect>
           <x>320</x>
           <y>140</y>
-          <width>80</width>
-          <height>24</height>
+          <width>110</width>
+          <height>32</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">/* AÑADIR BENEFICIO */
+QPushButton {
+    background-color: transparent;
+    color: #9B5DE5;
+    border: 1px solid #9B5DE5;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-family: &quot;Montserrat SemiBold&quot;;
+    font-weight: 600;
+}
+QPushButton:hover {
+    background-color: #9B5DE5;
+    color: #F1FAEE;
+}
+QPushButton:pressed {
+    background-color: #7E3FCC;
+    border: 1px solid #7E3FCC;
+    color: #F1FAEE;
+}</string>
         </property>
         <property name="text">
          <string>Editar Sede</string>
@@ -4405,11 +4987,33 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnSedeEliminar">
         <property name="geometry">
          <rect>
-          <x>420</x>
+          <x>450</x>
           <y>140</y>
-          <width>80</width>
-          <height>24</height>
+          <width>131</width>
+          <height>32</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">/* RECHAZAR */
+QPushButton {
+    background-color: transparent;
+    color: #FF3B4E;
+    border: 1px solid #FF3B4E;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-family: &quot;Montserrat SemiBold&quot;;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+QPushButton:hover {
+    background-color: #FF3B4E;
+    color: #F1FAEE;
+}
+QPushButton:pressed {
+    background-color: #D62638;
+    border: 1px solid #D62638;
+    color: #F1FAEE;
+}</string>
         </property>
         <property name="text">
          <string>Eliminar Sede</string>
@@ -4418,11 +5022,31 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnSedePeliculas">
         <property name="geometry">
          <rect>
-          <x>520</x>
+          <x>600</x>
           <y>140</y>
-          <width>141</width>
-          <height>24</height>
+          <width>180</width>
+          <height>32</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+    background-color: transparent;
+    color: #F4A340;
+    border: 1px solid #F4A340;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-family: &quot;Montserrat&quot;;
+    font-weight: 600;
+}
+QPushButton:hover {
+    background-color: #F4A340;
+    color: #0D1321;
+}
+QPushButton:pressed {
+    background-color: #D4872A;
+    border: 1px solid #D4872A;
+    color: #0D1321;
+}</string>
         </property>
         <property name="text">
          <string>Ver Películas por Sede</string>
@@ -4437,6 +5061,12 @@ QPushButton:pressed {
           <height>16</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: &quot;Montserrat &quot;;
+font-size: 12px;
+color: #A8B2C1;
+background: transparent;</string>
+        </property>
         <property name="text">
          <string>CANTIDAD DE SALAS</string>
         </property>
@@ -4444,57 +5074,161 @@ QPushButton:pressed {
        <widget class="QComboBox" name="cmbSedeOrigen">
         <property name="geometry">
          <rect>
-          <x>40</x>
-          <y>290</y>
+          <x>50</x>
+          <y>270</y>
           <width>111</width>
-          <height>41</height>
+          <height>35</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QComboBox {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QComboBox:hover {
+    border: 1px solid #E63946;
+}
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 24px;
+    border-left: 1px solid #3A4A6B;
+}
+QComboBox::down-arrow {
+    width: 0px;
+    height: 0px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #F1FAEE;
+    margin-right: 6px;
+}
+QComboBox QAbstractItemView {
+    background-color: #1D2D44;
+    border: 1px solid #3A4A6B;
+    color: #F1FAEE;
+    selection-background-color: #E63946;
+    selection-color: #F1FAEE;
+    outline: none;
+}</string>
         </property>
        </widget>
        <widget class="QComboBox" name="cmbSedeDestino">
         <property name="geometry">
          <rect>
-          <x>170</x>
-          <y>290</y>
+          <x>180</x>
+          <y>270</y>
           <width>111</width>
-          <height>41</height>
+          <height>35</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QComboBox {
+    background-color: #25314A;
+    border: 1px solid #3A4A6B;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1FAEE;
+    font-family: &quot;Montserrat&quot;;
+    font-size: 13px;
+}
+QComboBox:hover {
+    border: 1px solid #E63946;
+}
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 24px;
+    border-left: 1px solid #3A4A6B;
+}
+QComboBox::down-arrow {
+    width: 0px;
+    height: 0px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #F1FAEE;
+    margin-right: 6px;
+}
+QComboBox QAbstractItemView {
+    background-color: #1D2D44;
+    border: 1px solid #3A4A6B;
+    color: #F1FAEE;
+    selection-background-color: #E63946;
+    selection-color: #F1FAEE;
+    outline: none;
+}</string>
         </property>
        </widget>
        <widget class="QLabel" name="label_66">
         <property name="geometry">
          <rect>
           <x>50</x>
-          <y>270</y>
+          <y>250</y>
           <width>49</width>
           <height>16</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: &quot;Montserrat &quot;;
+font-size: 12px;
+color: #A8B2C1;
+background: transparent;</string>
+        </property>
         <property name="text">
-         <string>Origen</string>
+         <string>ORIGEN</string>
         </property>
        </widget>
        <widget class="QLabel" name="label_67">
         <property name="geometry">
          <rect>
-          <x>170</x>
-          <y>270</y>
-          <width>49</width>
+          <x>180</x>
+          <y>250</y>
+          <width>61</width>
           <height>16</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: &quot;Montserrat &quot;;
+font-size: 12px;
+color: #A8B2C1;
+background: transparent;</string>
+        </property>
         <property name="text">
-         <string>Destino</string>
+         <string>DESTINO</string>
         </property>
        </widget>
        <widget class="QPushButton" name="btnSedeCamino">
         <property name="geometry">
          <rect>
-          <x>70</x>
-          <y>340</y>
-          <width>161</width>
-          <height>24</height>
+          <x>50</x>
+          <y>320</y>
+          <width>241</width>
+          <height>32</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+    background-color: transparent;
+    color: #9B5DE5;
+    border: 1px solid #9B5DE5;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-family: &quot;Montserrat&quot;;
+    font-weight: 600;
+}
+QPushButton:hover {
+    background-color: #9B5DE5;
+    color: #F1FAEE;
+}
+QPushButton:pressed {
+    background-color: #7E3FCC;
+    border: 1px solid #7E3FCC;
+    color: #F1FAEE;
+}</string>
         </property>
         <property name="text">
          <string>Buscar Camino Corto (BFS)</string>
@@ -4503,11 +5237,31 @@ QPushButton:pressed {
        <widget class="QPushButton" name="btnSedeRanking">
         <property name="geometry">
          <rect>
-          <x>320</x>
-          <y>300</y>
-          <width>161</width>
-          <height>24</height>
+          <x>310</x>
+          <y>270</y>
+          <width>201</width>
+          <height>32</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+    background-color: transparent;
+    color: #F4A340;
+    border: 1px solid #F4A340;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-family: &quot;Montserrat&quot;;
+    font-weight: 600;
+}
+QPushButton:hover {
+    background-color: #F4A340;
+    color: #0D1321;
+}
+QPushButton:pressed {
+    background-color: #D4872A;
+    border: 1px solid #D4872A;
+    color: #0D1321;
+}</string>
         </property>
         <property name="text">
          <string>Ver Ranking de Relaciones</string>
@@ -5385,6 +6139,7 @@ QComboBox QAbstractItemView {
     </widget>
    </widget>
   </widget>
+  <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
@@ -5394,8 +6149,13 @@ QComboBox QAbstractItemView {
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuCINEMAUSAC">
+    <property name="title">
+     <string>CINEMAUSAC</string>
+    </property>
+   </widget>
+   <addaction name="menuCINEMAUSAC"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>
